@@ -5,6 +5,7 @@
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
+#define WINDOWS_IGNORE_PACKING_MISMATCH 1
 
 enum main_states
 {

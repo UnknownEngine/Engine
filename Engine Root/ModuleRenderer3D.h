@@ -2,7 +2,11 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
-
+//ImGui Includes
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
+#include "ImGui/imgui_impl_sdl.h"
+#include "ImGui/imgui_impl_opengl3.h"
 
 class ModuleRenderer3D : public Module
 {
