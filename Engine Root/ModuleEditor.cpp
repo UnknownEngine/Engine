@@ -78,6 +78,18 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+
+			if (ImGui::MenuItem("Exit", NULL, false, true)) {
+				return UPDATE_STOP;
+			}
+			ImGui::EndMenu();
+		}
+
+
+		ImGui::EndMainMenuBar();
+	}
 
 	ImGui::Begin("Holi",NULL);
 	float width = ImGui::GetWindowContentRegionWidth();
@@ -85,7 +97,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 	if (ImGui::Button("Eudald", ImVec2(200, 40))) {
 		LOG("Click");
 	}
-
 	ImGui::End();
 
 	ImGui::ShowDemoWindow();
