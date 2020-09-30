@@ -7,10 +7,10 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "ModuleSceneIntro.h"
 
 class Application
 {
@@ -18,9 +18,9 @@ public:
 	ModuleWindow* window;
 	ModuleInput* input;
 	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
+	ModuleSceneIntro* scene_intro;
 	ModulePhysics3D* physics;
 
 private:

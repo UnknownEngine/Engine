@@ -38,7 +38,7 @@ bool ModuleAudio::Init()
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		//ret = false;
+		ret = false;
 	}
 
 	return ret;
@@ -117,6 +117,25 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 
 	LOG("Successfully playing %s", path);
 	return ret;
+}
+
+void ModuleAudio::StopMusic(float fade_time) 
+{
+	if (music != NULL)
+	{
+		if (fade_time > 0.0f)
+		{
+			Mix_FadeOutMusic((int)(fade_time * 1000.0f));
+		}
+		else
+		{
+			Mix_HaltMusic();
+		}
+
+		// this call blocks until fade out is done
+		Mix_FreeMusic(music);
+		music = NULL;
+	}
 }
 
 // Load WAV

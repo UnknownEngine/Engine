@@ -20,10 +20,10 @@
       <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
     </Filter>
     <Filter Include="External Libraries">
-      <UniqueIdentifier>{487034bb-c235-4d0e-ab89-4a0e9aba8e1a}</UniqueIdentifier>
+      <UniqueIdentifier>{86219b0c-6e82-4c17-a794-f8330cd6b852}</UniqueIdentifier>
     </Filter>
     <Filter Include="External Libraries\ImGui">
-      <UniqueIdentifier>{dc1017d2-85fa-40cc-b9de-2638a9c7f16b}</UniqueIdentifier>
+      <UniqueIdentifier>{9245a560-4683-4275-9ae7-4a5262b14f46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,9 +69,6 @@
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -101,6 +98,12 @@
     </ClInclude>
     <ClInclude Include="External Libraries\ImGui\imstb_truetype.h">
       <Filter>External Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneIntro.h">
+      <Filter>Sources\Modules\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditor.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,11 +143,11 @@
     <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClCompile>
     <ClCompile Include="ModulePhysics3D.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneIntro.cpp">
+      <Filter>Sources\Modules\Game</Filter>
     </ClCompile>
     <ClCompile Include="External Libraries\ImGui\imgui.cpp">
       <Filter>External Libraries\ImGui</Filter>
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="External Libraries\ImGui\imgui_widgets.cpp">
       <Filter>External Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditor.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
