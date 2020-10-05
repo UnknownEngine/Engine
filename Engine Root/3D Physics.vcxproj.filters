@@ -300,9 +300,6 @@
     <ClInclude Include="External Libraries\MathGeoLib\include\Time\Clock.h">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleAudio.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -460,9 +457,6 @@
     </ClCompile>
     <ClCompile Include="External Libraries\MathGeoLib\include\Time\Clock.cpp">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleAudio.cpp">
-      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
