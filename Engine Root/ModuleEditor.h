@@ -29,6 +29,9 @@ private:
 
 public:
 
+
+	int test = 30;
+
 private:
 	std::vector<WindowFrame*> windowFrames;
 

@@ -22,9 +22,28 @@ public:
 	ModulePhysics3D* physics;
 	ModuleEditor* editor;
 
+	Timer	startup_time;
+	Timer	frame_time;
+	Timer	last_sec_frame_time;
+
+	int		frame_count = 0;
+	int		miliseconds_count = 0;
+	int		frames_iterator = 0;
+	int		ms_iterator = 0;
+
+	float	last_sec_frame_count = 0;
+	float	last_frame_ms = 0;
+	float	frames_on_last_update = 0;
+	float	prev_last_sec_frame_count = 0;
+	float	avg_fps = 0;
+	float	seconds_since_startup = 0;
+
+	std::vector<float> frames_log;
+	std::vector<float> ms_log;
+
+
 private:
 
-	Timer	ms_timer;
 	float	dt;
 	std::vector<Module*> list_modules;
 
@@ -38,9 +57,13 @@ public:
 	bool CleanUp();
 
 	void RequestBrowser(char* path);
+
+
 private:
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+	void FillFrameLog();
+	void FillMSLog();
 };

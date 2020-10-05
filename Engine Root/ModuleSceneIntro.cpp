@@ -14,14 +14,6 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	//float3 hola(0.4f, 0.1f, 0.2f);
-	float3 hola = float3(0.4f, 0.1f, 0.2f);	
-	LOG("Vector hola x: %f y: %f z: %f", hola.x, hola.y, hola.z);
-	//hola.Set(0.3, 0.2, 0.1);
-	/*hola.x = 0.3f;
-	hola.y = 0.2f;
-	hola.z = 0.1f;*/
-
 	LOG("Loading Intro assets");
 	bool ret = true;
 

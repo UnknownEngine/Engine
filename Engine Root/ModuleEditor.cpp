@@ -121,14 +121,29 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 
 
-
-
-	ImGui::Begin("Holi",NULL);
+	ImGui::Begin("Application",NULL);
 	float width = ImGui::GetWindowContentRegionWidth();
-	float height = ImGui::GetWindowHeight();
-	if (ImGui::Button("Eudald", ImVec2(200, 40))) {
-		LOG("Click");
+	char title[25];
+
+	if (ImGui::Button("Unknown Engine              ")) {
+		App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");
 	}
+	ImGui::SameLine(220);
+	ImGui::Text("Project Name");
+
+	if (ImGui::Button("CITM                        ")) {
+		App->RequestBrowser("https://www.citm.upc.edu/");
+	}
+	ImGui::SameLine(220);
+	ImGui::Text("Organization");
+
+
+	ImGui::SliderInt("FPS Cap", &test, 30, 60) ;	
+
+	sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size()-1]);
+	ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
+	sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size()-1]);
+	ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
 	ImGui::End();
 
 	if (showcase)
