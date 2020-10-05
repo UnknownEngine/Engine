@@ -11,11 +11,14 @@ private :
 public:
 	Application* App;
 
+	
 	Module(Application* parent, bool start_enabled = true) : App(parent)
 	{}
 
 	virtual ~Module()
 	{}
+
+	bool IsActive() { return enabled; }
 
 	virtual bool Init() 
 	{
