@@ -37,6 +37,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void RequestBrowser(char* path);
 private:
 
 	void AddModule(Module* mod);

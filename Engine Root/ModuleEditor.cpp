@@ -12,6 +12,7 @@
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	showcase = false;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -72,24 +73,55 @@ bool ModuleEditor::Start()
 	return true;
 }
 
-update_status ModuleEditor::PostUpdate(float dt)
-{
+update_status ModuleEditor::PreUpdate(float dt) {
 	//Begin new ImGui Frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
+
 	ImGui::NewFrame();
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::PostUpdate(float dt)
+{
+
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 
 			if (ImGui::MenuItem("Exit", NULL, false, true)) {
 				return UPDATE_STOP;
 			}
+		
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Help")) {
 
+			if (ImGui::MenuItem("Gui Demo"))
+				showcase = !showcase;
+			
+
+			if (ImGui::MenuItem("Documentation"))
+				App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");
+			
+			if (ImGui::MenuItem("Download latest"))
+				App->RequestBrowser("https://github.com/UnknownEngine/Engine/releases");
+			
+			if (ImGui::MenuItem("Report a bug"))
+				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
+			
+			if (ImGui::MenuItem("About")) {
+				//show about
+			}
+
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 	}
+
+
+
 
 	ImGui::Begin("Holi",NULL);
 	float width = ImGui::GetWindowContentRegionWidth();
@@ -99,7 +131,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	ImGui::End();
 
-	ImGui::ShowDemoWindow();
+	if (showcase)
+		ImGui::ShowDemoWindow();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -119,6 +152,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 update_status ModuleEditor::Update(float dt)
 {
+
 	return UPDATE_CONTINUE;
 }
 
