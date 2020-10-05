@@ -26,6 +26,7 @@
 
 #include "../MathGeoLibFwd.h"
 
+
 #ifdef MATH_QT_INTEROP
 #include <QVector3D>
 #endif
