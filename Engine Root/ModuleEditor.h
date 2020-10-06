@@ -29,7 +29,6 @@ private:
 
 public:
 
-
 	int test = 60;
 
 private:
@@ -42,4 +41,6 @@ private:
 	bool using_mouse;
 
 	bool showcase;
+
+
 };

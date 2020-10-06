@@ -8,7 +8,7 @@
 #include <SDL/include/SDL.h>
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
-#include <gl/GLU.h>
+#include <string>
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -92,7 +92,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (ImGui::MenuItem("Exit", NULL, false, true)) {
 				return UPDATE_STOP;
 			}
-		
+
 			ImGui::EndMenu();
 		}
 
@@ -100,19 +100,19 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 			if (ImGui::MenuItem("Gui Demo"))
 				showcase = !showcase;
-			
+
 
 			if (ImGui::MenuItem("Documentation"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");
-			
+
 			if (ImGui::MenuItem("Download latest"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/releases");
-			
+
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
-			
+
 			if (ImGui::MenuItem("About")) {
-				//show about
+				ImGui::TextWrapped("# UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development. This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work.## Team* Jordi Pardo Gutiérrez* Eudald Garrofé Flix");
 			}
 
 			ImGui::EndMenu();
@@ -121,71 +121,103 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 
 	//Application Window ------------------------------------
-	ImGui::Begin("Application",NULL);
+	if(ImGui::CollapsingHeader("Application"))
+	{
+		float width = ImGui::GetWindowContentRegionWidth();
+		char title[25];
 
-	float width = ImGui::GetWindowContentRegionWidth();
-	char title[25];
+		if (ImGui::Button("Unknown Engine              ")) { App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki"); }
+		ImGui::SameLine(220);
+		ImGui::Text("Project Name");
 
-	if (ImGui::Button("Unknown Engine              ")) {App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");}
-	ImGui::SameLine(220);
-	ImGui::Text("Project Name");
+		if (ImGui::Button("CITM                        ")) { App->RequestBrowser("https://www.citm.upc.edu/"); }
+		ImVec2(100, 100);
+		ImGui::Text("Organization");
 
-	if (ImGui::Button("CITM                        ")) {App->RequestBrowser("https://www.citm.upc.edu/");}
-	ImVec2(100, 100);
-	ImGui::Text("Organization");
+		ImGui::SliderInt("FPS Cap", &test, 30, 60);
 
-	ImGui::SliderInt("FPS Cap", &test, 30, 60) ;	
+		sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size() - 1]);
+		ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
+		ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
 
-	sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size()-1]);
-	ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
-	sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size()-1]);
-	ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
-	ImGui::End();
-
+	}
 	//Window Window --------------------------
-	ImGui::Begin("Window", NULL);
-	float brightness = SDL_GetWindowBrightness(App->window->window);
-
-	if (App->window->resizable)
+	if (ImGui::CollapsingHeader("Window"))
 	{
-		App->window->width_resize = ImGui::SliderInt("Width", &App->window->width, 1280, 1920);
-		App->window->height_resize = ImGui::SliderInt("Height", &App->window->height, 1024, 1080);
+		float brightness = SDL_GetWindowBrightness(App->window->window);
+
+		if (App->window->resizable)
+		{
+			App->window->width_resize = ImGui::SliderInt("Width", &App->window->width, 1280, 1920);
+			App->window->height_resize = ImGui::SliderInt("Height", &App->window->height, 1024, 1080);
+		}
+		bool bright_resize = ImGui::SliderFloat("Bright", &brightness, 1.f, 3.794f);
+
+		ImGui::Text("");
+
+		if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) { App->window->SetFullScreen(App->window->fullscreen); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Resizable", &App->window->resizable)) { App->window->SetResizability(App->window->resizable); }
+
+		if (ImGui::Checkbox("Borderless", &App->window->borderless)) { App->window->SetBorderless(App->window->borderless); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Desktop", &App->window->desktop)) { App->window->SetFullDesktop(App->window->desktop); }
+
+
+		if (App->window->width_resize || App->window->height_resize)
+		{
+			SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
+			glViewport(0, 0, App->window->width, App->window->height);
+		}
+		else if (bright_resize)
+		{
+			SDL_SetWindowBrightness(App->window->window, brightness);
+		}
 	}
-	bool bright_resize = ImGui::SliderFloat("Bright", &brightness,1.f,3.794f);
-
-	ImGui::Text("");
-
-	if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) { App->window->SetFullScreen(App->window->fullscreen); }
-	ImGui::SameLine(150);
-	if (ImGui::Checkbox("Resizable", &App->window->resizable)) { App->window->SetResizability(App->window->resizable); }
-
-	if (ImGui::Checkbox("Borderless", &App->window->borderless)) { App->window->SetBorderless(App->window->borderless); }
-	ImGui::SameLine(150);
-	if (ImGui::Checkbox("Desktop", &App->window->desktop)) { App->window->SetFullDesktop(App->window->desktop); }
-
-
-	if (App->window->width_resize || App->window->height_resize)
-	{
-		SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
-		glViewport(0, 0, App->window->width, App->window->height);
-	}
-	else if (bright_resize )
-	{
-		SDL_SetWindowBrightness(App->window->window, brightness);
-	}
-	ImGui::End();
 
 	//Hardware Window
-	ImGui::Begin("Hardware");
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		ImGui::Text("CPU Cache Line: %d", SDL_GetCPUCacheLineSize());
+		ImGui::Text("Number of CPUs cores: %d", SDL_GetCPUCount());
+		ImGui::Text("System RAM: %d", SDL_GetSystemRAM());
+		ImGui::Text("Caps:  ");
+		std::string caps;
+		if (SDL_Has3DNow() == SDL_TRUE) { std::string threednow = "3DNow";		caps += threednow; caps += ", "; }
+		if (SDL_HasAVX() == SDL_TRUE) { std::string avx = "AVX";		caps += avx; caps += ", "; }
+		if (SDL_HasAVX2() == SDL_TRUE) { std::string avx2 = "AVX2";		caps += avx2; caps += ", "; }
+		if (SDL_HasAltiVec() == SDL_TRUE) { std::string altivec = "AltiVec";	caps += altivec; caps += ", "; }
+		if (SDL_HasMMX() == SDL_TRUE) { std::string mmx = "MMX";		caps += mmx; caps += ", "; }
+		if (SDL_HasRDTSC() == SDL_TRUE) { std::string rdtsc = "RDTSC";		caps += rdtsc; caps += ", "; }
+		if (SDL_HasSSE() == SDL_TRUE) { std::string sse = "SSE";		caps += sse; caps += ", "; }
+		if (SDL_HasSSE2() == SDL_TRUE) { std::string sse2 = "SSE2";		caps += sse2; caps += ", "; }
+		if (SDL_HasSSE3() == SDL_TRUE) { std::string sse3 = "SSE3";		caps += sse3; caps += ", "; }
+		if (SDL_HasSSE41() == SDL_TRUE) { std::string sse41 = "SSE41";		caps += sse41; caps += ", "; }
+		if (SDL_HasSSE42() == SDL_TRUE) { std::string sse42 = "SSE42";		caps += sse42; caps += ", "; }
 
-	ImGui::Text("CPU Cache Line: %d", SDL_GetCPUCacheLineSize());
-	ImGui::Text("Number of CPUs cores: %d", SDL_GetCPUCount());
-	ImGui::Text("System RAM: %d", SDL_GetSystemRAM());
-	ImGui::Text("Caps: ");
-	ImGui::Text("Caps: ");
-	//ImGui::TextColored()
+		ImGui::SameLine(50);
+		
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+		ImGui::TextWrapped(caps.c_str());
+		ImGui::PopStyleColor(1);
+		ImGui::Text("----------------------------------------------------------");
+		const char* vendor = (const char*)glGetString(GL_VENDOR);
+		ImGui::Text("System RAM: "); 	ImGui::SameLine(100);
+		ImGui::TextWrapped(vendor);
 
-	ImGui::End();
+		const char* model = (const char*)glGetString(GL_RENDERER);
+		ImGui::Text("Driver Model: "); 	ImGui::SameLine(100);
+		ImGui::TextWrapped(model);
+	}
+	if (ImGui::CollapsingHeader("Input"))
+	{
+
+	}
+	if (ImGui::CollapsingHeader("Console"))
+	{
+
+	}
 
 	if (showcase)
 		ImGui::ShowDemoWindow();
