@@ -185,16 +185,16 @@ update_status ModuleEditor::PostUpdate(float dt)
 		ImGui::Text("Caps:  ");
 		std::string caps;
 		if (SDL_Has3DNow() == SDL_TRUE) { std::string threednow = "3DNow";		caps += threednow; caps += ", "; }
-		if (SDL_HasAVX() == SDL_TRUE) { std::string avx = "AVX";		caps += avx; caps += ", "; }
-		if (SDL_HasAVX2() == SDL_TRUE) { std::string avx2 = "AVX2";		caps += avx2; caps += ", "; }
+		if (SDL_HasAVX() == SDL_TRUE) { std::string avx = "AVX";				caps += avx; caps += ", "; }
+		if (SDL_HasAVX2() == SDL_TRUE) { std::string avx2 = "AVX2";				caps += avx2; caps += ", "; }
 		if (SDL_HasAltiVec() == SDL_TRUE) { std::string altivec = "AltiVec";	caps += altivec; caps += ", "; }
-		if (SDL_HasMMX() == SDL_TRUE) { std::string mmx = "MMX";		caps += mmx; caps += ", "; }
-		if (SDL_HasRDTSC() == SDL_TRUE) { std::string rdtsc = "RDTSC";		caps += rdtsc; caps += ", "; }
-		if (SDL_HasSSE() == SDL_TRUE) { std::string sse = "SSE";		caps += sse; caps += ", "; }
-		if (SDL_HasSSE2() == SDL_TRUE) { std::string sse2 = "SSE2";		caps += sse2; caps += ", "; }
-		if (SDL_HasSSE3() == SDL_TRUE) { std::string sse3 = "SSE3";		caps += sse3; caps += ", "; }
-		if (SDL_HasSSE41() == SDL_TRUE) { std::string sse41 = "SSE41";		caps += sse41; caps += ", "; }
-		if (SDL_HasSSE42() == SDL_TRUE) { std::string sse42 = "SSE42";		caps += sse42; caps += ", "; }
+		if (SDL_HasMMX() == SDL_TRUE) { std::string mmx = "MMX";				caps += mmx; caps += ", "; }
+		if (SDL_HasRDTSC() == SDL_TRUE) { std::string rdtsc = "RDTSC";			caps += rdtsc; caps += ", "; }
+		if (SDL_HasSSE() == SDL_TRUE) { std::string sse = "SSE";				caps += sse; caps += ", "; }
+		if (SDL_HasSSE2() == SDL_TRUE) { std::string sse2 = "SSE2";				caps += sse2; caps += ", "; }
+		if (SDL_HasSSE3() == SDL_TRUE) { std::string sse3 = "SSE3";				caps += sse3; caps += ", "; }
+		if (SDL_HasSSE41() == SDL_TRUE) { std::string sse41 = "SSE41";			caps += sse41; caps += ", "; }
+		if (SDL_HasSSE42() == SDL_TRUE) { std::string sse42 = "SSE42";			caps += sse42; caps += ", "; }
 
 		ImGui::SameLine(50);
 		
@@ -212,7 +212,12 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	if (ImGui::CollapsingHeader("Input"))
 	{
-
+		ImGui::TextUnformatted(input_log.begin());
+		if (scroll)
+		{
+			ImGui::SetScrollHere(1.0f);
+		}
+		scroll = false;
 	}
 	if (ImGui::CollapsingHeader("Console"))
 	{

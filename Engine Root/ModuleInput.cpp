@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include <stdio.h>
 
 #define MAX_KEYS 300
 
@@ -46,7 +47,6 @@ update_status ModuleInput::PreUpdate(float dt)
 		{
 			if (keyboard[i] == KEY_IDLE)
 			{
-				
 				keyboard[i] = KEY_DOWN;
 			}
 			else
@@ -54,8 +54,10 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 		else
 		{
-			if(keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN) {
 				keyboard[i] = KEY_UP;
+				InputGetKeys(i);
+			}
 			else
 				keyboard[i] = KEY_IDLE;
 		}
@@ -78,8 +80,11 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN)
+			if (mouse_buttons[i] == KEY_REPEAT || mouse_buttons[i] == KEY_DOWN) {
 				mouse_buttons[i] = KEY_UP;
+				InputGetKeys(i);
+			}
+				
 			else
 				mouse_buttons[i] = KEY_IDLE;
 		}
@@ -135,4 +140,11 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::InputGetKeys(int i)
+{
+	char inputs[40];
+	sprintf_s(inputs, 40, "INPUT_KEY: %i\n", i);
+	App->editor->input_log.append(inputs);
 }

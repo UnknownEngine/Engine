@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "ImGui/imgui.h"
 #include <vector>
 
 class WindowFrame;
@@ -30,6 +31,8 @@ private:
 public:
 
 	int test = 60;
+	ImGuiTextBuffer input_log;
+	bool scroll = false;
 
 private:
 	std::vector<WindowFrame*> windowFrames;
@@ -39,7 +42,6 @@ private:
 
 	bool using_keyboard;
 	bool using_mouse;
-
 	bool showcase;
 
 

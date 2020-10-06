@@ -58,6 +58,9 @@ public:
 		return mouse_y_motion;
 	}
 
+	void InputGetKeys(int i);
+	
+
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
