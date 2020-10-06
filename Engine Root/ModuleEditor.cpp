@@ -120,23 +120,19 @@ update_status ModuleEditor::PostUpdate(float dt)
 		ImGui::EndMainMenuBar();
 	}
 
-
+	//Application Window ------------------------------------
 	ImGui::Begin("Application",NULL);
+
 	float width = ImGui::GetWindowContentRegionWidth();
 	char title[25];
 
-	if (ImGui::Button("Unknown Engine              ")) {
-		App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");
-	}
+	if (ImGui::Button("Unknown Engine              ")) {App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");}
 	ImGui::SameLine(220);
 	ImGui::Text("Project Name");
 
-	if (ImGui::Button("CITM                        ")) {
-		App->RequestBrowser("https://www.citm.upc.edu/");
-	}
-	ImGui::SameLine(220);
+	if (ImGui::Button("CITM                        ")) {App->RequestBrowser("https://www.citm.upc.edu/");}
+	ImVec2(100, 100);
 	ImGui::Text("Organization");
-
 
 	ImGui::SliderInt("FPS Cap", &test, 30, 60) ;	
 
@@ -144,6 +140,51 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
 	sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size()-1]);
 	ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
+	ImGui::End();
+
+	//Window Window --------------------------
+	ImGui::Begin("Window", NULL);
+	float brightness = SDL_GetWindowBrightness(App->window->window);
+
+	if (App->window->resizable)
+	{
+		App->window->width_resize = ImGui::SliderInt("Width", &App->window->width, 1280, 1920);
+		App->window->height_resize = ImGui::SliderInt("Height", &App->window->height, 1024, 1080);
+	}
+	bool bright_resize = ImGui::SliderFloat("Bright", &brightness,1.f,3.794f);
+
+	ImGui::Text("");
+
+	if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) { App->window->SetFullScreen(App->window->fullscreen); }
+	ImGui::SameLine(150);
+	if (ImGui::Checkbox("Resizable", &App->window->resizable)) { App->window->SetResizability(App->window->resizable); }
+
+	if (ImGui::Checkbox("Borderless", &App->window->borderless)) { App->window->SetBorderless(App->window->borderless); }
+	ImGui::SameLine(150);
+	if (ImGui::Checkbox("Desktop", &App->window->desktop)) { App->window->SetFullDesktop(App->window->desktop); }
+
+
+	if (App->window->width_resize || App->window->height_resize)
+	{
+		SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
+		glViewport(0, 0, App->window->width, App->window->height);
+	}
+	else if (bright_resize )
+	{
+		SDL_SetWindowBrightness(App->window->window, brightness);
+	}
+	ImGui::End();
+
+	//Hardware Window
+	ImGui::Begin("Hardware");
+
+	ImGui::Text("CPU Cache Line: %d", SDL_GetCPUCacheLineSize());
+	ImGui::Text("Number of CPUs cores: %d", SDL_GetCPUCount());
+	ImGui::Text("System RAM: %d", SDL_GetSystemRAM());
+	ImGui::Text("Caps: ");
+	ImGui::Text("Caps: ");
+	//ImGui::TextColored()
+
 	ImGui::End();
 
 	if (showcase)

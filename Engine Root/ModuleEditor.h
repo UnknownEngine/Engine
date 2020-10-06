@@ -30,7 +30,7 @@ private:
 public:
 
 
-	int test = 30;
+	int test = 60;
 
 private:
 	std::vector<WindowFrame*> windowFrames;

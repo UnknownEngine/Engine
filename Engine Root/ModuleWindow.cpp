@@ -27,8 +27,8 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+		width = SCREEN_WIDTH * SCREEN_SIZE;
+		height = SCREEN_HEIGHT * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -96,4 +96,71 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
+}
+
+void ModuleWindow::SetFullScreen(bool full_screen)
+{
+	if (fullscreen)
+	{
+		previous_height = height;
+		previous_width = width;
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		width = 1920; height = 1080;
+		SDL_SetWindowSize(window,width, height);
+	}
+	else
+	{
+		width = previous_width;
+		height = previous_height;
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowSize(window, width, height);
+	}
+}
+
+void ModuleWindow::SetResizability(bool resizable)
+{
+	if (resizable)
+	{
+		SDL_bool resizable = SDL_TRUE;
+		SDL_SetWindowResizable(window, resizable);
+	}
+	else
+	{
+		SDL_bool resizable = SDL_FALSE;
+		SDL_SetWindowResizable(window, resizable);
+	}
+}
+
+void ModuleWindow::SetBorderless(bool borderless)
+{
+	if (borderless)
+	{
+		SDL_bool borderless = SDL_TRUE;
+		SDL_SetWindowBordered(window, borderless);
+	}
+	else
+	{
+		SDL_bool borderless = SDL_FALSE;
+		SDL_SetWindowBordered(window, borderless);
+	}
+}
+
+void ModuleWindow::SetFullDesktop(bool desktop)
+{
+	if (desktop)
+	{
+		previous_height = height;
+		previous_width = width;
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		width = 1920; height = 1080;
+		SDL_SetWindowSize(window, width, height);
+	}
+	else
+	{
+		width = previous_width;
+		height = previous_height;
+		SDL_SetWindowFullscreen(window, 0);
+		SDL_SetWindowSize(window, width, height);
+
+	}
 }
