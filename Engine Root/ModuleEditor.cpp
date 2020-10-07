@@ -1,7 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
-
+#include <Glew/include/glew.h>
+#include "MathGeoLib/include/MathGeoLibFwd.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
@@ -114,7 +115,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
 
-			if (ImGui::MenuItem("About")) {
+			if (ImGui::MenuItem("About",nullptr,nullptr,&showAboutWindow)) {
 				showAboutWindow = !showAboutWindow;
 				
 			}
@@ -284,12 +285,69 @@ void ModuleEditor::CleanConsole()
 void ModuleEditor::AboutWindow() 
 {	
 	if (ImGui::Begin("About",&showAboutWindow)) {
-		ImGui::TextWrapped("# UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development. This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work.## Team* Jordi Pardo Gutiérrez* Eudald Garrofé Flix");
+		ImGui::TextWrapped("Unknown Engine v0.1");
+		HyperLink("Unkown Engine Github", "https://github.com/UnknownEngine/Engine/wiki");
+		ImGui::Spacing();
+		ImGui::TextWrapped("UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development."
+			"This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work. ");
+		ImGui::Spacing();
+		ImGui::TextWrapped("Team");
+		ImGui::SameLine();
+		ImGui::TextWrapped("Jordi Pardo Gutierrez");
+		HyperLink("Jordi's Github", "https://github.com/Jordi-Pardo");
+		ImGui::SameLine();
+		ImGui::TextWrapped("and");
+		ImGui::SameLine();
+		ImGui::TextWrapped("Eudald Garrofe Flix");
+		HyperLink("Eudald's Github", "https://github.com/Hevne");
+		ImGui::Spacing();
+		SDL_version linked;
+		SDL_VERSION(&linked);
+		ImGui::BulletText("SDL %d.%d.%d",linked.major,linked.minor,linked.patch);
+		HyperLink("SDL Web", "https://www.libsdl.org");
+		ImGui::BulletText("GLEW  %s",glewGetString(GLEW_VERSION));
+		HyperLink("Glew Web", "http://glew.sourceforge.net/");
+		ImGui::BulletText("OpenGL %s",glGetString(GL_VERSION));
+		HyperLink("OpenGL Web", "https://www.opengl.org/");
+		ImGui::BulletText("ImGui %s", ImGui::GetVersion());
+		HyperLink("ImGui Web", "https://github.com/ocornut/imgui");
+		ImGui::BulletText("MathGeoLib 1.5");
+		HyperLink("MathGeoLib Web", "https://github.com/juj/MathGeoLib/tags");
+
+
+		ImGui::TextWrapped("\n\nMIT LIcense");
+		ImGui::Spacing();
+		ImGui::TextWrapped("Copyright 2020 Eudald Garrofe & Jordi Pardo\n\n"
+			
+			"Permission is hereby granted, free of charge, to any person obtaining a copy of this softwareand associated"
+			"documentation files(the 'Software'), to deal in the Software without restriction, including without limitation"
+			"the rights to use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies of the Software,"
+			"to permit persons to whom the Software is furnished to do so, subject to the following conditions :\n\n"
+
+			"The above copyright noticeand this permission notice shall be included in all copies or substantial portions"
+			"of the Software.\n\n"
+
+			"THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES"
+			"OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE"
+			"FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH"
+			"THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
+			
+
 	}
 
 
-
 	ImGui::End();
+}
+
+void ModuleEditor::HyperLink(const char* tooltip, const char* url)
+{
+	if (ImGui::IsItemHovered()) {
+		if (ImGui::IsItemClicked(0)) {
+			App->RequestBrowser(url);
+		}
+		
+		ImGui::SetTooltip(tooltip);
+	}
 }
 
 bool ModuleEditor::CleanUp()

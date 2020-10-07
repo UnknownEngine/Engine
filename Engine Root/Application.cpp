@@ -139,7 +139,7 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
-void Application::RequestBrowser(char* path)
+void Application::RequestBrowser(const char* path)
 {
 	ShellExecuteA(0, "Open", path, 0, "", 3);
 }

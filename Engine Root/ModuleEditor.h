@@ -33,6 +33,8 @@ private:
 	void CleanConsole();
 	void AboutWindow();
 
+	void HyperLink(const char* tooltip, const char* url);
+
 public:
 
 	int test = 60;

@@ -56,7 +56,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void RequestBrowser(char* path);
+	void RequestBrowser(const char* path);
 
 
 private:
