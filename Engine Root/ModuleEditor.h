@@ -19,14 +19,19 @@ public:
 	bool Init();
 	bool Start();
 
+	void AddLog(char* path);
+
+
+
 	update_status PreUpdate(float dt);
-	
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 private:
-	
+	void PrintConsole();
+	void CleanConsole();
+	void AboutWindow();
 
 public:
 
@@ -43,6 +48,7 @@ private:
 	bool using_keyboard;
 	bool using_mouse;
 	bool showcase;
+	bool showAboutWindow;
 
-
+	std::vector<char*> items;
 };

@@ -13,6 +13,7 @@
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	showcase = false;
+	showAboutWindow = false;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -61,6 +62,7 @@ bool ModuleEditor::Init()
 
 bool ModuleEditor::Start()
 {
+	AddLog("Hola");
 	//frameWindowClass = new ImGuiWindowClass();
 	//frameWindowClass->ClassId = 1;
 	//frameWindowClass->DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoSplit;
@@ -72,6 +74,7 @@ bool ModuleEditor::Start()
 
 	return true;
 }
+
 
 update_status ModuleEditor::PreUpdate(float dt) {
 	//Begin new ImGui Frame
@@ -112,7 +115,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
 
 			if (ImGui::MenuItem("About")) {
-				ImGui::TextWrapped("# UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development. This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work.## Team* Jordi Pardo Gutiérrez* Eudald Garrofé Flix");
+				showAboutWindow = !showAboutWindow;
+				
 			}
 
 			ImGui::EndMenu();
@@ -221,11 +225,18 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	if (ImGui::CollapsingHeader("Console"))
 	{
-
+		if (ImGui::Button("Clear Console")) {
+			CleanConsole();
+		}
+		PrintConsole();
 	}
+
+	if (showAboutWindow)
+		AboutWindow();
 
 	if (showcase)
 		ImGui::ShowDemoWindow();
+
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -249,6 +260,37 @@ update_status ModuleEditor::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleEditor::AddLog(char* path)
+{
+	items.push_back(strdup(path));
+}
+
+void ModuleEditor::PrintConsole() 
+{
+	ImGui::Text("----- Console -----");
+	for (uint i = 0; i < items.size(); i++)
+	{
+		ImGui::TextWrapped(items[i]);
+	}
+}
+
+void ModuleEditor::CleanConsole() 
+{
+	for (int i = 0; i < items.size(); i++)
+		free(items[i]);
+	items.clear();
+}
+
+void ModuleEditor::AboutWindow() 
+{	
+	if (ImGui::Begin("About",&showAboutWindow)) {
+		ImGui::TextWrapped("# UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development. This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work.## Team* Jordi Pardo Gutiérrez* Eudald Garrofé Flix");
+	}
+
+
+
+	ImGui::End();
+}
 
 bool ModuleEditor::CleanUp()
 {
