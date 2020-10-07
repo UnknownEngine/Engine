@@ -315,7 +315,8 @@ void ModuleEditor::AboutWindow()
 		HyperLink("MathGeoLib Web", "https://github.com/juj/MathGeoLib/tags");
 
 
-		ImGui::TextWrapped("\n\nMIT LIcense");
+		ImGui::TextWrapped("\n\nLicense:");
+		ImGui::TextWrapped("\nMIT License");
 		ImGui::Spacing();
 		ImGui::TextWrapped("Copyright 2020 Eudald Garrofe & Jordi Pardo\n\n"
 			
