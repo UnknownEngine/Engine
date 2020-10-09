@@ -40,6 +40,7 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC true
 #define TITLE "Unknown Engine"
+#define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 
 // Deletes a buffer
 #define RELEASE( x )\

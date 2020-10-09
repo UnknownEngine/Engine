@@ -10,6 +10,7 @@
 #include "ModulePhysics3D.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleEditor.h"
+#include "Primitive.h"
 
 class Application
 {
@@ -37,10 +38,11 @@ public:
 	float	prev_last_sec_frame_count = 0;
 	float	avg_fps = 0;
 	float	seconds_since_startup = 0;
+	float maxcapTime;
 
 	std::vector<float> frames_log;
 	std::vector<float> ms_log;
-
+	std::vector<float> primitive_list;
 
 private:
 
@@ -66,4 +68,5 @@ private:
 	void FinishUpdate();
 	void FillFrameLog();
 	void FillMSLog();
+	void SetMaxFramesCap(int frames_to_cap);
 };

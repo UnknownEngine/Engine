@@ -23,7 +23,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-
 private:
 
 	bool debug;

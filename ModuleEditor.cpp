@@ -1,8 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
-#include <Glew/include/glew.h>
-#include "MathGeoLib/include/MathGeoLibFwd.h"
+
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
@@ -115,7 +114,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
 
-			if (ImGui::MenuItem("About",nullptr,nullptr,&showAboutWindow)) {
+			if (ImGui::MenuItem("About")) {
 				showAboutWindow = !showAboutWindow;
 				
 			}
@@ -140,7 +139,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 		ImGui::Text("Organization");
 
 		ImGui::SliderInt("FPS Cap", &slider_frames, 1, 60);
-
 		sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size() - 1]);
 		ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
 		sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
@@ -233,18 +231,19 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	if (ImGui::CollapsingHeader("OpenGL Settings"))
 	{
-		if (ImGui::Checkbox("Depth Test", &App->renderer3D->gl_depth_test)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_depth_test, 0); }
+		if (ImGui::Checkbox("Depth Test", &App->renderer3D->gl_depth_test)) { glEnable(GL_DEPTH_TEST); }
 		ImGui::SameLine(150);
-		if (ImGui::Checkbox("Cull Face", &App->renderer3D->gl_cull_face)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_cull_face, 1); }
-		if (ImGui::Checkbox("Color Material", &App->renderer3D->gl_color_material)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_color_material, 2); }
+		if (ImGui::Checkbox("Cull Face", &App->renderer3D->gl_cull_face)) { glEnable(GL_CULL_FACE); }
+		if (ImGui::Checkbox("Color Material", &App->renderer3D->gl_color_material)) { glEnable(GL_COLOR_MATERIAL); }
 		ImGui::SameLine(150);
-		if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_lightning, 3); }
-		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->gl_texture_2d)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_texture_2d, 4); }
+		if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { glEnable(GL_LIGHTING); }
+		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->gl_texture_2d)) { glEnable(GL_TEXTURE_2D); }
 		ImGui::SameLine(150);
-		if (ImGui::Checkbox("Ambient", &App->renderer3D->gl_ambient)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient, 5); }
-		if (ImGui::Checkbox("Ambient & Diffuse", &App->renderer3D->gl_ambient_diffuse)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient_diffuse, 6); }
+		if (ImGui::Checkbox("Ambient", &App->renderer3D->gl_ambient)) { glEnable(GL_AMBIENT); }
+		if (ImGui::Checkbox("Ambient & Diffuse", &App->renderer3D->gl_ambient_diffuse)) { glEnable(GL_AMBIENT_AND_DIFFUSE); }
 		ImGui::SameLine(150);
-		if (ImGui::Checkbox("Render Wireframe", &App->renderer3D->gl_wireframe)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_wireframe, 7); }
+		if (ImGui::Checkbox("Render Wireframe", &App->renderer3D->gl_wireframe)) { LOG("xd") }		
+
 	}
 
 	if (showAboutWindow)
@@ -300,70 +299,12 @@ void ModuleEditor::CleanConsole()
 void ModuleEditor::AboutWindow() 
 {	
 	if (ImGui::Begin("About",&showAboutWindow)) {
-		ImGui::TextWrapped("Unknown Engine v0.1");
-		HyperLink("Unkown Engine Github", "https://github.com/UnknownEngine/Engine/wiki");
-		ImGui::Spacing();
-		ImGui::TextWrapped("UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development."
-			"This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work. ");
-		ImGui::Spacing();
-		ImGui::TextWrapped("Team");
-		ImGui::SameLine();
-		ImGui::TextWrapped("Jordi Pardo Gutierrez");
-		HyperLink("Jordi's Github", "https://github.com/Jordi-Pardo");
-		ImGui::SameLine();
-		ImGui::TextWrapped("and");
-		ImGui::SameLine();
-		ImGui::TextWrapped("Eudald Garrofe Flix");
-		HyperLink("Eudald's Github", "https://github.com/Hevne");
-		ImGui::Spacing();
-		SDL_version linked;
-		SDL_VERSION(&linked);
-		ImGui::BulletText("SDL %d.%d.%d",linked.major,linked.minor,linked.patch);
-		HyperLink("SDL Web", "https://www.libsdl.org");
-		ImGui::BulletText("GLEW  %s",glewGetString(GLEW_VERSION));
-		HyperLink("Glew Web", "http://glew.sourceforge.net/");
-		ImGui::BulletText("OpenGL %s",glGetString(GL_VERSION));
-		HyperLink("OpenGL Web", "https://www.opengl.org/");
-		ImGui::BulletText("ImGui %s", ImGui::GetVersion());
-		HyperLink("ImGui Web", "https://github.com/ocornut/imgui");
-		ImGui::BulletText("MathGeoLib 1.5");
-		HyperLink("MathGeoLib Web", "https://github.com/juj/MathGeoLib/tags");
-
-
-		ImGui::TextWrapped("\n\nLicense:");
-		ImGui::TextWrapped("\nMIT License");
-		ImGui::Spacing();
-		ImGui::TextWrapped("Copyright 2020 Eudald Garrofe & Jordi Pardo\n\n"
-			
-			"Permission is hereby granted, free of charge, to any person obtaining a copy of this softwareand associated"
-			"documentation files(the 'Software'), to deal in the Software without restriction, including without limitation"
-			"the rights to use, copy, modify, merge, publish, distribute, sublicense, and /or sell copies of the Software,"
-			"to permit persons to whom the Software is furnished to do so, subject to the following conditions :\n\n"
-
-			"The above copyright noticeand this permission notice shall be included in all copies or substantial portions"
-			"of the Software.\n\n"
-
-			"THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES"
-			"OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE"
-			"FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH"
-			"THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
-			
-
+		ImGui::TextWrapped("# UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development. This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work.## Team* Jordi Pardo Gutiérrez* Eudald Garrofé Flix");
 	}
+
 
 
 	ImGui::End();
-}
-
-void ModuleEditor::HyperLink(const char* tooltip, const char* url)
-{
-	if (ImGui::IsItemHovered()) {
-		if (ImGui::IsItemClicked(0)) {
-			App->RequestBrowser(url);
-		}
-		
-		ImGui::SetTooltip(tooltip);
-	}
 }
 
 bool ModuleEditor::CleanUp()

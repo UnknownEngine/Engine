@@ -23,6 +23,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
+	glDisable(GL_CULL_FACE);
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
@@ -142,4 +143,49 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::ActivateCheckBoxs(bool is_active, int identifier)
+{
+	int define = 0;
+	
+	switch (identifier)
+	{
+	case 0:
+		define = 0x0B71;
+		break;
+	case 1:
+		define = 0x0B44;
+		break;
+	case 2:
+		define = 0x0B57;
+		break;
+	case 3:
+		define = 0x0B50;
+		break;
+	case 4:
+		define = 0x0DE1;
+		break;
+	case 5:
+		define = 0x1200;
+		break;
+	case 6:
+		define = 0x1602;
+		break;
+	case 7:
+	{
+		
+	}
+		break;
+	}
+
+	if (is_active)
+	{
+		glDisable(define);
+	}
+	else
+	{
+		glEnable(define);
+	}
+	!is_active;
 }

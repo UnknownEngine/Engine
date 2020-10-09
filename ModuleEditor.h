@@ -33,13 +33,10 @@ private:
 	void CleanConsole();
 	void AboutWindow();
 
-	void HyperLink(const char* tooltip, const char* url);
-
 public:
-
-	int slider_frames = 60;
 	ImGuiTextBuffer input_log;
 	bool scroll = false;
+	int slider_frames = 60;
 
 private:
 	std::vector<WindowFrame*> windowFrames;
@@ -53,4 +50,5 @@ private:
 	bool showAboutWindow;
 
 	std::vector<char*> items;
+
 };

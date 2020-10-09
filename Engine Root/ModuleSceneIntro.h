@@ -1,7 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-
+#include "Primitive.h"
+#include <vector>
 class ModuleSceneIntro : public Module
 {
 public:

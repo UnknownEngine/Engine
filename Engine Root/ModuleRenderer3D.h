@@ -17,6 +17,16 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+	void ActivateCheckBoxs(bool is_active, int identifier);
+public:
+	bool gl_depth_test = false;
+	bool gl_cull_face = false;
+	bool gl_lightning = true;
+	bool gl_color_material = false;
+	bool gl_texture_2d = false;
+	bool gl_ambient = false;
+	bool gl_ambient_diffuse = false;
+	bool gl_wireframe = false;
 
 public:
 

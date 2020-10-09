@@ -91,6 +91,9 @@ void Application::FinishUpdate()
 	last_frame_ms = frame_time.Read();
 	frames_on_last_update = prev_last_sec_frame_count;
 
+	frames_on_last_update = editor->slider_frames;
+	SetMaxFramesCap(editor->slider_frames);
+
 	FillFrameLog();
 	FillMSLog();
 }
@@ -148,7 +151,6 @@ void Application::FillFrameLog()
 {
 	if (frames_iterator >= frames_log.size() - 1)
 	{
-		editor->test = 50;
 		for (int i = frames_log.size() - 1; i >= 0; i--)
 		{
 
@@ -191,4 +193,11 @@ void Application::FillMSLog()
 		ms_log.at(frames_iterator) = last_frame_ms;
 		ms_iterator++;
 	}
+}
+
+void Application::SetMaxFramesCap(int frames_to_cap)
+{
+	maxcapTime = 1000 / frames_to_cap;
+	int delay = MAX(0, (int)maxcapTime - (int)last_frame_ms);
+	SDL_Delay(delay);
 }
