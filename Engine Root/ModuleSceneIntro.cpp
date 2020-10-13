@@ -24,6 +24,51 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
+
+
+	float vertices[] = {
+	0.f,0.f,0.f,
+	1.f,0.f,0.f,
+	1.f,1.f,0.f,
+	0.f,1.f,0.f,
+	1.f,0.f,-1.f,
+	1.f,1.f,-1.f,
+	0.f,1.f,-1.f,
+	0.f,0.f,-1.f,
+
+
+	};
+
+
+	uint indices[] = {
+	0,1,2,
+	2,3,0,
+	1,4,5,
+	5,2,1,
+	5,6,3,
+	3,2,5,
+	5,4,7,
+	7,6,5,
+	7,0,3,
+	3,6,7,
+	1,0,4,
+	0,7,4,
+	};
+
+	num_indices = 36;
+	my_indices = 0;
+	glGenBuffers(1, (GLuint*)&(my_indices));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
+
+
+	num_vertices = 8;
+	my_id = 0;
+	glGenBuffers(1, (GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+
+
 	return ret;
 }
 
@@ -115,69 +160,106 @@ update_status ModuleSceneIntro::Update(float dt)
 	//	glEnd();
 
 
-	float vertices[108] = { 0.f,0.f,0.f,
-							0.f,1.f,0.f,
-							1.f,1.f,0.f,
 
-							0.f,0.f,0.f,
-							1.f,0.f,0.f,
-							1.f,1.f,0.f,
+	//float vertices[108] = { 0.f,0.f,0.f,
+	//						0.f,1.f,0.f,
+	//						1.f,1.f,0.f,
 
-
-							1.f,0.f,0.f,
-							1.f,1.f,0.f,
-							1.f,0.f,1.f,
-
-							1.f,1.f,0.f,
-							1.f,1.f,1.f,
-							1.f,0.f,1.f,
+	//						0.f,0.f,0.f,
+	//						1.f,0.f,0.f,
+	//						1.f,1.f,0.f,
 
 
-							0.f,1.f,0.f,
-							1.f,1.f,0.f,
-							0.f,1.f,1.f,
+	//						1.f,0.f,0.f,
+	//						1.f,1.f,0.f,
+	//						1.f,0.f,1.f,
 
-							0.f,1.f,1.f,
-							1.f,1.f,0.f,
-							1.f,1.f,1.f,
-
-
-							0.f, 0.f, 0.f,
-							0.f, 0.f, 1.f,
-							0.f, 1.f, 1.f,
-
-							0.f, 0.f, 0.f,
-							0.f, 1.f, 0.f,
-							0.f, 1.f, 1.f,
+	//						1.f,1.f,0.f,
+	//						1.f,1.f,1.f,
+	//						1.f,0.f,1.f,
 
 
-							0.f, 0.f, 1.f,
-							1.f, 0.f, 1.f,
-							1.f, 1.f, 1.f,
+	//						0.f,1.f,0.f,
+	//						1.f,1.f,0.f,
+	//						0.f,1.f,1.f,
 
-							0.f, 0.f, 1.f,
-							0.f, 1.f, 1.f,
-							1.f, 1.f, 1.f,
+	//						0.f,1.f,1.f,
+	//						1.f,1.f,0.f,
+	//						1.f,1.f,1.f,
 
 
-							0.f, 0.f, 0.f,
-							1.f, 0.f, 0.f,
-							1.f, 0.f, 1.f,
+	//						0.f, 0.f, 0.f,
+	//						0.f, 0.f, 1.f,
+	//						0.f, 1.f, 1.f,
 
-							0.f, 0.f, 0.f,
-							0.f, 0.f, 1.f,
-							1.f, 0.f, 1.f
-	};
-	int num_vertices = 36;
-	uint my_id = 0;
-	glGenBuffers(1, (GLuint*) & (my_id));
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+	//						0.f, 0.f, 0.f,
+	//						0.f, 1.f, 0.f,
+	//						0.f, 1.f, 1.f,
+
+
+	//						0.f, 0.f, 1.f,
+	//						1.f, 0.f, 1.f,
+	//						1.f, 1.f, 1.f,
+
+	//						0.f, 0.f, 1.f,
+	//						0.f, 1.f, 1.f,
+	//						1.f, 1.f, 1.f,
+
+
+	//						0.f, 0.f, 0.f,
+	//						1.f, 0.f, 0.f,
+	//						1.f, 0.f, 1.f,
+
+	//						0.f, 0.f, 0.f,
+	//						0.f, 0.f, 1.f,
+	//						1.f, 0.f, 1.f
+	//};
+	//int num_vertices = 36;
+	//uint my_id = 0;
+	//glGenBuffers(1, (GLuint*) & (my_id));
+	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	//glVertexPointer(3, GL_FLOAT, 0, NULL);
+	//glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+
+	//float vertices[] = {
+	//0.f,0.f,0.f,
+	//1.f,0.f,0.f,
+	//1.f,1.f,0.f,
+
+	////1.f,1.f,0.f,
+	////0.f,1.f,0.f,
+	////0.f,0.f,0.f,
+
+	////1.f,0.f,0.f,
+	////1.f,0.f,-1.f,
+	////1.f,1.f,-1.f,
+
+	////1.f,1.f,-1.f,
+	////1.f,1.f,0.f,
+	////1.f,0.f,0.f,
+	////
+	////1.f,1.f,0.f,
+	////1.f,1.f,-1.f,
+	////0.f,1.f,0.f,
+
+	////1.f,1.f,-1.f,
+	////0.f,1.f,-1.f,
+	////0.f,1.f,0.f,
+
+	//};
+
+
+
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;

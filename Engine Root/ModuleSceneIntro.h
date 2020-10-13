@@ -14,4 +14,10 @@ public:
 	bool CleanUp();
 
 public:
+
+	uint my_indices;
+	int num_indices;
+
+	int num_vertices;
+	uint my_id;
 };
