@@ -25,8 +25,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-
-	float vertices[] = {
+	/*float vertices[] = {
 	0.f,0.f,0.f,
 	1.f,0.f,0.f,
 	1.f,1.f,0.f,
@@ -35,11 +34,7 @@ bool ModuleSceneIntro::Start()
 	1.f,1.f,-1.f,
 	0.f,1.f,-1.f,
 	0.f,0.f,-1.f,
-
-
 	};
-
-
 	uint indices[] = {
 	0,1,2,
 	2,3,0,
@@ -59,14 +54,38 @@ bool ModuleSceneIntro::Start()
 	my_indices = 0;
 	glGenBuffers(1, (GLuint*)&(my_indices));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices, indices, GL_STATIC_DRAW);
-
-
+	
 	num_vertices = 8;
 	my_id = 0;
 	glGenBuffers(1, (GLuint*)&(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);*/
+
+	CreateSphere(vertices, indices, 2.f,20, 20);
+
+	num_indices = indices.size();
+	num_vertices = vertices.size();
+
+	for (int i = 0; i < num_indices; i++)
+	{
+		indices_array[i] = indices[i];
+	}
+
+	for (int i = 0; i < num_vertices; i++)
+	{
+		vertices_array[i] = vertices[i];
+	}
+
+
+	my_indices = 0;
+	glGenBuffers(1, ((GLuint*) & (my_indices)));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices ,indices_array, GL_STATIC_DRAW);
+
+	my_vertices = 0;
+	glGenBuffers(1, (GLuint*) & (my_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices_array, GL_STATIC_DRAW); 
 
 
 	return ret;
@@ -94,175 +113,49 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-
-	//DIRECT MODE =======================================
-	//glBegin(GL_TRIANGLES); 
-	//// front face =================
-	//glVertex3f(0.f,0.f,0.f);    // v0-v1-v2
-	//glVertex3f(0.f,1.f,0.f);
-	//glVertex3f(1.f,1.f,0.f);
-
-	//glVertex3f(0.f,0.f,0.f);    // v2-v3-v0
-	//glVertex3f(1.f,0.f,0.f);
-	//glVertex3f(1.f,1.f,0.f);
-
-	//// right fce =================
-	//glVertex3f(1.f,0.f,0.f);    // v0-v3-v4
-	//glVertex3f(1.f,1.f,0.f);
-	//glVertex3f(1.f,0.f,1.f);
-
-	//glVertex3f(1.f,1.f,0.f);    // v4-v5-v0
-	//glVertex3f(1.f,1.f,1.f);
-	//glVertex3f(1.f,0.f,1.f);
-
-	//// top fac ===================
-	//glVertex3f(0.f,1.f,0.f);    // v0-v5-v6
-	//glVertex3f(1.f,1.f,0.f);
-	//glVertex3f(0.f,1.f,1.f);
-	//
-
-	//glVertex3f(0.f,1.f,1.f);
-	//glVertex3f(1.f,1.f,0.f);    // v6-v1-v0
-	//glVertex3f(1.f,1.f,1.f);
-
-	////Left Face =================
-
-	//glVertex3f(0.f, 0.f, 0.f);    
-	//glVertex3f(0.f, 0.f, 1.f);
-	//glVertex3f(0.f, 1.f, 1.f);
-
-
-	//glVertex3f(0.f, 0.f, 0.f);
-	//glVertex3f(0.f, 1.f, 0.f);    
-	//glVertex3f(0.f, 1.f, 1.f);
-
-	////Back Face =============
-
-	//glVertex3f(0.f, 0.f, 1.f);    
-	//glVertex3f(1.f, 0.f, 1.f);
-	//glVertex3f(1.f, 1.f, 1.f);
-
-
-	//glVertex3f(0.f, 0.f, 1.f);
-	//glVertex3f(0.f, 1.f, 1.f);   
-	//glVertex3f(1.f, 1.f, 1.f);
-
-	////Down Face =============
-
-	//glVertex3f(0.f, 0.f, 0.f);    // v0-v5-v6
-	//glVertex3f(1.f, 0.f, 0.f);
-	//glVertex3f(1.f, 0.f, 1.f);
-
-
-	//glVertex3f(0.f, 0.f, 0.f);
-	//glVertex3f(0.f, 0.f, 1.f);    // v6-v1-v0
-	//glVertex3f(1.f, 0.f, 1.f);
-	//	glEnd();
-
-
-
-	//float vertices[108] = { 0.f,0.f,0.f,
-	//						0.f,1.f,0.f,
-	//						1.f,1.f,0.f,
-
-	//						0.f,0.f,0.f,
-	//						1.f,0.f,0.f,
-	//						1.f,1.f,0.f,
-
-
-	//						1.f,0.f,0.f,
-	//						1.f,1.f,0.f,
-	//						1.f,0.f,1.f,
-
-	//						1.f,1.f,0.f,
-	//						1.f,1.f,1.f,
-	//						1.f,0.f,1.f,
-
-
-	//						0.f,1.f,0.f,
-	//						1.f,1.f,0.f,
-	//						0.f,1.f,1.f,
-
-	//						0.f,1.f,1.f,
-	//						1.f,1.f,0.f,
-	//						1.f,1.f,1.f,
-
-
-	//						0.f, 0.f, 0.f,
-	//						0.f, 0.f, 1.f,
-	//						0.f, 1.f, 1.f,
-
-	//						0.f, 0.f, 0.f,
-	//						0.f, 1.f, 0.f,
-	//						0.f, 1.f, 1.f,
-
-
-	//						0.f, 0.f, 1.f,
-	//						1.f, 0.f, 1.f,
-	//						1.f, 1.f, 1.f,
-
-	//						0.f, 0.f, 1.f,
-	//						0.f, 1.f, 1.f,
-	//						1.f, 1.f, 1.f,
-
-
-	//						0.f, 0.f, 0.f,
-	//						1.f, 0.f, 0.f,
-	//						1.f, 0.f, 1.f,
-
-	//						0.f, 0.f, 0.f,
-	//						0.f, 0.f, 1.f,
-	//						1.f, 0.f, 1.f
-	//};
-	//int num_vertices = 36;
-	//uint my_id = 0;
-	//glGenBuffers(1, (GLuint*) & (my_id));
-	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);
-
-	//glEnableClientState(GL_VERTEX_ARRAY);
-	//glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	//glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//glDrawArrays(GL_TRIANGLES, 0, num_vertices);
-	//glDisableClientState(GL_VERTEX_ARRAY);
-
-	//float vertices[] = {
-	//0.f,0.f,0.f,
-	//1.f,0.f,0.f,
-	//1.f,1.f,0.f,
-
-	////1.f,1.f,0.f,
-	////0.f,1.f,0.f,
-	////0.f,0.f,0.f,
-
-	////1.f,0.f,0.f,
-	////1.f,0.f,-1.f,
-	////1.f,1.f,-1.f,
-
-	////1.f,1.f,-1.f,
-	////1.f,1.f,0.f,
-	////1.f,0.f,0.f,
-	////
-	////1.f,1.f,0.f,
-	////1.f,1.f,-1.f,
-	////0.f,1.f,0.f,
-
-	////1.f,1.f,-1.f,
-	////0.f,1.f,-1.f,
-	////0.f,1.f,0.f,
-
-	//};
-
-
-
-
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
 	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s)
+{
+	
+	int curRow = r * sectors;
+	int nextRow = (r + 1) * sectors;
+
+	indices.push_back(curRow + s);
+	indices.push_back(nextRow + s);
+	indices.push_back(nextRow + (s + 1));
+
+	indices.push_back(curRow + s);
+	indices.push_back(nextRow + (s + 1));
+	indices.push_back(curRow + (s + 1));
+}
+
+
+void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<uint>& indices, float radius, uint rings, uint sectors)
+{
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	for (int r = 0; r < rings; ++r) {
+		for (int s = 0; s <= sectors; ++s) {
+			float y = sin(-M_PI_2 + M_PI * r * R);
+			float x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
+			float z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
+
+			vertices.push_back(x * radius);
+			vertices.push_back(y * radius);
+			vertices.push_back(z * radius);
+			PushSphereIndices(indices, sectors, r, s);
+		}
+	}
 }
 
 

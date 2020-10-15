@@ -13,11 +13,21 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s);
+	void CreateSphere(std::vector<float>& vertices, std::vector<uint>& indices, float radius, uint rings, uint sectors);
+
 public:
 
 	uint my_indices;
 	int num_indices;
 
+	uint my_vertices;
 	int num_vertices;
-	uint my_id;
+
+	uint indices_array[2520];
+	float vertices_array[1260];
+
+	std::vector<float> vertices;
+	std::vector<uint> indices;
+	std::vector<uint> textcoords;
 };
