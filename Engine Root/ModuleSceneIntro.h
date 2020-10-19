@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Primitive.h"
 #include <vector>
+
+struct Mesh;
 class ModuleSceneIntro : public Module
 {
 public:
@@ -11,11 +13,13 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
+	void Draw();
 	bool CleanUp();
 
 	void PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s);
 	void CreateSphere(std::vector<float>& vertices, std::vector<uint>& indices, float radius, uint rings, uint sectors);
 
+	void CreateBuffer(Mesh* mesh);
 public:
 
 	uint my_indices;

@@ -13,6 +13,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	editor = new ModuleEditor(this);
+	geometry = new ModuleGeometry(this);
 
 
 	// The order of calls is very important!
@@ -25,6 +26,7 @@ Application::Application()
 	AddModule(input);
 	AddModule(physics);
 	AddModule(editor);
+	AddModule(geometry);
 	
 	//scenes
 	AddModule(scene_intro);

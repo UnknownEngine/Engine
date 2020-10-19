@@ -121,6 +121,11 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleRenderer3D::Draw(Mesh* mesh)
+{
+
+}
+
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {

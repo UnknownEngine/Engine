@@ -61,31 +61,31 @@ bool ModuleSceneIntro::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);*/
 
-	CreateSphere(vertices, indices, 2.f,20, 20);
+	//CreateSphere(vertices, indices, 2.f,20, 20);
 
-	num_indices = indices.size();
-	num_vertices = vertices.size();
+	//num_indices = indices.size();
+	//num_vertices = vertices.size();
 
-	for (int i = 0; i < num_indices; i++)
-	{
-		indices_array[i] = indices[i];
-	}
+	//for (int i = 0; i < num_indices; i++)
+	//{
+	//	indices_array[i] = indices[i];
+	//}
 
-	for (int i = 0; i < num_vertices; i++)
-	{
-		vertices_array[i] = vertices[i];
-	}
+	//for (int i = 0; i < num_vertices; i++)
+	//{
+	//	vertices_array[i] = vertices[i];
+	//}
 
 
-	my_indices = 0;
-	glGenBuffers(1, ((GLuint*) & (my_indices)));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices ,indices_array, GL_STATIC_DRAW);
+	//my_indices = 0;
+	//glGenBuffers(1, ((GLuint*) & (my_indices)));
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices ,indices_array, GL_STATIC_DRAW);
 
-	my_vertices = 0;
-	glGenBuffers(1, (GLuint*) & (my_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices_array, GL_STATIC_DRAW); 
+	//my_vertices = 0;
+	//glGenBuffers(1, (GLuint*) & (my_vertices));
+	//glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices_array, GL_STATIC_DRAW); 
 
 
 	return ret;
@@ -113,15 +113,33 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
+
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::Draw()
+{
+	for (uint i = 0; i < App->geometry->ourMeshes.size(); i++)
+	{
+		//Get mesh
+		Mesh* mesh = App->geometry->ourMeshes[i];
+		
+		//Draw mesh
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices); //Select buffer
+		glVertexPointer(3, GL_FLOAT, 0, NULL); //Set vertex
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
+
+		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL); // Draw with the last buffer selected
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	}
+	
 }
 
 void ModuleSceneIntro::PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s)
@@ -156,6 +174,19 @@ void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<ui
 			PushSphereIndices(indices, sectors, r, s);
 		}
 	}
+}
+
+void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
+{
+	mesh->id_indices = 0;
+	glGenBuffers(1, ((GLuint*)&(mesh->id_indices)));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+
+	mesh->id_vertices = 0;
+	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
 }
 
 

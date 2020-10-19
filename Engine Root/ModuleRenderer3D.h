@@ -4,7 +4,7 @@
 #include "glmath.h"
 
 #define MAX_LIGHTS 8
-
+struct Mesh;
 class ModuleRenderer3D : public Module
 {
 public:
@@ -14,6 +14,7 @@ public:
 	bool Init();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
+	void Draw(Mesh* mesh);
 	bool CleanUp();
 
 	void OnResize(int width, int height);

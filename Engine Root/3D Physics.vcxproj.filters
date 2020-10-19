@@ -43,9 +43,6 @@
     <Filter Include="External Libraries\MathGeoLib\Time">
       <UniqueIdentifier>{c2a00cae-8d0f-444f-a844-2298e82603f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Unknown_Geometry">
-      <UniqueIdentifier>{0c170e46-5d0b-4209-ab02-5704454b82d6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -294,6 +291,9 @@
     <ClInclude Include="External Libraries\MathGeoLib\include\Time\Clock.h">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleGeometry.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -451,6 +451,9 @@
     </ClCompile>
     <ClCompile Include="External Libraries\MathGeoLib\include\Time\Clock.cpp">
       <Filter>External Libraries\MathGeoLib\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGeometry.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

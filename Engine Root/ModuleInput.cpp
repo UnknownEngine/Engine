@@ -125,6 +125,14 @@ update_status ModuleInput::PreUpdate(float dt)
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			}
+			break;
+
+			case SDL_DROPFILE:
+			{
+				char* drop_file_dir = e.drop.file;
+				App->geometry->LoadFbx(drop_file_dir);
+			}
+			break;
 		}
 	}
 

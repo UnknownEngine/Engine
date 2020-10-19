@@ -10,6 +10,7 @@
 #include "ModulePhysics3D.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleEditor.h"
+#include "ModuleGeometry.h"
 #include "Primitive.h"
 
 class Application
@@ -22,6 +23,8 @@ public:
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics3D* physics;
 	ModuleEditor* editor;
+	ModuleGeometry* geometry;
+
 
 	Timer	startup_time;
 	Timer	frame_time;
