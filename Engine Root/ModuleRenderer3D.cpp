@@ -100,7 +100,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
-
+		lights[0].Active(true);
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -197,11 +197,6 @@ void ModuleRenderer3D::ActivateCheckBoxs(bool is_active, int identifier)
 		break;
 	case 6:
 		define = 0x1602;
-		break;
-	case 7:
-	{
-		
-	}
 		break;
 	}
 

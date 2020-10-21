@@ -169,11 +169,7 @@ void ModuleSceneIntro::Draw()
 
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
-
-
-
-	}
-	
+	}	
 }
 
 void ModuleSceneIntro::PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s)
