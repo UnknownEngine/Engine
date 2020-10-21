@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
+#include "Light.h"
 
 #define MAX_LIGHTS 8
 struct Mesh;
@@ -34,4 +35,5 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	Light lights[MAX_LIGHTS];
 };

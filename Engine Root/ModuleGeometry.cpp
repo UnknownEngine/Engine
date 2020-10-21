@@ -23,9 +23,6 @@ bool ModuleGeometry::Start()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
-
-
-
 	return true;
 }
 
@@ -80,14 +77,23 @@ bool ModuleGeometry::LoadFbx(const char* path)
 				}
 			}
 
-			if (aimesh->HasNormals()) {
-				
+
+			if (aimesh->HasNormals())
+			{
+				ourMesh->num_normals = ourMesh->num_vertices;
+				ourMesh->normals = new float[ourMesh->num_normals * 3];
+				memcpy(ourMesh->normals, aimesh->mNormals, sizeof(float) * ourMesh->num_normals * 3);
+				LOG("New mesh with %d normals", ourMesh->num_normals);
 			}
 		}
+
 		ourMeshes.push_back(ourMesh);
 		App->scene_intro->CreateBuffer(ourMesh);
+
 		//Release assimp
 		aiReleaseImport(scene);
+
+
 	}
 	else {
 		LOG("Error loading scene %s", path);

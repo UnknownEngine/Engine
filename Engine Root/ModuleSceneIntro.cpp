@@ -131,11 +131,45 @@ void ModuleSceneIntro::Draw()
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices); //Select buffer
 		glVertexPointer(3, GL_FLOAT, 0, NULL); //Set vertex
 
+
+		if (mesh->num_normals != 0) {
+			glEnableClientState(GL_NORMAL_ARRAY);   
+			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals); 
+			glNormalPointer(GL_FLOAT, 0, NULL);   
+		}
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
 
 		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL); // Draw with the last buffer selected
 
+		//glColor3f(1, 0, 0);
+		//glBegin(GL_LINES);
+		//for (int i = 0; i < mesh->num_normals * 3; i += 3)
+		//{
+		//	glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+		//	glVertex3f((mesh->vertices[i] + mesh->normals[i]) * .2f, (mesh->vertices[i + 1] + mesh->normals[i + 1]) * .2f, (mesh->vertices[i + 2] + mesh->normals[i + 2])*0.2f);
+		//	LOG("%f, %f, %f", mesh->normals[i], mesh->normals[i + 1], mesh->normals[i + 2]);
+		//}
+
+		//glColor3f(1, 1, 1);
+		//glEnd();
+		glColor3f(0, 1, 0);  
+		glBegin(GL_LINES); 
+		float normalLenght = 0.05f;   
+		for (int i = 0; i < mesh->num_normals * 3; i += 3) 
+		{ glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+		glVertex3f(mesh->vertices[i] + mesh->normals[i] * normalLenght, mesh->vertices[i + 1] + mesh->normals[i + 1] * normalLenght, mesh->vertices[i + 2] + mesh->normals[i + 2] * normalLenght);
+		}    
+		glEnd();  
+		glColor3f(1, 1, 1);
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
+
 
 
 	}
@@ -187,6 +221,20 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+
+	//mesh->id_normals = 0;
+	//glGenBuffers(1, (GLuint*)&(mesh->id_normals));
+	//glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+
+	//Normals buffer     
+	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//glEnableVertexAttribArray(2);    
+	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);  
+	
 }
 
 

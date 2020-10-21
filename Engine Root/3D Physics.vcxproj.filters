@@ -294,6 +294,9 @@
     <ClInclude Include="ModuleGeometry.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -454,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="ModuleGeometry.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
