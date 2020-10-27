@@ -9,6 +9,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -61,10 +62,20 @@ bool ModuleSceneIntro::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices, GL_STATIC_DRAW);*/
 
+
+	//std::vector<int> hola;
+
 	//CreateSphere(vertices, indices, 2.f,20, 20);
 
 	//num_indices = indices.size();
 	//num_vertices = vertices.size();
+
+	//indices_array = new uint[num_indices];
+	//vertices_array = new float[num_vertices];
+
+	//indices_array[0] = 0;
+	//indices_array[1] = 0;
+	//indices_array[2] = 0;
 
 	//for (int i = 0; i < num_indices; i++)
 	//{
@@ -80,12 +91,12 @@ bool ModuleSceneIntro::Start()
 	//my_indices = 0;
 	//glGenBuffers(1, ((GLuint*) & (my_indices)));
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices ,indices_array, GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * num_indices ,&indices_array, GL_STATIC_DRAW);
 
 	//my_vertices = 0;
 	//glGenBuffers(1, (GLuint*) & (my_vertices));
 	//glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, vertices_array, GL_STATIC_DRAW); 
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * num_vertices * 3, &vertices_array, GL_STATIC_DRAW); 
 
 
 	return ret;
@@ -113,6 +124,13 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 
 	return UPDATE_CONTINUE;
@@ -152,16 +170,15 @@ void ModuleSceneIntro::Draw()
 		//}
 
 		//glColor3f(1, 1, 1);
-		//glEnd();
-		glColor3f(0, 1, 0);  
-		glBegin(GL_LINES); 
-		float normalLenght = 0.05f;   
-		for (int i = 0; i < mesh->num_normals * 3; i += 3) 
-		{ glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-		glVertex3f(mesh->vertices[i] + mesh->normals[i] * normalLenght, mesh->vertices[i + 1] + mesh->normals[i + 1] * normalLenght, mesh->vertices[i + 2] + mesh->normals[i + 2] * normalLenght);
-		}    
-		glEnd();  
-		glColor3f(1, 1, 1);
+		//glColor3f(0, 1, 0);  
+		//glBegin(GL_LINES); 
+		//float normalLenght = 0.05f;   
+		//for (int i = 0; i < mesh->num_normals * 3; i += 3) 
+		//{ glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+		//glVertex3f(mesh->vertices[i] + mesh->normals[i] * normalLenght, mesh->vertices[i + 1] + mesh->normals[i + 1] * normalLenght, mesh->vertices[i + 2] + mesh->normals[i + 2] * normalLenght);
+		//}    
+		//glEnd();  
+		//glColor3f(1, 1, 1);
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

@@ -22,16 +22,19 @@ public:
 	void CreateBuffer(Mesh* mesh);
 public:
 
-	//uint my_indices;
-	//int num_indices;
+	uint my_indices;
+	int num_indices;
 
-	//uint my_vertices;
-	//int num_vertices;
+	uint my_vertices;
+	int num_vertices;
 
-	//uint indices_array[2520];
-	//float vertices_array[1260];
+	/*uint indices_array[2520];
+	float vertices_array[1260];*/
 
-	//std::vector<float> vertices;
-	//std::vector<uint> indices;
-	//std::vector<uint> textcoords;
+	uint* indices_array;
+	float* vertices_array;
+
+	std::vector<float> vertices;
+	std::vector<uint> indices;
+	std::vector<uint> textcoords;
 };

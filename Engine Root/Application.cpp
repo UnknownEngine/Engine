@@ -14,6 +14,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	editor = new ModuleEditor(this);
 	geometry = new ModuleGeometry(this);
+	fsystem = new M_FileSystem(this);
 
 
 	// The order of calls is very important!
@@ -24,9 +25,11 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(fsystem);
 	AddModule(physics);
 	AddModule(editor);
 	AddModule(geometry);
+
 	
 	//scenes
 	AddModule(scene_intro);

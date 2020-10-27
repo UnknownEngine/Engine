@@ -297,6 +297,9 @@
     <ClInclude Include="Light.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleFSystem.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -460,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFSystem.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

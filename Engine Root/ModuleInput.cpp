@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include <stdio.h>
+#include <string>
 
 #define MAX_KEYS 300
 
@@ -130,7 +131,11 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 			{
 				char* drop_file_dir = e.drop.file;
-				App->geometry->LoadFbx(drop_file_dir);
+				std::string  path = "";
+				std::string  file = "";
+				std::string  extension = "";
+				App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
+				App->fsystem->DetectExtension(path,file, extension);
 			}
 			break;
 		}

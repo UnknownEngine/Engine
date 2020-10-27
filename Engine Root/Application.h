@@ -12,6 +12,7 @@
 #include "ModuleEditor.h"
 #include "ModuleGeometry.h"
 #include "Primitive.h"
+#include "ModuleFSystem.h"
 
 class Application
 {
@@ -24,6 +25,7 @@ public:
 	ModulePhysics3D* physics;
 	ModuleEditor* editor;
 	ModuleGeometry* geometry;
+	M_FileSystem* fsystem;
 
 
 	Timer	startup_time;

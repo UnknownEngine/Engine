@@ -30,7 +30,7 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	bool LoadFbx(const char* path);
+	bool LoadFbx(const char* path, int size);
 
 	bool CleanUp();
 	std::vector<Mesh*> ourMeshes;

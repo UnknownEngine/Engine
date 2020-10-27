@@ -43,17 +43,18 @@ update_status ModuleGeometry::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleGeometry::LoadFbx(const char* path)
+bool ModuleGeometry::LoadFbx(const char* buffer,int size) 
 {
+
 	Mesh* ourMesh = new Mesh;
 
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
+
 	if (scene != nullptr && scene->HasMeshes()) 
 	{
 		//iterate meshes
 		for (uint i = 0; i < scene->mNumMeshes; i++)
 		{
-			
 			//copy vertices
 			aiMesh* aimesh = scene->mMeshes[i];
 			ourMesh->num_vertices = aimesh->mNumVertices;
@@ -77,7 +78,6 @@ bool ModuleGeometry::LoadFbx(const char* path)
 				}
 			}
 
-
 			if (aimesh->HasNormals())
 			{
 				ourMesh->num_normals = ourMesh->num_vertices;
@@ -96,7 +96,7 @@ bool ModuleGeometry::LoadFbx(const char* path)
 
 	}
 	else {
-		LOG("Error loading scene %s", path);
+		//LOG("Error loading scene %s", buffer);
 		App->editor->AddLog("Error loading scene");
 	}
 
