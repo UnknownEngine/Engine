@@ -4,10 +4,12 @@
 #include "Primitive.h"
 #include "MathGeoLib/include/MathGeoLib.h"
 
-#include "Glew/include/glew.h"
-#include "SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#include "Devil\include\ilu.h"
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#include "Devil\include\ilut.h"
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 #define CHECKERS_HEIGHT 8
 #define CHECKERS_WIDTH 8
@@ -24,6 +26,11 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
+
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
@@ -149,7 +156,7 @@ void ModuleSceneIntro::Draw()
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals); 
 			glNormalPointer(GL_FLOAT, 0, NULL);   
 		}
-		glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
+		glBindTexture(GL_TEXTURE_2D, bufferTexture);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
 
@@ -177,10 +184,12 @@ void ModuleSceneIntro::Draw()
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}	
 }
 
@@ -220,6 +229,60 @@ void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<ui
 
 void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 {
+	int width = 0;
+	int height = 0;
+	int bpp = 0;
+
+	const char* filename = "Assets/Textures/Baker_house.png";
+	// IL image ID
+	ILuint ImgId = 0;
+
+	// Generate the main image name to use
+	ilGenImages(1, &ImgId);
+	// Bind this image name
+	ilBindImage(ImgId);
+	// Loads the image specified by File into the ImgId image
+	if (!ilLoadImage(filename))
+	{
+		ILenum err = ilGetError();
+		printf("An error occured while loading %s: %d (%s)\n", filename, err, iluErrorString(err));
+		return;
+	}
+
+	// Get image width and height
+	width = (int)ilGetInteger(IL_IMAGE_WIDTH);
+	height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
+	bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+
+	BYTE* pixmap = new BYTE[width * height * 3];
+	ilCopyPixels(0, 0, 0, width, height, 1, IL_RGB,
+		IL_UNSIGNED_BYTE, pixmap);
+
+	ilBindImage(ImgId);
+	BYTE* data = ilGetData();
+
+
+	//Textures Buffer
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &bufferTexture);
+	glBindTexture(GL_TEXTURE_2D, bufferTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
+	// Enable texturing
+	glEnable(GL_TEXTURE_2D);
+
+	// Goes through all steps of sending the image to OpenGL
+	bufferTexture = ilutGLBindTexImage();
+
+	// We're done with our image, so we go ahead and delete it
+	ilDeleteImages(1, &ImgId);
 	mesh->id_indices = 0;
 	glGenBuffers(1, ((GLuint*)&(mesh->id_indices)));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
@@ -230,10 +293,8 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
 
-	//mesh->id_normals = 0;
-	//glGenBuffers(1, (GLuint*)&(mesh->id_normals));
-	//glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+
+
 
 	//Normals buffer     
 	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
@@ -243,27 +304,7 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	//glEnableVertexAttribArray(2);    
 	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);  
 	
-	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
-	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
-		for (int j = 0; j < CHECKERS_WIDTH; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkerImage[i][j][0] = (GLubyte)c;
-			checkerImage[i][j][1] = (GLubyte)c;
-			checkerImage[i][j][2] = (GLubyte)c;
-			checkerImage[i][j][3] = (GLubyte)255;
-		}
-	}
 
-	//Textures Buffer
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &mesh->id_textures);
-	glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
 
 

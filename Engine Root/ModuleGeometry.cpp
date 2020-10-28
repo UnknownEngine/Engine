@@ -78,6 +78,8 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 				}
 			}
 
+			
+
 			if (aimesh->HasNormals())
 			{
 				ourMesh->num_normals = ourMesh->num_vertices;

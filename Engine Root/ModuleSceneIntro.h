@@ -4,6 +4,13 @@
 #include "Primitive.h"
 #include <vector>
 
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
+
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
 struct Mesh;
 class ModuleSceneIntro : public Module
 {
@@ -33,7 +40,7 @@ public:
 
 	uint* indices_array;
 	float* vertices_array;
-
+	GLuint bufferTexture = 0;
 	std::vector<float> vertices;
 	std::vector<uint> indices;
 	std::vector<uint> textcoords;
