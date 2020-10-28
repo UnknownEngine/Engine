@@ -5,11 +5,7 @@
 #include "MathGeoLib/include/MathGeoLib.h"
 #include "ModuleWindow.h"
 
-#pragma comment( lib, "Devil/libx86/DevIL.lib" )
-#include "Devil\include\ilu.h"
-#pragma comment( lib, "Devil/libx86/ILU.lib" )
-#include "Devil\include\ilut.h"
-#pragma comment( lib, "Devil/libx86/ILUT.lib" )
+
 
 #define CHECKERS_HEIGHT 8
 #define CHECKERS_WIDTH 8
@@ -146,24 +142,27 @@ void ModuleSceneIntro::Draw()
 		
 		//Draw mesh
 		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);   
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+
+		//Vertices
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices); //Select buffer
 		glVertexPointer(3, GL_FLOAT, 0, NULL); //Set vertex
 
-
+		//normals
 		if (mesh->num_normals != 0) {
-			glEnableClientState(GL_NORMAL_ARRAY);   
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals); 
 			glNormalPointer(GL_FLOAT, 0, NULL);   
 		}
 
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
+		//UVs
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textures); 
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		if (mesh->id_textures != 0) {
-			glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
+		//Textures
+		if (bufferTexture != 0) {
+			glBindTexture(GL_TEXTURE_2D, bufferTexture);
 		}
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
@@ -288,6 +287,10 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	ilGenImages(1, &ImgId);
 	// Bind this image name
 	ilBindImage(ImgId);
+
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+
 	// Loads the image specified by File into the ImgId image
 	if (!ilLoadImage(filename))
 	{
@@ -295,20 +298,25 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 		printf("An error occured while loading %s: %d (%s)\n", filename, err, iluErrorString(err));
 		return;
 	}
-
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	
 	// Get image width and height
 	width = (int)ilGetInteger(IL_IMAGE_WIDTH);
 	height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
 	bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
 
-
+	dataTexture = ilGetData();
 
 	// Goes through all steps of sending the image to OpenGL
-	bufferTexture = ilutGLBindTexImage();
-
+	
 	// We're done with our image, so we go ahead and delete it
-	ilDeleteImages(1, &ImgId);
 
+
+	glBindTexture(GL_TEXTURE_2D, bufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, dataTexture);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ilDeleteImages(1, &ImgId);
 
 }
 
