@@ -9,6 +9,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#define CHECKERS_HEIGHT 8
+#define CHECKERS_WIDTH 8
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -125,14 +127,6 @@ update_status ModuleSceneIntro::Update(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-	glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-
 	return UPDATE_CONTINUE;
 }
 
@@ -155,6 +149,7 @@ void ModuleSceneIntro::Draw()
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals); 
 			glNormalPointer(GL_FLOAT, 0, NULL);   
 		}
+		glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
 
@@ -248,6 +243,33 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	//glEnableVertexAttribArray(2);    
 	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);  
 	
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];
+	for (int i = 0; i < CHECKERS_HEIGHT; i++) {
+		for (int j = 0; j < CHECKERS_WIDTH; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	//Textures Buffer
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &mesh->id_textures);
+	glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+
+
+
+
+	
+
 }
 
 

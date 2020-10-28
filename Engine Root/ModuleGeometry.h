@@ -17,6 +17,10 @@ struct Mesh {
 	uint id_normals = 0;
 	uint num_normals = 0;
 	float* normals = nullptr;
+
+	uint id_textures = 0;
+	uint num_textures = 0;
+	float* textures = nullptr;
 };
 
 class ModuleGeometry : public Module
