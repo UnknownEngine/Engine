@@ -20,7 +20,7 @@ struct Mesh {
 
 	uint id_textures = 0;
 	uint num_textures = 0;
-	float* textures = nullptr;
+	float* tex_coords = nullptr;
 };
 
 class ModuleGeometry : public Module

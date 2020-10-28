@@ -3,7 +3,7 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "MathGeoLib/include/MathGeoLib.h"
-
+#include "ModuleWindow.h"
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
 #include "Devil\include\ilu.h"
@@ -156,7 +156,15 @@ void ModuleSceneIntro::Draw()
 			glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals); 
 			glNormalPointer(GL_FLOAT, 0, NULL);   
 		}
-		glBindTexture(GL_TEXTURE_2D, bufferTexture);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textures); 
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		if (mesh->id_textures != 0) {
+			glBindTexture(GL_TEXTURE_2D, mesh->id_textures);
+		}
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); //Select buffer
 
@@ -229,6 +237,45 @@ void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<ui
 
 void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 {
+	
+	//Indices
+	mesh->id_indices = 0;
+	glGenBuffers(1, ((GLuint*)&(mesh->id_indices)));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
+
+
+	//Vertices
+	mesh->id_vertices = 0;
+	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+
+	//Textures
+	mesh->id_textures = 0;
+	glGenBuffers(1, (GLuint*)&(mesh->id_textures));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textures);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 2, mesh->tex_coords, GL_STATIC_DRAW);
+
+
+	//Normals buffer     
+	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	//textures 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &bufferTexture);
+	glBindTexture(GL_TEXTURE_2D, bufferTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	int width = 0;
 	int height = 0;
 	int bpp = 0;
@@ -254,62 +301,14 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
 	bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
 
-	BYTE* pixmap = new BYTE[width * height * 3];
-	ilCopyPixels(0, 0, 0, width, height, 1, IL_RGB,
-		IL_UNSIGNED_BYTE, pixmap);
 
-	ilBindImage(ImgId);
-	BYTE* data = ilGetData();
-
-
-	//Textures Buffer
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &bufferTexture);
-	glBindTexture(GL_TEXTURE_2D, bufferTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
-		0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-
-	// Enable texturing
-	glEnable(GL_TEXTURE_2D);
 
 	// Goes through all steps of sending the image to OpenGL
 	bufferTexture = ilutGLBindTexImage();
 
 	// We're done with our image, so we go ahead and delete it
 	ilDeleteImages(1, &ImgId);
-	mesh->id_indices = 0;
-	glGenBuffers(1, ((GLuint*)&(mesh->id_indices)));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
-	mesh->id_vertices = 0;
-	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
-
-
-
-
-	//Normals buffer     
-	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glEnableVertexAttribArray(2);    
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);  
-	
-
-
-
-
-
-	
 
 }
 
