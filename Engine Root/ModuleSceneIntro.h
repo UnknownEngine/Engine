@@ -11,12 +11,6 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#pragma comment( lib, "Devil/libx86/DevIL.lib" )
-#include "Devil\include\ilu.h"
-#pragma comment( lib, "Devil/libx86/ILU.lib" )
-#include "Devil\include\ilut.h"
-#pragma comment( lib, "Devil/libx86/ILUT.lib" )
-
 struct Mesh;
 class ModuleSceneIntro : public Module
 {
@@ -40,8 +34,6 @@ public:
 
 	uint* indices_array;
 	float* vertices_array;
-	GLuint bufferTexture = 0;
-	ILubyte* dataTexture = nullptr;
 	std::vector<float> vertices;
 	std::vector<uint> indices;
 	std::vector<uint> textcoords;

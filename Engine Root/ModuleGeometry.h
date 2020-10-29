@@ -5,6 +5,13 @@
 
 #include "Module.h"
 
+#pragma comment( lib, "Devil/libx86/DevIL.lib" )
+#include "Devil\include\ilu.h"
+#pragma comment( lib, "Devil/libx86/ILU.lib" )
+#include "Devil\include\ilut.h"
+#pragma comment( lib, "Devil/libx86/ILUT.lib" )
+
+
 struct Texture {
 	int width = 0;
 	int height = 0;

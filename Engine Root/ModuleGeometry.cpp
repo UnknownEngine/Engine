@@ -23,6 +23,11 @@ bool ModuleGeometry::Start()
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+
 	return true;
 }
 
@@ -152,8 +157,6 @@ void ModuleGeometry::CreateBuffer(Mesh* mesh)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//LoadTexture("Assets/Textures/Baker_house.png", mesh);
 }
 
 void ModuleGeometry::LoadVertices(aiMesh* aimesh, Mesh* ourMesh)
