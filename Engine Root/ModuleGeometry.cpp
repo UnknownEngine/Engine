@@ -70,7 +70,6 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 		if (ret)
 		{
 			ourMeshes.push_back(ourMesh);
-			LoadTexture("Assets/Textures/Baker_house.png", ourMesh);
 			CreateBuffer(ourMesh);
 			aiReleaseImport(scene);
 		}
@@ -153,6 +152,8 @@ void ModuleGeometry::CreateBuffer(Mesh* mesh)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//LoadTexture("Assets/Textures/Baker_house.png", mesh);
 }
 
 void ModuleGeometry::LoadVertices(aiMesh* aimesh, Mesh* ourMesh)

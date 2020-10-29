@@ -256,10 +256,22 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 			App->geometry->LoadFbx(buffer,size);
 		}
 	}
-	//else if (extension == "png" || extension == "PNG")
-	//{
-
-	//}
+	else if (extension == "png" || extension == "PNG")
+	{
+		std::string realName = "/Textures/" + file + "." + extension;
+		char* buffer = nullptr;
+		std::string realDir = PHYSFS_getRealDir(realName.c_str());
+		realDir += realName;
+		uint size = Load(realDir.c_str(), &buffer);
+		for (int i = 0; i < App->geometry->ourMeshes.size(); i++)
+		{
+			Mesh* mesh = App->geometry->ourMeshes[i];
+			if (buffer != nullptr)
+			{
+				App->geometry->LoadTexture(realDir.c_str(), mesh);
+			}
+		}
+	}
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
