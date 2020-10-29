@@ -32,12 +32,22 @@ private:
 	void PrintConsole();
 	void CleanConsole();
 	void AboutWindow();
+	void ApplicationWindow();
+	void WindowWindow();
+	void OpenGLSettings();
+	void HardwareWindow();
+	void InputWindow();
+	void ConsoleWindow();
 
 	void HyperLink(const char* tooltip, const char* url);
 
 public:
 
 	int slider_frames = 60;
+	float rotx = 0.0;
+	float roty = 0.0;
+	float rotz = 0.0;
+	bool IsActive = true;
 	ImGuiTextBuffer input_log;
 	bool scroll = false;
 
@@ -51,6 +61,12 @@ private:
 	bool using_mouse;
 	bool showcase;
 	bool showAboutWindow;
+	bool showApplicationWindow;
+	bool showWindowWindow;
+	bool showOpenGLWindow;
+	bool showInputWindow;
+	bool showHardwareWindow;
+	bool showConsoleWindow;
 
 	std::vector<char*> items;
 };

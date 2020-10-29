@@ -15,6 +15,12 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 {
 	showcase = false;
 	showAboutWindow = false;
+	showApplicationWindow = false;
+	showWindowWindow = false;
+	showInputWindow = false;
+	showHardwareWindow = false;
+	showConsoleWindow = false;
+	showOpenGLWindow = false;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -108,145 +114,173 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/issues");
 
-			if (ImGui::MenuItem("About",nullptr,nullptr,&showAboutWindow)) {
+			if (ImGui::MenuItem("About",nullptr,nullptr,&showAboutWindow)) 
 				showAboutWindow = !showAboutWindow;
 				
-			}
-
 			ImGui::EndMenu();
 		}
-	
-
 
 		if (ImGui::BeginMenu("Settings"))
 		{
 			if (ImGui::MenuItem("Application"))
-			{
-			float width = ImGui::GetWindowContentRegionWidth();
-			char title[25];
-
-			if (ImGui::Button("Unknown Engine              ")) { App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki"); }
-			ImGui::SameLine(220);
-			ImGui::Text("Project Name");
-
-			if (ImGui::Button("CITM                        ")) { App->RequestBrowser("https://www.citm.upc.edu/"); }
-			ImVec2(100, 100);
-			ImGui::Text("Organization");
-
-			ImGui::SliderInt("FPS Cap", &slider_frames, 1, 60);
-
-			sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size() - 1]);
-			ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
-			sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
-			ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
-
-			}
+				showApplicationWindow = !showApplicationWindow;
 
 			if (ImGui::MenuItem("Window"))
-			{
-			float brightness = SDL_GetWindowBrightness(App->window->window);
-
-			if (App->window->resizable)
-			{
-				App->window->width_resize = ImGui::SliderInt("Width", &App->window->width, 1280, 1920);
-				App->window->height_resize = ImGui::SliderInt("Height", &App->window->height, 1024, 1080);
-			}
-			bool bright_resize = ImGui::SliderFloat("Bright", &brightness, 1.f, 3.794f);
-
-			ImGui::Text("");
-
-			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) { App->window->SetFullScreen(App->window->fullscreen); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Resizable", &App->window->resizable)) { App->window->SetResizability(App->window->resizable); }
-
-			if (ImGui::Checkbox("Borderless", &App->window->borderless)) { App->window->SetBorderless(App->window->borderless); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Desktop", &App->window->desktop)) { App->window->SetFullDesktop(App->window->desktop); }
-
-
-			if (App->window->width_resize || App->window->height_resize)
-			{
-				SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
-				glViewport(0, 0, App->window->width, App->window->height);
-			}
-			else if (bright_resize)
-			{
-				SDL_SetWindowBrightness(App->window->window, brightness);
-			}
-			}
+				showWindowWindow = !showWindowWindow;
 
 			if (ImGui::MenuItem("Hardware"))
-			{
-			ImGui::Text("CPU Cache Line: %d", SDL_GetCPUCacheLineSize());
-			ImGui::Text("Number of CPUs cores: %d", SDL_GetCPUCount());
-			ImGui::Text("System RAM: %d", SDL_GetSystemRAM());
-			ImGui::Text("Caps:  ");
-			std::string caps;
-			if (SDL_Has3DNow() == SDL_TRUE) { std::string threednow = "3DNow";		caps += threednow; caps += ", "; }
-			if (SDL_HasAVX() == SDL_TRUE) { std::string avx = "AVX";				caps += avx; caps += ", "; }
-			if (SDL_HasAVX2() == SDL_TRUE) { std::string avx2 = "AVX2";				caps += avx2; caps += ", "; }
-			if (SDL_HasAltiVec() == SDL_TRUE) { std::string altivec = "AltiVec";	caps += altivec; caps += ", "; }
-			if (SDL_HasMMX() == SDL_TRUE) { std::string mmx = "MMX";				caps += mmx; caps += ", "; }
-			if (SDL_HasRDTSC() == SDL_TRUE) { std::string rdtsc = "RDTSC";			caps += rdtsc; caps += ", "; }
-			if (SDL_HasSSE() == SDL_TRUE) { std::string sse = "SSE";				caps += sse; caps += ", "; }
-			if (SDL_HasSSE2() == SDL_TRUE) { std::string sse2 = "SSE2";				caps += sse2; caps += ", "; }
-			if (SDL_HasSSE3() == SDL_TRUE) { std::string sse3 = "SSE3";				caps += sse3; caps += ", "; }
-			if (SDL_HasSSE41() == SDL_TRUE) { std::string sse41 = "SSE41";			caps += sse41; caps += ", "; }
-			if (SDL_HasSSE42() == SDL_TRUE) { std::string sse42 = "SSE42";			caps += sse42; caps += ", "; }
+				showHardwareWindow = !showHardwareWindow;
 
-			ImGui::SameLine(50);
-
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped(caps.c_str());
-			ImGui::PopStyleColor(1);
-			ImGui::Text("----------------------------------------------------------");
-			const char* vendor = (const char*)glGetString(GL_VENDOR);
-			ImGui::Text("System RAM: "); 	ImGui::SameLine(100);
-			ImGui::TextWrapped(vendor);
-
-			const char* model = (const char*)glGetString(GL_RENDERER);
-			ImGui::Text("Driver Model: "); 	ImGui::SameLine(100);
-			ImGui::TextWrapped(model);
-			}
 			if (ImGui::MenuItem("Input"))
-			{
-			ImGui::TextUnformatted(input_log.begin());
-			if (scroll)
-			{
-				ImGui::SetScrollHere(1.0f);
-			}
-			scroll = false;
-			}
+				showInputWindow = !showInputWindow;
+			
 			if (ImGui::MenuItem("Console"))
-			{
-			if (ImGui::Button("Clear Console")) {
-				CleanConsole();
-			}
-			PrintConsole();
-			}
+				showConsoleWindow = !showConsoleWindow;
+
 			if (ImGui::MenuItem("OpenGL Settings"))
-			{
-			if (ImGui::Checkbox("Depth Test", &App->renderer3D->gl_depth_test)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_depth_test, 0); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Cull Face", &App->renderer3D->gl_cull_face)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_cull_face, 1); }
-			if (ImGui::Checkbox("Color Material", &App->renderer3D->gl_color_material)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_color_material, 2); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_lightning, 3); }
-			if (ImGui::Checkbox("Texture 2D", &App->renderer3D->gl_texture_2d)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_texture_2d, 4); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Ambient", &App->renderer3D->gl_ambient)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient, 5); }
-			if (ImGui::Checkbox("Ambient & Diffuse", &App->renderer3D->gl_ambient_diffuse)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient_diffuse, 6); }
-			ImGui::SameLine(150);
-			if (ImGui::Checkbox("Render Wireframe", &App->renderer3D->gl_wireframe)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_wireframe, 7); }
-			}
+				showOpenGLWindow = !showOpenGLWindow;
+
 			ImGui::EndMenu();
 	}
 
 	ImGui::EndMainMenuBar();
 	}
 
+	if (ImGui::Begin("Inspector"))
+	{
+		if (ImGui::CollapsingHeader("Properties"))
+		{
+			ImGui::Text("properties");
+		}
+		if (ImGui::CollapsingHeader("Transform"))
+		{
+			ImGui::PushItemWidth(60);
+			ImGui::Text("");
+
+			ImGui::Text("Position:");
+			ImGui::SameLine(75.f);
+			ImGui::InputText("##posx", "0.0", 64);
+			ImGui::SameLine(142.f);
+			ImGui::InputText("##posy", "0.0", 64);
+			ImGui::SameLine(208.f);
+			ImGui::InputText(" ##posz", "0.0", 64);
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("Rotation:");
+			ImGui::SameLine(75.f);
+			ImGui::SliderFloat("##rotx", &rotx, -360, 360, "X: %1.f", 0.5f);
+			ImGui::SameLine(142.f);
+			ImGui::SliderFloat("##roty", &roty, -360, 360, "Y: %1.f", 0.5f);
+			ImGui::SameLine(208.f);
+			ImGui::SliderFloat("##rotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("Scale:");
+			ImGui::SameLine(75.f);
+			ImGui::InputText("##scalex", "0.0", 64);
+			ImGui::SameLine(142.f);
+			ImGui::InputText("##scaley", "0.0", 64);
+			ImGui::SameLine(208.f);
+			ImGui::InputText("##scalez", "0.0", 64);
+
+			ImGui::PopItemWidth();
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			ImGui::Button("Reset Transforms", ImVec2(200, 20));
+			ImGui::Text("");
+		}
+		if (ImGui::CollapsingHeader("Material"))
+		{
+			ImGui::Checkbox("Active##material", &IsActive);
+			
+			ImGui::TextWrapped("File Path:");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("Ruta de archivo");
+			ImGui::PopStyleColor(1);
+
+			ImGui::PushItemWidth(95);
+			ImGui::Text("");
+
+			ImGui::Text("Position:");
+			ImGui::SameLine(75.f);
+			ImGui::InputText("##mposx", "0.0", 64);
+			ImGui::SameLine(175.f);
+			ImGui::InputText("##mposy", "0.0", 64);
+
+			ImGui::PopItemWidth();
+			ImGui::PushItemWidth(60);
+
+			ImGui::Text("Rotation:");
+			ImGui::SameLine(75.f);
+			ImGui::SliderFloat("##mrotx", &rotx, -360, 360, "X: %1.f", 0.5f);
+			ImGui::SameLine(142.f);
+			ImGui::SliderFloat("##mroty", &roty, -360, 360, "Y: %1.f", 0.5f);
+			ImGui::SameLine(208.f);
+			ImGui::SliderFloat("##mrotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+
+			ImGui::PopItemWidth();
+			ImGui::PushItemWidth(95);
+
+			ImGui::Text("Scale:");
+			ImGui::SameLine(75.f);
+			ImGui::InputText("##mscalex", "0.0", 64);
+			ImGui::SameLine(175.f);
+			ImGui::InputText("##mscaley", "0.0", 64);
+
+			ImGui::PopItemWidth();
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			ImGui::Button("Reset Transforms", ImVec2(200, 20));
+			ImGui::Text("");
+
+			if (App->geometry->ourMeshes.size()!=0)
+			{
+				ImGui::Text("Size: (%i,%i)", App->geometry->ourMeshes[0]->texture.width, App->geometry->ourMeshes[0]->texture.height);
+				ImGui::Text("Bpp: %i", App->geometry->ourMeshes[0]->texture.bpp);
+				ImGui::Image((void*)(intptr_t)App->geometry->ourMeshes[0]->texture.bufferTexture, ImVec2(256, 256));
+				
+			}
+		}
+		if (ImGui::CollapsingHeader("Mesh"))
+		{
+
+		}
+		ImGui::End();
+	}
+		
 
 
+	
+
+	if (showApplicationWindow)
+		ApplicationWindow();
+	if (showWindowWindow)
+		WindowWindow();
+	if (showHardwareWindow)
+		HardwareWindow();
+	if (showOpenGLWindow)
+		OpenGLSettings();
+	if (showInputWindow)
+		InputWindow();
+	if (showConsoleWindow)
+		ConsoleWindow();
 
 	if (showAboutWindow)
 		AboutWindow();
@@ -349,10 +383,144 @@ void ModuleEditor::AboutWindow()
 			"FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH"
 			"THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
 			
-
 	}
+	ImGui::End();
+}
+
+void ModuleEditor::ApplicationWindow()
+{
+	if (ImGui::Begin("Application", &showApplicationWindow)) {
+		float width = ImGui::GetWindowContentRegionWidth();
+		char title[25];
+
+		if (ImGui::Button("Unknown Engine              ")) { App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki"); }
+
+		if (ImGui::Button("CITM                        ")) { App->RequestBrowser("https://www.citm.upc.edu/"); }
+		ImVec2(100, 100);
+
+		ImGui::SliderInt("FPS Cap", &slider_frames, 1, 60);
+
+		sprintf_s(title, 25, "Framerate %.1f", App->frames_log[App->frames_log.size() - 1]);
+		ImGui::PlotHistogram("##FPS Ratio:", &App->frames_log[0], App->frames_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %.1f", App->ms_log[App->ms_log.size() - 1]);
+		ImGui::PlotHistogram("##Milliseconds:", &App->ms_log[0], App->ms_log.size(), 0, title, 0.0f, 100, ImVec2(310, 100));
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::WindowWindow()
+{
+	if (ImGui::Begin("Window Settings", &showWindowWindow)) {
+		float brightness = SDL_GetWindowBrightness(App->window->window);
+
+		if (App->window->resizable)
+		{
+			App->window->width_resize = ImGui::SliderInt("Width", &App->window->width, 1280, 1920);
+			App->window->height_resize = ImGui::SliderInt("Height", &App->window->height, 1024, 1080);
+		}
+		bool bright_resize = ImGui::SliderFloat("Bright", &brightness, 1.f, 3.794f);
+
+		ImGui::Text("");
+
+		if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen)) { App->window->SetFullScreen(App->window->fullscreen); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Resizable", &App->window->resizable)) { App->window->SetResizability(App->window->resizable); }
+
+		if (ImGui::Checkbox("Borderless", &App->window->borderless)) { App->window->SetBorderless(App->window->borderless); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Desktop", &App->window->desktop)) { App->window->SetFullDesktop(App->window->desktop); }
 
 
+		if (App->window->width_resize || App->window->height_resize)
+		{
+			SDL_SetWindowSize(App->window->window, App->window->width, App->window->height);
+			glViewport(0, 0, App->window->width, App->window->height);
+		}
+		else if (bright_resize)
+		{
+			SDL_SetWindowBrightness(App->window->window, brightness);
+		}
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::OpenGLSettings()
+{
+	if (ImGui::Begin("OpenGL Settings", &showOpenGLWindow)) {
+		if (ImGui::Checkbox("Depth Test", &App->renderer3D->gl_depth_test)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_depth_test, 0); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Cull Face", &App->renderer3D->gl_cull_face)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_cull_face, 1); }
+		if (ImGui::Checkbox("Color Material", &App->renderer3D->gl_color_material)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_color_material, 2); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_lightning, 3); }
+		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->gl_texture_2d)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_texture_2d, 4); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Ambient", &App->renderer3D->gl_ambient)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient, 5); }
+		if (ImGui::Checkbox("Ambient & Diffuse", &App->renderer3D->gl_ambient_diffuse)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient_diffuse, 6); }
+		ImGui::SameLine(150);
+		if (ImGui::Checkbox("Render Wireframe", &App->renderer3D->gl_wireframe)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_wireframe, 7); }
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::HardwareWindow()
+{
+	if (ImGui::Begin("Hardware Specs", &showHardwareWindow)) {
+		ImGui::Text("CPU Cache Line: %d", SDL_GetCPUCacheLineSize());
+		ImGui::Text("Number of CPUs cores: %d", SDL_GetCPUCount());
+		ImGui::Text("System RAM: %d", SDL_GetSystemRAM());
+		ImGui::Text("Caps:  ");
+		std::string caps;
+		if (SDL_Has3DNow() == SDL_TRUE) { std::string threednow = "3DNow";		caps += threednow; caps += ", "; }
+		if (SDL_HasAVX() == SDL_TRUE) { std::string avx = "AVX";				caps += avx; caps += ", "; }
+		if (SDL_HasAVX2() == SDL_TRUE) { std::string avx2 = "AVX2";				caps += avx2; caps += ", "; }
+		if (SDL_HasAltiVec() == SDL_TRUE) { std::string altivec = "AltiVec";	caps += altivec; caps += ", "; }
+		if (SDL_HasMMX() == SDL_TRUE) { std::string mmx = "MMX";				caps += mmx; caps += ", "; }
+		if (SDL_HasRDTSC() == SDL_TRUE) { std::string rdtsc = "RDTSC";			caps += rdtsc; caps += ", "; }
+		if (SDL_HasSSE() == SDL_TRUE) { std::string sse = "SSE";				caps += sse; caps += ", "; }
+		if (SDL_HasSSE2() == SDL_TRUE) { std::string sse2 = "SSE2";				caps += sse2; caps += ", "; }
+		if (SDL_HasSSE3() == SDL_TRUE) { std::string sse3 = "SSE3";				caps += sse3; caps += ", "; }
+		if (SDL_HasSSE41() == SDL_TRUE) { std::string sse41 = "SSE41";			caps += sse41; caps += ", "; }
+		if (SDL_HasSSE42() == SDL_TRUE) { std::string sse42 = "SSE42";			caps += sse42; caps += ", "; }
+
+		ImGui::SameLine(50);
+
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+		ImGui::TextWrapped(caps.c_str());
+		ImGui::PopStyleColor(1);
+		ImGui::Text("----------------------------------------------------------");
+		const char* vendor = (const char*)glGetString(GL_VENDOR);
+		ImGui::Text("System RAM: "); 	ImGui::SameLine(100);
+		ImGui::TextWrapped(vendor);
+
+		const char* model = (const char*)glGetString(GL_RENDERER);
+		ImGui::Text("Driver Model: "); 	ImGui::SameLine(100);
+		ImGui::TextWrapped(model);
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::InputWindow()
+{
+	if (ImGui::Begin("Input", &showInputWindow)) {
+		ImGui::TextUnformatted(input_log.begin());
+		if (scroll)
+		{
+			ImGui::SetScrollHere(1.0f);
+		}
+		scroll = false;
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::ConsoleWindow()
+{
+	if (ImGui::Begin("Console", &showConsoleWindow)) {
+		if (ImGui::Button("Clear Console")) {
+			CleanConsole();
+		}
+		PrintConsole();
+	}
 	ImGui::End();
 }
 
