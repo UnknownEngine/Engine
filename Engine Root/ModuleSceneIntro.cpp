@@ -237,18 +237,18 @@ void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<ui
 void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 {
 	
-	//Indices
-	mesh->id_indices = 0;
-	glGenBuffers(1, ((GLuint*)&(mesh->id_indices)));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
-
 
 	//Vertices
 	mesh->id_vertices = 0;
 	glGenBuffers(1, (GLuint*)&(mesh->id_vertices));
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 3, mesh->vertices, GL_STATIC_DRAW);
+	
+	//Normals buffer     
+	glGenBuffers(1, (GLuint*) & (mesh->id_normals));
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Textures
 	mesh->id_textures = 0;
@@ -256,12 +256,11 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_textures);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 2, mesh->tex_coords, GL_STATIC_DRAW);
 
-
-	//Normals buffer     
-	glGenBuffers(1, (GLuint*)&(mesh->id_normals));
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	//Indices
+	mesh->id_indices = 0;
+	glGenBuffers(1, ((GLuint*) & (mesh->id_indices)));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
 
 	//textures 
@@ -304,7 +303,6 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	width = (int)ilGetInteger(IL_IMAGE_WIDTH);
 	height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
 	bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-
 	dataTexture = ilGetData();
 
 	// Goes through all steps of sending the image to OpenGL
@@ -316,7 +314,7 @@ void ModuleSceneIntro::CreateBuffer(Mesh* mesh)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, dataTexture);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	ilDeleteImages(1, &ImgId);
+	//ilDeleteImages(1, &ImgId);
 
 }
 

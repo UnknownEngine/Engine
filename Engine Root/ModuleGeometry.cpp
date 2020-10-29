@@ -79,9 +79,8 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 			}
 
 			if (aimesh->HasTextureCoords(0)) {
-				ourMesh->num_textures = aimesh->mNumVertices;
 				ourMesh->tex_coords = new float[aimesh->mNumVertices * 2];
-				for (unsigned int i = 0; i < ourMesh->id_textures; i++)
+				for (unsigned int i = 0; i < aimesh->mNumVertices; i++)
 				{
 					ourMesh->tex_coords[i * 2] = aimesh->mTextureCoords[0][i].x;
 					ourMesh->tex_coords[i * 2 + 1] = aimesh->mTextureCoords[0][i].y;
