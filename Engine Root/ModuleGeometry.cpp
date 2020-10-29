@@ -110,7 +110,7 @@ bool ModuleGeometry::LoadTexture(const char* path, Mesh* mesh)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mesh->texture.width, mesh->texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, mesh->texture.dataTexture);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//ilDeleteImages(1, &ImgId);
+	ilDeleteImages(1, &ImgId);
 	return ret;
 }
 
