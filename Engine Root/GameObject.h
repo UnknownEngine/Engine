@@ -5,23 +5,23 @@
 #include <vector>
 #include <string>
 
-#include "ModuleSceneIntro.h"
-#include "ModuleGeometry.h"
-
-class Components;
+class Component;
 class GameObject {
 
 public:
-	GameObject(bool active, std::string name, bool mesh, bool material, bool transform);
+	GameObject(std::string name);
 	~GameObject();
-	Components* CreateComponent(std::string type, bool active, GameObject* owner);
+
+	void Update();
+	Component* CreateComponent(std::string type, bool active);
+
 	void ChangeParent(GameObject* newParent);
 	void DeleteChild(std::string name);
 
 public:
 	bool active;
 	std::string nameID;
-	std::vector<Components*> components;
+	std::vector<Component*> components;
 	std::vector<GameObject*> childs;
 	GameObject* parent;
 };

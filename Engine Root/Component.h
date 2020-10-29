@@ -5,23 +5,28 @@
 #include <vector>
 
 
-#include "ModuleSceneIntro.h"
-#include "ModuleGeometry.h"
 
 class GameObject;
-enum ComponentType {
+enum class ComponentType {
 	Mesh,
 	Material,
 	Transform,
 };
 
-class Components {
+class Component {
+
+public:
+	Component(ComponentType type,GameObject* owner);
+	~Component();
+
 	virtual void Enable();
 	virtual void Update();
 	virtual void Disable();
+
+	virtual void OnEditor();
 public:
-	ComponentType type;
 	bool active;
+	ComponentType type;
 	GameObject* owner;
 
 };

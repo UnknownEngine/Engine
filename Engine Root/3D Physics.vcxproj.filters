@@ -300,10 +300,10 @@
     <ClInclude Include="ModuleFSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects.h">
+    <ClInclude Include="Component.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
+    <ClInclude Include="GameObject.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
@@ -473,10 +473,10 @@
     <ClCompile Include="ModuleFSystem.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects.cpp">
+    <ClCompile Include="Component.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Components.cpp">
+    <ClCompile Include="GameObject.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>

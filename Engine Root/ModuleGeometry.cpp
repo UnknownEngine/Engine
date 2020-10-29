@@ -53,6 +53,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 	Mesh* ourMesh = new Mesh;
 	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
 
+
 	if (scene != nullptr && scene->HasMeshes()) 
 	{
 		//For all meshes
@@ -123,7 +124,7 @@ bool ModuleGeometry::LoadTexture(const char* path, Mesh* mesh)
 
 void ModuleGeometry::CreateBuffer(Mesh* mesh)
 {
-	//Vertices
+	//Vertices buffer
 	mesh->id_vertices = 0;
 	glGenBuffers(1, (GLuint*) & (mesh->id_vertices));
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
@@ -135,19 +136,19 @@ void ModuleGeometry::CreateBuffer(Mesh* mesh)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_normals * 3, &mesh->normals[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//Textures
+	//UVs buffer
 	mesh->id_coords = 0;
 	glGenBuffers(1, (GLuint*) & (mesh->id_coords));
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_coords);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertices * 2, mesh->tex_coords, GL_STATIC_DRAW);
 
-	//Indices
+	//Indices buffer
 	mesh->id_indices = 0;
 	glGenBuffers(1, ((GLuint*) & (mesh->id_indices)));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
-	//Textures 
+	//Texture buffer
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &mesh->texture.bufferTexture);
 	glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);

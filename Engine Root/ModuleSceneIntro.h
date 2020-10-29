@@ -11,6 +11,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "GameObject.h"
+
 struct Mesh;
 class ModuleSceneIntro : public Module
 {
@@ -22,19 +24,9 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s);
-	void CreateSphere(std::vector<float>& vertices, std::vector<uint>& indices, float radius, uint rings, uint sectors);
 public:
+	
+	GameObject* CreateGameObject(std::string name);
+	std::vector<GameObject*> gameObjectsList;
 
-	uint my_indices;
-	int num_indices;
-
-	uint my_vertices;
-	int num_vertices;
-
-	uint* indices_array;
-	float* vertices_array;
-	std::vector<float> vertices;
-	std::vector<uint> indices;
-	std::vector<uint> textcoords;
 };

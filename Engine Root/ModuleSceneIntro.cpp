@@ -26,6 +26,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	CreateGameObject("Empty GameObject");
+
 	return ret;
 }
 
@@ -35,6 +37,15 @@ bool ModuleSceneIntro::CleanUp()
 	LOG("Unloading Intro scene");
 
 	return true;
+}
+
+GameObject* ModuleSceneIntro::CreateGameObject(std::string name)
+{
+	GameObject* gameObject = new GameObject(name);
+
+	gameObjectsList.push_back(gameObject);
+	LOG("Created GameObject: %s", gameObject->nameID.c_str());
+	return gameObject;
 }
 
 
@@ -55,40 +66,6 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-
-void ModuleSceneIntro::PushSphereIndices(std::vector<uint>& indices, int sectors, int r, int s)
-{
-	
-	int curRow = r * sectors;
-	int nextRow = (r + 1) * sectors;
-
-	indices.push_back(curRow + s);
-	indices.push_back(nextRow + s);
-	indices.push_back(nextRow + (s + 1));
-
-	indices.push_back(curRow + s);
-	indices.push_back(nextRow + (s + 1));
-	indices.push_back(curRow + (s + 1));
-}
-
-
-void ModuleSceneIntro::CreateSphere(std::vector<float>& vertices, std::vector<uint>& indices, float radius, uint rings, uint sectors)
-{
-	float const R = 1. / (float)(rings - 1);
-	float const S = 1. / (float)(sectors - 1);
-	for (int r = 0; r < rings; ++r) {
-		for (int s = 0; s <= sectors; ++s) {
-			float y = sin(-M_PI_2 + M_PI * r * R);
-			float x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
-			float z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
-
-			vertices.push_back(x * radius);
-			vertices.push_back(y * radius);
-			vertices.push_back(z * radius);
-			PushSphereIndices(indices, sectors, r, s);
-		}
-	}
-}
 
 
 

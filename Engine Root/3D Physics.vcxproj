@@ -48,14 +48,14 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,7 +81,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Components.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="External Libraries\ImGui\imconfig.h" />
     <ClInclude Include="External Libraries\ImGui\imgui.h" />
     <ClInclude Include="External Libraries\ImGui\imgui_impl_opengl3.h" />
@@ -150,7 +150,7 @@
     <ClInclude Include="External Libraries\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="External Libraries\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="External Libraries\MathGeoLib\include\Time\Clock.h" />
-    <ClInclude Include="GameObjects.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Light.h" />
@@ -170,7 +170,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
-    <ClCompile Include="Components.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="External Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="External Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="External Libraries\ImGui\imgui_draw.cpp" />
@@ -209,7 +209,7 @@
     <ClCompile Include="External Libraries\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="External Libraries\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="External Libraries\MathGeoLib\include\Time\Clock.cpp" />
-    <ClCompile Include="GameObjects.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
