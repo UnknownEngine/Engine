@@ -90,7 +90,10 @@ update_status ModuleEditor::PreUpdate(float dt) {
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
-
+	//uint tex = App->renderer3D->fb;
+	//ImGui::Begin("Viewport");
+	//ImGui::Image(ImTextureID(tex), ImVec2(512, 512));
+	//ImGui::End();
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 
@@ -155,6 +158,30 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	ImGui::EndMainMenuBar();
 	}
+
+	if (App->geometry->firstGameObject != NULL)
+	{
+			if (ImGui::TreeNode(App->geometry->firstGameObject->nameID.c_str()))
+			{
+				for (int i = 0; i < App->geometry->firstGameObject->childs.size(); i++)
+				{
+					if (i == 0)
+						ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
+					if (ImGui::TreeNode(App->geometry->firstGameObject->childs[i]->nameID.c_str()))
+					{
+						ImGui::Text("blah blah");
+						ImGui::SameLine();
+						if (ImGui::SmallButton("button")) {}
+						ImGui::TreePop();
+					}
+				}
+				ImGui::TreePop();
+			}	
+	}
+
+	
+
 
 	if (ImGui::Begin("Inspector"))
 	{
