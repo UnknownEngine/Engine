@@ -70,8 +70,6 @@ update_status ModuleCamera3D::Update(float dt)
 
 			int dx = -App->input->GetMouseXMotion();
 			int dy = -App->input->GetMouseYMotion();
-			//newPos = ball->toScreenCoord(dx,dy);
-
 			float Sensitivity = 0.25f;
 
 			Position -= Reference;
@@ -101,8 +99,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 			Position = Reference + Z * length(Position);
 		}
-	
-		//ball->cursorCallback(App->window->window, App->input->GetMouseX(), App->input->GetMouseY());
+
 	CalculateViewMatrix();
 	LookAt((0, 0, 0));
 	

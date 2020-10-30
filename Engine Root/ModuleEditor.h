@@ -47,6 +47,9 @@ public:
 	float rotx = 0.0;
 	float roty = 0.0;
 	float rotz = 0.0;
+	float mrotx = 0.0;
+	float mroty = 0.0;
+	float mrotz = 0.0;
 	bool IsActive = true;
 	ImGuiTextBuffer input_log;
 	bool scroll = false;
