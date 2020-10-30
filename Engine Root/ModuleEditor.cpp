@@ -123,6 +123,15 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 		if (ImGui::BeginMenu("Settings"))
 		{
+			if (ImGui::MenuItem("Unfold All"))
+			{
+				showWindowWindow = !showWindowWindow;
+				showApplicationWindow = !showApplicationWindow;
+				showInputWindow = !showInputWindow;
+				showConsoleWindow = !showConsoleWindow;
+				showOpenGLWindow = !showOpenGLWindow;
+			}
+
 			if (ImGui::MenuItem("Application"))
 				showApplicationWindow = !showApplicationWindow;
 
@@ -149,12 +158,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	if (ImGui::Begin("Inspector"))
 	{
-		if (ImGui::CollapsingHeader("Properties"))
-		{
-			ImGui::Text("properties");
-		}
-		if (ImGui::CollapsingHeader("Transform"))
-		{
+	ImGui::CollapsingHeader("Transform");
+		
 			ImGui::PushItemWidth(60);
 			ImGui::Text("");
 
@@ -200,16 +205,66 @@ update_status ModuleEditor::PostUpdate(float dt)
 			ImGui::SameLine(72.f);
 			ImGui::Button("Reset Transforms", ImVec2(200, 20));
 			ImGui::Text("");
-		}
-		if (ImGui::CollapsingHeader("Material"))
-		{
+
+			
+		
+	ImGui::CollapsingHeader("Mesh");
+		
+			ImGui::TextWrapped("Name");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("Nombre");
+			ImGui::PopStyleColor(1);
+
+			ImGui::TextWrapped("Path");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("Ruta");
+			ImGui::PopStyleColor(1);
+
+			ImGui::Button("Change Source", ImVec2(200, 20));
+
+			ImGui::TextWrapped("Vertexs");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("num vertex");
+			ImGui::PopStyleColor(1);
+
+			ImGui::TextWrapped("Faces");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("num faces");
+			ImGui::PopStyleColor(1);
+
+			ImGui::TextWrapped("Normals");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("num normals");
+			ImGui::PopStyleColor(1);
+			ImGui::Text("");
+
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			ImGui::Button("Delete Component", ImVec2(200, 20));
+			ImGui::Text("");
+
+	ImGui::CollapsingHeader("Material");
+		
 			ImGui::Checkbox("Active##material", &IsActive);
 			
+			ImGui::TextWrapped("Name");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("nombre");
+			ImGui::PopStyleColor(1);
+
 			ImGui::TextWrapped("File Path:");
 			ImGui::SameLine(100);
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
 			ImGui::TextWrapped("Ruta de archivo");
 			ImGui::PopStyleColor(1);
+
+			ImGui::Button("Change Source", ImVec2(200, 20));
 
 			ImGui::PushItemWidth(95);
 			ImGui::Text("");
@@ -225,11 +280,11 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 			ImGui::Text("Rotation:");
 			ImGui::SameLine(75.f);
-			ImGui::SliderFloat("##mrotx", &rotx, -360, 360, "X: %1.f", 0.5f);
+			ImGui::SliderFloat(" ##xrot", &mrotx, -360, 360, "X: %1.f", 0.5f);
 			ImGui::SameLine(142.f);
-			ImGui::SliderFloat("##mroty", &roty, -360, 360, "Y: %1.f", 0.5f);
+			ImGui::SliderFloat(" ##yrot", &mroty, -360, 360, "Y: %1.f", 0.5f);
 			ImGui::SameLine(208.f);
-			ImGui::SliderFloat("##mrotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+			ImGui::SliderFloat("##zrot", &mrotz, -360, 360, "Z: %1.f", 0.5f);
 
 			ImGui::PopItemWidth();
 			ImGui::PushItemWidth(95);
@@ -243,12 +298,16 @@ update_status ModuleEditor::PostUpdate(float dt)
 			ImGui::PopItemWidth();
 
 			ImGui::Text("");
-			ImGui::Separator();
+			ImGui::SameLine(72.f);
+			ImGui::Button("Reset Transforms", ImVec2(200, 20));
 			ImGui::Text("");
 
 			ImGui::Text("");
 			ImGui::SameLine(72.f);
-			ImGui::Button("Reset Transforms", ImVec2(200, 20));
+			ImGui::Button("Delete Component", ImVec2(200, 20));
+
+			ImGui::Text("");
+			ImGui::Separator();
 			ImGui::Text("");
 
 			if (App->geometry->ourMeshes.size()!=0)
@@ -258,18 +317,11 @@ update_status ModuleEditor::PostUpdate(float dt)
 				ImGui::Image((void*)(intptr_t)App->geometry->ourMeshes[0]->texture.bufferTexture, ImVec2(256, 256));
 				
 			}
-		}
-		if (ImGui::CollapsingHeader("Mesh"))
-		{
+		
 
-		}
 		ImGui::End();
 	}
 		
-
-
-	
-
 	if (showApplicationWindow)
 		ApplicationWindow();
 	if (showWindowWindow)
