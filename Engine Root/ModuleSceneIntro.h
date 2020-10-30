@@ -13,7 +13,7 @@
 
 #include "GameObject.h"
 
-struct Mesh;
+struct MeshComponent;
 class ModuleSceneIntro : public Module
 {
 public:

@@ -6,6 +6,8 @@
 #include "Assimp/include/postprocess.h"
 #include "ModuleSceneIntro.h"
 
+#include "MeshComponent.h"
+
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 struct aiLogStream stream;
@@ -50,8 +52,10 @@ update_status ModuleGeometry::PostUpdate(float dt)
 bool ModuleGeometry::LoadFbx(const char* buffer,int size) 
 {
 	bool ret = false;
-	Mesh* ourMesh = new Mesh;
+	
+	MeshComponent* ourMesh = new MeshComponent();
 	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
+	
 
 
 	if (scene != nullptr && scene->HasMeshes()) 
@@ -87,7 +91,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 	return ret;
 }
 
-bool ModuleGeometry::LoadTexture(const char* path, Mesh* mesh)
+bool ModuleGeometry::LoadTexture(const char* path, MeshComponent* mesh)
 {
 	bool ret = true;
 	ilEnable(IL_ORIGIN_SET);
@@ -122,7 +126,7 @@ bool ModuleGeometry::LoadTexture(const char* path, Mesh* mesh)
 
 
 
-void ModuleGeometry::CreateBuffer(Mesh* mesh)
+void ModuleGeometry::CreateBuffer(MeshComponent* mesh)
 {
 	//Vertices buffer
 	mesh->id_vertices = 0;
@@ -160,7 +164,7 @@ void ModuleGeometry::CreateBuffer(Mesh* mesh)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void ModuleGeometry::LoadVertices(aiMesh* aimesh, Mesh* ourMesh)
+void ModuleGeometry::LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh)
 {
 	ourMesh->num_vertices = aimesh->mNumVertices;
 	ourMesh->vertices = new float[ourMesh->num_vertices * 3];
@@ -168,7 +172,7 @@ void ModuleGeometry::LoadVertices(aiMesh* aimesh, Mesh* ourMesh)
 	LOG("New mesh with %d vertices", ourMesh->num_vertices);
 }
 
-bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, Mesh* ourMesh)
+bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasFaces())
@@ -189,7 +193,7 @@ bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, Mesh* ourMesh)
 	return ret;
 }
 
-bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, Mesh* ourMesh)
+bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasNormals())
@@ -203,7 +207,7 @@ bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, Mesh* ourMesh)
 	return ret;
 }
 
-bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, Mesh* ourMesh)
+bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasTextureCoords(0))
@@ -223,7 +227,7 @@ void ModuleGeometry::RenderMeshes()
 {
 	for (uint i = 0; i < ourMeshes.size(); i++)
 	{
-		Mesh* mesh = ourMeshes[i];
+		MeshComponent* mesh = ourMeshes[i];
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);

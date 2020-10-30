@@ -8,6 +8,7 @@
 
 class GameObject;
 enum class ComponentType {
+	None,
 	Mesh,
 	Material,
 	Transform,
@@ -16,7 +17,7 @@ enum class ComponentType {
 class Component {
 
 public:
-	Component(ComponentType type,GameObject* owner);
+	Component();
 	~Component();
 
 	virtual void Enable();

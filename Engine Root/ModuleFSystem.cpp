@@ -9,6 +9,7 @@
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
 #include "SDL/include/SDL.h"
+#include "MeshComponent.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
@@ -265,7 +266,7 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 		uint size = Load(realDir.c_str(), &buffer);
 		for (int i = 0; i < App->geometry->ourMeshes.size(); i++)
 		{
-			Mesh* mesh = App->geometry->ourMeshes[i];
+			MeshComponent* mesh = App->geometry->ourMeshes[i];
 			if (buffer != nullptr)
 			{
 				App->geometry->LoadTexture(realDir.c_str(), mesh);

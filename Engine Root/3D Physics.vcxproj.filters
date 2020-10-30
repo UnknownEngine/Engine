@@ -43,6 +43,15 @@
     <Filter Include="External Libraries\MathGeoLib\Time">
       <UniqueIdentifier>{c2a00cae-8d0f-444f-a844-2298e82603f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Components">
+      <UniqueIdentifier>{8afc958d-8e76-43ee-aa12-d8b09bf28b15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Components\Base">
+      <UniqueIdentifier>{8a7b754f-4e5b-40c0-8ee4-1c0e11b426d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Components\Inherits">
+      <UniqueIdentifier>{4911714c-e957-44a8-9c1e-624a3c2bd008}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -300,11 +309,17 @@
     <ClInclude Include="ModuleFSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Sources\Components\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Sources\Components\Inherits</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialComponent.h">
+      <Filter>Sources\Components\Inherits</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -473,11 +488,17 @@
     <ClCompile Include="ModuleFSystem.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Sources\Components\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>Sources\Components\Inherits</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialComponent.cpp">
+      <Filter>Sources\Components\Inherits</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

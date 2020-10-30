@@ -12,33 +12,9 @@
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
 
-struct Texture {
-	int width = 0;
-	int height = 0;
-	int bpp = 0;
-	GLuint bufferTexture = 0;
-	ILubyte* dataTexture = nullptr;
-};
 
-struct Mesh {
-	uint id_vertices = 0;
-	uint num_vertices = 0;
-	float* vertices = nullptr;
 
-	uint id_indices = 0; // index in VRAM
-	uint num_indices = 0;
-	uint* indices = nullptr;
-
-	uint id_normals = 0;
-	uint num_normals = 0;
-	float* normals = nullptr;
-
-	uint id_coords = 0;
-	float* tex_coords = nullptr;
-
-	Texture texture;
-};
-
+class MeshComponent;
 class aiMesh;
 class ModuleGeometry : public Module
 {
@@ -53,19 +29,19 @@ public:
 
 	
 	bool LoadFbx(const char* path, int size);
-	bool LoadTexture(const char* path, Mesh* mesh);
-	void CreateBuffer(Mesh* mesh);
+	bool LoadTexture(const char* path, MeshComponent* mesh);
+	void CreateBuffer(MeshComponent* mesh);
 
-	void LoadVertices(aiMesh* aimesh, Mesh* ourMesh);
-	bool CheckAndLoadFaces(aiMesh* aimesh, Mesh* ourMesh);
-	bool CheckAndLoadNormals(aiMesh* aimesh, Mesh* ourMesh);
-	bool CheckAndLoadTexCoords(aiMesh* aimesh, Mesh* ourMesh);
+	void LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh);
+	bool CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh);
+	bool CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh);
+	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
 
 	void RenderMeshes();
 
 	bool CleanUp();
-	std::vector<Mesh*> ourMeshes;
-
+	std::vector<MeshComponent*> ourMeshes;
+	GameObject* firstGameObject = nullptr;
 };
 
 #endif // !__ModuleGeometry_H__

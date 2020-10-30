@@ -1,7 +1,7 @@
 #include "Component.h"
 #pragma once
 
-Component::Component(ComponentType type, GameObject* owner) : type(type), owner(owner),active(true) {}
+Component::Component(): type(ComponentType::None),active(true),owner(nullptr) {}
 
 Component::~Component() {}
 
