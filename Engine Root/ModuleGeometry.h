@@ -28,7 +28,7 @@ public:
 	update_status PostUpdate(float dt);
 
 	
-	bool LoadFbx(const char* path, int size);
+	bool LoadFbx(const char* path, int size, std::string fileName);
 	bool LoadTexture(const char* path, MeshComponent* mesh);
 	void CreateBuffer(MeshComponent* mesh);
 

@@ -20,6 +20,11 @@ Component* GameObject::CreateComponent(std::string type, bool active)
 	return nullptr;
 }
 
+void GameObject::AddComponent(Component* component)
+{
+	components.push_back(component);
+}
+
 void GameObject::ChangeParent(GameObject* newParent)
 {
 }

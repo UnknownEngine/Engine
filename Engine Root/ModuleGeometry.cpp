@@ -49,22 +49,24 @@ update_status ModuleGeometry::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleGeometry::LoadFbx(const char* buffer,int size) 
+bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName) 
 {
 	bool ret = false;
+
+	//Create Root GameObject
+	firstGameObject = new GameObject(fileName);
 	
-	MeshComponent* ourMesh = new MeshComponent();
+	//Load aiScene from Fbx with Assimp
 	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
-	
 
-
-	if (scene != nullptr && scene->HasMeshes()) 
+	//Create child GameObjects for each mesh
+	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
-		//For all meshes
-		for (uint i = 0; i < scene->mNumMeshes; i++)
-		{
-			aiMesh* aimesh = scene->mMeshes[i];
-
+		aiNode* node = scene->mRootNode->mChildren[i];
+		firstGameObject->childs.push_back(new GameObject(std::string(node->mName.C_Str())));
+		if (node->mNumMeshes > 0) {
+			MeshComponent* ourMesh = new MeshComponent();
+			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
 			//Copy Vertices
 			LoadVertices(aimesh, ourMesh);
 
@@ -76,13 +78,42 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size)
 
 			//Copy Normals
 			ret = CheckAndLoadNormals(aimesh, ourMesh);
+			if (ret)
+			{
+				firstGameObject->childs[i]->AddComponent(ourMesh);
+				ourMeshes.push_back(ourMesh);
+				CreateBuffer(ourMesh);
+			}
 		}
-		if (ret)
-		{
-			ourMeshes.push_back(ourMesh);
-			CreateBuffer(ourMesh);
-			aiReleaseImport(scene);
-		}
+			
+	}
+	aiReleaseImport(scene);
+
+	if (scene != nullptr && scene->HasMeshes()) 
+	{
+		////For all meshes
+		//for (uint i = 0; i < scene->mNumMeshes; i++)
+		//{
+		//	aiMesh* aimesh = scene->mMeshes[i];
+
+		//	//Copy Vertices
+		//	LoadVertices(aimesh, ourMesh);
+
+		//	//Copy Faces
+		//	ret = CheckAndLoadFaces(aimesh, ourMesh);
+
+		//	//Copy Textures
+		//	ret = CheckAndLoadTexCoords(aimesh, ourMesh);
+
+		//	//Copy Normals
+		//	ret = CheckAndLoadNormals(aimesh, ourMesh);
+		//}
+		//if (ret)
+		//{
+		//	ourMeshes.push_back(ourMesh);
+		//	CreateBuffer(ourMesh);
+		//	aiReleaseImport(scene);
+		//}
 	}
 	else 
 	{
@@ -225,9 +256,12 @@ bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMes
 
 void ModuleGeometry::RenderMeshes()
 {
-	for (uint i = 0; i < ourMeshes.size(); i++)
+	if (firstGameObject == nullptr) return;
+
+	for (uint i = 0; i < firstGameObject->childs.size(); i++)
 	{
-		MeshComponent* mesh = ourMeshes[i];
+		
+		MeshComponent* mesh = static_cast<MeshComponent*>(firstGameObject->childs[i]->components[0]);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);

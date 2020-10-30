@@ -14,7 +14,7 @@ public:
 
 	void Update();
 	Component* CreateComponent(std::string type, bool active);
-
+	void AddComponent(Component* component);
 	void ChangeParent(GameObject* newParent);
 	void DeleteChild(std::string name);
 
