@@ -264,9 +264,9 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 		std::string realDir = PHYSFS_getRealDir(realName.c_str());
 		realDir += realName;
 		uint size = Load(realDir.c_str(), &buffer);
-		for (int i = 0; i < App->geometry->ourMeshes.size(); i++)
+		for (int i = 0; i < App->geometry->firstGameObject->childs.size(); i++)
 		{
-			MeshComponent* mesh = App->geometry->ourMeshes[i];
+			MeshComponent* mesh = static_cast<MeshComponent*>(App->geometry->firstGameObject->childs[i]->components[0]);
 			if (buffer != nullptr)
 			{
 				App->geometry->LoadTexture(realDir.c_str(), mesh);

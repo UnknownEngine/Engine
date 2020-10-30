@@ -40,7 +40,6 @@ public:
 	void RenderMeshes();
 
 	bool CleanUp();
-	std::vector<MeshComponent*> ourMeshes;
 	GameObject* firstGameObject = nullptr;
 };
 

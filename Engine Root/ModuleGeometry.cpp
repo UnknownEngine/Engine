@@ -81,7 +81,6 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName)
 			if (ret)
 			{
 				firstGameObject->childs[i]->AddComponent(ourMesh);
-				ourMeshes.push_back(ourMesh);
 				CreateBuffer(ourMesh);
 			}
 		}
@@ -302,10 +301,10 @@ bool ModuleGeometry::CleanUp()
 {
 	aiDetachAllLogStreams();
 
-	for (uint i = 0; i < ourMeshes.size(); i++)
-	{
-		delete ourMeshes[i];
-	}
+	//for (uint i = 0; i < ourMeshes.size(); i++)
+	//{
+	//	delete ourMeshes[i];
+	//}
 
 	return true;
 }

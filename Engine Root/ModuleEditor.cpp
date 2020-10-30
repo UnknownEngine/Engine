@@ -310,13 +310,13 @@ update_status ModuleEditor::PostUpdate(float dt)
 			ImGui::Separator();
 			ImGui::Text("");
 
-			if (App->geometry->ourMeshes.size()!=0)
-			{
-				ImGui::Text("Size: (%i,%i)", App->geometry->ourMeshes[0]->texture.width, App->geometry->ourMeshes[0]->texture.height);
-				ImGui::Text("Bpp: %i", App->geometry->ourMeshes[0]->texture.bpp);
-				ImGui::Image((void*)(intptr_t)App->geometry->ourMeshes[0]->texture.bufferTexture, ImVec2(256, 256));
-				
-			}
+			//if (App->geometry->ourMeshes.size()!=0)
+			//{
+			//	ImGui::Text("Size: (%i,%i)", App->geometry->ourMeshes[0]->texture.width, App->geometry->ourMeshes[0]->texture.height);
+			//	ImGui::Text("Bpp: %i", App->geometry->ourMeshes[0]->texture.bpp);
+			//	ImGui::Image((void*)(intptr_t)App->geometry->ourMeshes[0]->texture.bufferTexture, ImVec2(256, 256));
+			//	
+			//}
 		
 
 		ImGui::End();
