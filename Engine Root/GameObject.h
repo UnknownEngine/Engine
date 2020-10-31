@@ -17,6 +17,7 @@ public:
 	void AddComponent(Component* component);
 	void ChangeParent(GameObject* newParent);
 	void DeleteChild(std::string name);
+	bool HasMeshComponent(GameObject*);
 
 public:
 	bool active;

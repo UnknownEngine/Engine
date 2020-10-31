@@ -16,6 +16,8 @@
 
 class MeshComponent;
 class aiMesh;
+class aiNode;
+class aiScene;
 class ModuleGeometry : public Module
 {
 public:
@@ -38,9 +40,12 @@ public:
 	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
 
 	void RenderMeshes();
-
+	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
+	void DrawMesh(MeshComponent* mesh);
 	bool CleanUp();
 	GameObject* firstGameObject = nullptr;
+
+	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene);
 };
 
 #endif // !__ModuleGeometry_H__

@@ -4,9 +4,9 @@
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
-#include "ModuleSceneIntro.h"
 
 #include "MeshComponent.h"
+#include "TransformComponent.h"
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
@@ -40,7 +40,8 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
-	RenderMeshes();
+	DrawMeshFromGameObjectRoot(firstGameObject);
+	//RenderMeshes();
 	return UPDATE_CONTINUE;
 }
 
@@ -63,27 +64,10 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName)
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
 		aiNode* node = scene->mRootNode->mChildren[i];
-		firstGameObject->childs.push_back(new GameObject(std::string(node->mName.C_Str())));
-		if (node->mNumMeshes > 0) {
-			MeshComponent* ourMesh = new MeshComponent();
-			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
-			//Copy Vertices
-			LoadVertices(aimesh, ourMesh);
+		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
+		firstGameObject->childs.push_back(newGameObject);
+		CheckNodeChilds(node,newGameObject,scene);
 
-			//Copy Faces
-			ret = CheckAndLoadFaces(aimesh, ourMesh);
-
-			//Copy Textures
-			ret = CheckAndLoadTexCoords(aimesh, ourMesh);
-
-			//Copy Normals
-			ret = CheckAndLoadNormals(aimesh, ourMesh);
-			if (ret)
-			{
-				firstGameObject->childs[i]->AddComponent(ourMesh);
-				CreateBuffer(ourMesh);
-			}
-		}
 			
 	}
 	aiReleaseImport(scene);
@@ -255,8 +239,6 @@ bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMes
 
 void ModuleGeometry::RenderMeshes()
 {
-	if (firstGameObject == nullptr) return;
-
 	for (uint i = 0; i < firstGameObject->childs.size(); i++)
 	{
 		
@@ -297,6 +279,72 @@ void ModuleGeometry::RenderMeshes()
 	}
 }
 
+void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
+{
+	if (gameObject == nullptr) return;
+	if (gameObject->components.size() > 0) {
+		for (uint i = 0; i < gameObject->components.size(); i++)
+		{
+			LOG("Drawing %s components", gameObject->nameID.c_str());
+			TransformComponent* transformComponent = static_cast<TransformComponent*>(gameObject->components[1]);
+
+			//glPopMatrix();
+			//mat3x3 matrix = mat3x3(transformComponent->scale.x, transformComponent->scale.y, transformComponent->scale.z,
+			//	transformComponent->rotation.x, transformComponent->rotation.y, transformComponent->rotation.z,
+			//	transformComponent->position.x, transformComponent->position.y, transformComponent->position.z);
+			//mat4x4 matrix3d;
+			//
+			MeshComponent* mesh = static_cast<MeshComponent*>(gameObject->components[0]);
+			DrawMesh(mesh);
+			//gameObject->components[i]->Update();
+		}
+
+	}
+	if (gameObject->childs.size() > 0) {
+		for (uint i = 0; i < gameObject->childs.size(); i++)
+		{
+			DrawMeshFromGameObjectRoot(gameObject->childs[i]);
+		}
+	}
+
+}
+
+void ModuleGeometry::DrawMesh(MeshComponent* mesh)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	//Vertices
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	//normals
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glNormalPointer(GL_FLOAT, 0, NULL);
+
+	//UVs
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_coords);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	//Textures
+	glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
+
+	//Indices
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+
+	//Drawing
+	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
 bool ModuleGeometry::CleanUp()
 {
 	aiDetachAllLogStreams();
@@ -307,4 +355,57 @@ bool ModuleGeometry::CleanUp()
 	//}
 
 	return true;
+}
+
+void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,const aiScene* scene)
+{
+	LOG("Checking node: %s", node->mName.C_Str());
+	if (node->mNumMeshes > 0) {
+		LOG("I HAVE MESHES!");
+		bool ret = false;
+		if (node->mNumMeshes > 0) {
+			MeshComponent* ourMesh = new MeshComponent();
+			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+			//Copy Vertices
+			LoadVertices(aimesh, ourMesh);
+
+			//Copy Faces
+			ret = CheckAndLoadFaces(aimesh, ourMesh);
+
+			//Copy Textures
+			ret = CheckAndLoadTexCoords(aimesh, ourMesh);
+
+			//Copy Normals
+			ret = CheckAndLoadNormals(aimesh, ourMesh);
+			if (ret)
+			{
+				gameObjectNode->AddComponent(ourMesh);
+				CreateBuffer(ourMesh);
+			}
+		}
+	
+	}
+
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
+	
+	node->mTransformation.Decompose(scaling, rotation, translation);
+	TransformComponent* transformComponent = new TransformComponent(
+		float3(translation.x,translation.y, translation.z),
+		Quat(rotation.x, rotation.y, rotation.z, rotation.w),
+		float3(scaling.x, scaling.y, scaling.z));
+
+	gameObjectNode->AddComponent(transformComponent);
+
+
+	
+	if (node->mNumChildren > 0) {
+		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
+		gameObjectNode->childs.push_back(newGameObject);
+		LOG("GOT %d children", node->mNumChildren)
+		for (uint i = 0; i < node->mNumChildren; i++)
+		{
+			CheckNodeChilds(node->mChildren[i],newGameObject,scene);
+		}
+	}
 }

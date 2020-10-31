@@ -2,13 +2,13 @@
 
 #include "Component.h"
 #include "MaterialComponent.h"
-
-class GameObject;
 class MeshComponent : public Component
 {
 public:
 	MeshComponent();
 	~MeshComponent();
+
+	void Update() override;
 
 	uint id_vertices = 0;
 	uint num_vertices = 0;

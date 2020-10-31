@@ -321,6 +321,9 @@
     <ClInclude Include="MaterialComponent.h">
       <Filter>Sources\Components\Inherits</Filter>
     </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Sources\Components\Inherits</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -498,6 +501,9 @@
       <Filter>Sources\Components\Inherits</Filter>
     </ClCompile>
     <ClCompile Include="MaterialComponent.cpp">
+      <Filter>Sources\Components\Inherits</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
       <Filter>Sources\Components\Inherits</Filter>
     </ClCompile>
   </ItemGroup>

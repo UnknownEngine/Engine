@@ -6,6 +6,12 @@
 #include "ModuleWindow.h"
 
 
+#include "Glew/include/glew.h"
+#include "SDL/include/SDL_opengl.h"
+
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 #define CHECKERS_HEIGHT 8
 #define CHECKERS_WIDTH 8
