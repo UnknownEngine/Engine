@@ -24,7 +24,5 @@ public:
 
 	uint id_coords = 0;
 	float* tex_coords = nullptr;
-
-	MaterialComponent texture;
 };
 

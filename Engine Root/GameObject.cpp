@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Component.h"
+#include "MaterialComponent.h"
 
 GameObject::GameObject(std::string name) : active(true), nameID(name), parent(nullptr)
 {
@@ -51,5 +52,18 @@ bool GameObject::HasMeshComponent(GameObject* gameObject)
 	}
 
 	return false;
+}
+
+MaterialComponent* GameObject::GetMaterialComponent()
+{
+	MaterialComponent* materialComponent = nullptr;
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->type == ComponentType::Material) {
+			materialComponent = static_cast<MaterialComponent*>(components[i]);
+			return materialComponent;
+		}
+	}
+	return nullptr;
 }
 

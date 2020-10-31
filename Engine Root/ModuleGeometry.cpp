@@ -105,7 +105,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName)
 	return ret;
 }
 
-bool ModuleGeometry::LoadTexture(const char* path, MeshComponent* mesh)
+bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
 {
 	bool ret = true;
 	ilEnable(IL_ORIGIN_SET);
@@ -125,13 +125,13 @@ bool ModuleGeometry::LoadTexture(const char* path, MeshComponent* mesh)
 	}
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-	mesh->texture.width	 = (int)ilGetInteger(IL_IMAGE_WIDTH);
-	mesh->texture.height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
-	mesh->texture.bpp	 = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-	mesh->texture.dataTexture = ilGetData();
+	material->width	 = (int)ilGetInteger(IL_IMAGE_WIDTH);
+	material->height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
+	material->bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+	material->dataTexture = ilGetData();
 
-	glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mesh->texture.width, mesh->texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, mesh->texture.dataTexture);
+	glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, material->width, material->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, material->dataTexture);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	ilDeleteImages(1, &ImgId);
@@ -166,10 +166,14 @@ void ModuleGeometry::CreateBuffer(MeshComponent* mesh)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_indices, mesh->indices, GL_STATIC_DRAW);
 
+}
+
+void ModuleGeometry::CreateTextureBuffer(MaterialComponent* material)
+{
 	//Texture buffer
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &mesh->texture.bufferTexture);
-	glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
+	glGenTextures(1, &material->bufferTexture);
+	glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -261,7 +265,7 @@ void ModuleGeometry::RenderMeshes()
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 		//Textures
-		glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
+		//glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
 		
 		//Indices
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); 
@@ -295,7 +299,8 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			//mat4x4 matrix3d;
 			//
 			MeshComponent* mesh = static_cast<MeshComponent*>(gameObject->components[0]);
-			DrawMesh(mesh);
+			MaterialComponent* material = static_cast<MaterialComponent*>(gameObject->components[1]);
+			DrawMesh(mesh,material);
 			//gameObject->components[i]->Update();
 		}
 
@@ -309,7 +314,7 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 
 }
 
-void ModuleGeometry::DrawMesh(MeshComponent* mesh)
+void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -328,7 +333,9 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh)
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	//Textures
-	glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
+	if (material != nullptr && material->active) {
+		glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+	}
 
 	//Indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
@@ -382,6 +389,23 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 				gameObjectNode->AddComponent(ourMesh);
 				CreateBuffer(ourMesh);
 			}
+			if (scene->HasMaterials()) {
+				aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
+				uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+				aiString path;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+				LOG("s",path.C_Str());
+				std::string fileRoute = std::string(path.C_Str());
+				std::string rootPath = std::string("Assets/Textures/");
+				rootPath = rootPath + fileRoute;
+				LOG("%s", rootPath.c_str());
+				MaterialComponent* materialComponent = new MaterialComponent;
+				CreateTextureBuffer(materialComponent);
+				LoadTexture(rootPath.c_str(),materialComponent);
+				gameObjectNode->AddComponent(materialComponent);
+
+			}
 		}
 	
 	}
@@ -397,6 +421,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 
 	gameObjectNode->AddComponent(transformComponent);
 
+	//Create texture buffer 
+	//CreateTextureBuffer();
 
 	
 	if (node->mNumChildren > 0) {

@@ -15,6 +15,7 @@
 
 
 class MeshComponent;
+class MaterialComponent;
 class aiMesh;
 class aiNode;
 class aiScene;
@@ -31,8 +32,10 @@ public:
 
 	
 	bool LoadFbx(const char* path, int size, std::string fileName);
-	bool LoadTexture(const char* path, MeshComponent* mesh);
+	bool LoadTexture(const char* path, MaterialComponent* gameObject);
 	void CreateBuffer(MeshComponent* mesh);
+
+	void CreateTextureBuffer(MaterialComponent* material);
 
 	void LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh);
@@ -41,7 +44,7 @@ public:
 
 	void RenderMeshes();
 	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
-	void DrawMesh(MeshComponent* mesh);
+	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 	bool CleanUp();
 	GameObject* firstGameObject = nullptr;
 

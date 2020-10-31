@@ -6,6 +6,7 @@
 #include <string>
 
 class Component;
+class MaterialComponent;
 class GameObject {
 
 public:
@@ -18,6 +19,7 @@ public:
 	void ChangeParent(GameObject* newParent);
 	void DeleteChild(std::string name);
 	bool HasMeshComponent(GameObject*);
+	MaterialComponent* GetMaterialComponent();
 
 public:
 	bool active;

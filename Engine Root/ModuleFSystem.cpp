@@ -269,7 +269,7 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 			MeshComponent* mesh = static_cast<MeshComponent*>(App->geometry->firstGameObject->childs[i]->components[0]);
 			if (buffer != nullptr)
 			{
-				App->geometry->LoadTexture(realDir.c_str(), mesh);
+				//App->geometry->LoadTexture(realDir.c_str(), mesh);
 			}
 		}
 	}
