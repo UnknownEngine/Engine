@@ -158,9 +158,10 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	ImGui::EndMainMenuBar();
 	}
+	ImGui::Begin("Hierarchy");
 
-	if (App->geometry->firstGameObject != NULL)
-	{
+		if (App->geometry->firstGameObject != NULL)
+		{
 			if (ImGui::TreeNode(App->geometry->firstGameObject->nameID.c_str()))
 			{
 				for (int i = 0; i < App->geometry->firstGameObject->childs.size(); i++)
@@ -170,15 +171,17 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 					if (ImGui::TreeNode(App->geometry->firstGameObject->childs[i]->nameID.c_str()))
 					{
-						ImGui::Text("blah blah");
-						ImGui::SameLine();
-						if (ImGui::SmallButton("button")) {}
+						if (ImGui::IsItemClicked)
+						{
+							
+						}
 						ImGui::TreePop();
 					}
 				}
 				ImGui::TreePop();
-			}	
-	}
+			}
+		}
+	ImGui::End();
 
 	
 
