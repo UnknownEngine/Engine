@@ -65,6 +65,12 @@ update_status ModuleCamera3D::Update(float dt)
 		Position += newPos/6;
 		Reference += newPos/6;
 
+
+		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+		{
+			App->scene_intro->selected = nullptr;
+				target = (0, 0, 0);
+		}
 		if (App->scene_intro->selected != NULL)
 		{
 			TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
