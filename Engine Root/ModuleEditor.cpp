@@ -135,6 +135,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 				showInputWindow = !showInputWindow;
 				showConsoleWindow = !showConsoleWindow;
 				showOpenGLWindow = !showOpenGLWindow;
+				showHardwareWindow = !showHardwareWindow;
 			}
 
 			if (ImGui::MenuItem("Application"))
