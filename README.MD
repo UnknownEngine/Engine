@@ -11,7 +11,20 @@ focusing on basic level stuff in order to understand how a high level engine wor
 
 ## Controls
 
-##Top menus
+### FBX Loading
+
+Simply drag and drop your fbx into the viewport and it will load with its texture if it does have one.
+
+### PNG & DDS Loading
+
+When a gameobject is selected via Hierarchy drag and drop a texture into the viewport and it will
+be blaced on the selected gameobject.
+
+##Unselecting gameobjects
+
+* Press T to unselect the currently selected gameobject.
+
+### Top menus
 
 * File: For exiting application.
 * Help: Github related stuff.
@@ -39,6 +52,8 @@ you can see its children and select the object.
 ##Inspector
 
 Here, you can check information related to the game object mesh, material and transformation.
+
+* Click on UseCheckers button: Applies or removes the checker texture from the current gameobject.
 
 
 

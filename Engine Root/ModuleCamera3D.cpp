@@ -12,8 +12,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 {
 	
 	CalculateViewMatrix();
-
-	//ball = new Arcball(App->window->width, App->window->height, 5.0f);
 	X = vec3(1.0f, 0.0f, 0.0f);
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
@@ -81,15 +79,13 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 
 		// Mouse motion ----------------
-
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+		{
+			LookAt((0, 0, 0));
+		}
 
 		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 		{
-
-			if (App->input->GetKey(SDL_SCANCODE_LALT)==KEY_REPEAT)
-			{
-				LookAt(target);
-			}
 			int dx = -App->input->GetMouseXMotion();
 			int dy = -App->input->GetMouseYMotion();
 			float Sensitivity = 0.25f;
@@ -115,12 +111,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 			Position = Reference + Z * length(Position);
 		}
-
-	
-
-	CalculateViewMatrix();
-	
-	
+	CalculateViewMatrix();	
 	return UPDATE_CONTINUE;
 }
 

@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	//App->camera->LookAt(vec3(0, 0, 0));
 
 	//App->geometry->LoadFbx(buffer, size, file, file);
 	char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
