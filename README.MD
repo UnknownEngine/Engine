@@ -25,6 +25,7 @@ focusing on basic level stuff in order to understand how a high level engine wor
 * Alt + Right Click: Orbitates the camera.
 * WASD: To move around the viewport.
 * Scroll Up/Down: Zoom
+* Holding Shift: Camera moves twice as fast!
 
 ### Hierarchy
 
