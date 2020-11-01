@@ -27,6 +27,7 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	Arcball* ball=nullptr;
+
 private:
 
 	mat4x4 world;
@@ -37,6 +38,7 @@ private:
 
 	float x_rot = 0;
 	float y_rot = 0;
+
 };
 
 
