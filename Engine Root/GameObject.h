@@ -7,6 +7,8 @@
 
 class Component;
 class MaterialComponent;
+class TransformComponent;
+class MeshComponent;
 class GameObject {
 
 public:
@@ -20,6 +22,8 @@ public:
 	void DeleteChild(std::string name);
 	bool HasMeshComponent(GameObject*);
 	MaterialComponent* GetMaterialComponent();
+	TransformComponent* GetTransformComponent();
+	MeshComponent* GetMeshComponent();
 
 public:
 	bool active;

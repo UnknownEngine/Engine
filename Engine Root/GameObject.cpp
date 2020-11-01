@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "MaterialComponent.h"
+#include "TransformComponent.h"
+#include "MeshComponent.h"
 
 GameObject::GameObject(std::string name) : active(true), nameID(name), parent(nullptr)
 {
@@ -62,6 +64,32 @@ MaterialComponent* GameObject::GetMaterialComponent()
 		if (components[i]->type == ComponentType::Material) {
 			materialComponent = static_cast<MaterialComponent*>(components[i]);
 			return materialComponent;
+		}
+	}
+	return nullptr;
+}
+
+TransformComponent* GameObject::GetTransformComponent()
+{
+	TransformComponent* transformComponent = nullptr;
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->type == ComponentType::Transform) {
+			transformComponent = static_cast<TransformComponent*>(components[i]);
+			return transformComponent;
+		}
+	}
+	return nullptr;
+}
+
+MeshComponent* GameObject::GetMeshComponent()
+{
+	MeshComponent* meshComponent = nullptr;
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->type == ComponentType::Mesh) {
+			meshComponent = static_cast<MeshComponent*>(components[i]);
+			return meshComponent;
 		}
 	}
 	return nullptr;

@@ -290,7 +290,7 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 		for (uint i = 0; i < gameObject->components.size(); i++)
 		{
 			LOG("Drawing %s components", gameObject->nameID.c_str());
-			TransformComponent* transformComponent = static_cast<TransformComponent*>(gameObject->components[1]);
+			TransformComponent* transformComponent = gameObject->GetTransformComponent();
 
 			//glPopMatrix();
 			//mat3x3 matrix = mat3x3(transformComponent->scale.x, transformComponent->scale.y, transformComponent->scale.z,
@@ -298,8 +298,8 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			//	transformComponent->position.x, transformComponent->position.y, transformComponent->position.z);
 			//mat4x4 matrix3d;
 			//
-			MeshComponent* mesh = static_cast<MeshComponent*>(gameObject->components[0]);
-			MaterialComponent* material = static_cast<MaterialComponent*>(gameObject->components[1]);
+			MeshComponent* mesh = gameObject->GetMeshComponent();
+			MaterialComponent* material = gameObject->GetMaterialComponent();
 			DrawMesh(mesh,material);
 			//gameObject->components[i]->Update();
 		}
@@ -316,6 +316,8 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 
 void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 {
+	if (mesh == nullptr) return;
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
