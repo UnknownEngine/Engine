@@ -52,8 +52,8 @@ public:
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 
-private:
 	GLuint bufferCheckerTexture = 0;
+private:
 };
 
 #endif // !__ModuleGeometry_H__

@@ -23,5 +23,6 @@ public:
 	std::string path;
 	GLuint bufferTexture = 0;
 	ILubyte* dataTexture = nullptr;
+	bool useChecker = false;
 };
 

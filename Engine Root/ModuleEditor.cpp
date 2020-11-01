@@ -163,7 +163,10 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	ImGui::Begin("Hierarchy");
 
-	CreateHierarchy(App->geometry->firstGameObject);
+	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+	{
+		CreateHierarchy(App->scene_intro->gameObjectsList[i]);
+	}
 	ImGui::End();
 
 	if (ImGui::Begin("Inspector"))
@@ -338,12 +341,18 @@ void ModuleEditor::DrawInspector()
 		ImGui::Text("");
 		ImGui::Separator();
 		ImGui::Text("");
+		if (ImGui::Button("UseCheckers", ImVec2(200, 20))) {
+			App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
+		}
 
 		ImGui::Text("Size: (%i,%i)", material_width, material_height);
 		ImGui::Text("Bpp: %i", material_bpp);
-		if (material_buffer != 0)
+		if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
 		{
 			ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
+		}
+		else {
+			ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
 		}
 	}
 }

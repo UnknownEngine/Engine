@@ -61,12 +61,17 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 {
 	bool ret = false;
 
+	//Load aiScene from Fbx with Assimp
+	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
+	
+	if (scene == nullptr) {
+		App->editor->AddLog("Error loading scene");
+		return ret;
+	}
 	//Create Root GameObject
 	GameObject* gameObject = new GameObject(fileName);
 	App->scene_intro->gameObjectsList.push_back(gameObject);
-	
-	//Load aiScene from Fbx with Assimp
-	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
+
 
 	CreateTransformComponent(scene->mRootNode, gameObject);
 	//Create child GameObjects for each mesh
@@ -81,36 +86,6 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	}
 	aiReleaseImport(scene);
 
-	if (scene != nullptr && scene->HasMeshes()) 
-	{
-		////For all meshes
-		//for (uint i = 0; i < scene->mNumMeshes; i++)
-		//{
-		//	aiMesh* aimesh = scene->mMeshes[i];
-
-		//	//Copy Vertices
-		//	LoadVertices(aimesh, ourMesh);
-
-		//	//Copy Faces
-		//	ret = CheckAndLoadFaces(aimesh, ourMesh);
-
-		//	//Copy Textures
-		//	ret = CheckAndLoadTexCoords(aimesh, ourMesh);
-
-		//	//Copy Normals
-		//	ret = CheckAndLoadNormals(aimesh, ourMesh);
-		//}
-		//if (ret)
-		//{
-		//	ourMeshes.push_back(ourMesh);
-		//	CreateBuffer(ourMesh);
-		//	aiReleaseImport(scene);
-		//}
-	}
-	else 
-	{
-		App->editor->AddLog("Error loading scene");
-	}
 	return ret;
 }
 
@@ -295,7 +270,6 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			glMultMatrixf((float*)&transformMatrix);
 			DrawMesh(mesh,material);
 			glPopMatrix();
-			//gameObject->components[i]->Update();
 		}
 
 	}
@@ -335,7 +309,6 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 		}
 		else {
 			glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
-
 		}
 	}
 
