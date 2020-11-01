@@ -32,6 +32,13 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	//App->geometry->LoadFbx(buffer, size, file, file);
+	char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
+	std::string  path = "";
+	std::string  file = "";
+	std::string  extension = "";
+	App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
+	App->fsystem->DetectExtension(path, file, extension);
 
 	return ret;
 }
@@ -46,11 +53,8 @@ bool ModuleSceneIntro::CleanUp()
 
 GameObject* ModuleSceneIntro::CreateGameObject(std::string name)
 {
-	GameObject* gameObject = new GameObject(name);
 
-	gameObjectsList.push_back(gameObject);
-	LOG("Created GameObject: %s", gameObject->nameID.c_str());
-	return gameObject;
+	return nullptr;
 }
 
 

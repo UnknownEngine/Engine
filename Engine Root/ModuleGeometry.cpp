@@ -78,11 +78,9 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
 		aiNode* node = scene->mRootNode->mChildren[i];
-		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
+		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()),gameObject);
 		gameObject->childs.push_back(newGameObject);
-		CheckNodeChilds(node,newGameObject,scene, realDir);
-
-			
+		CheckNodeChilds(node,newGameObject,scene, realDir);	
 	}
 	aiReleaseImport(scene);
 

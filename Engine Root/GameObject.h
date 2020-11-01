@@ -12,7 +12,7 @@ class MeshComponent;
 class GameObject {
 
 public:
-	GameObject(std::string name);
+	GameObject(std::string name, GameObject* parent = nullptr);
 	~GameObject();
 
 	void Update();

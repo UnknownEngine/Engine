@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 #include "MeshComponent.h"
 
-GameObject::GameObject(std::string name) : active(true), nameID(name), parent(nullptr)
+GameObject::GameObject(std::string name, GameObject* parent) : active(true), nameID(name), parent(parent)
 {
 }
 
