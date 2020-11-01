@@ -157,7 +157,24 @@ update_status ModuleEditor::PostUpdate(float dt)
 				showOpenGLWindow = !showOpenGLWindow;
 
 			ImGui::EndMenu();
-	}
+		}
+		if (ImGui::BeginMenu("Primitives"))
+		{
+			if (ImGui::MenuItem("Sphere")){
+				App->fsystem->CreatePrimitives("Assets/FBXs/Sphere.fbx", "Sphere");
+			}
+			if (ImGui::MenuItem("Cylinder")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cylinder.fbx", "Cylinder");
+			}
+			if (ImGui::MenuItem("Cube")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cube.fbx", "Cube");
+			}
+			if (ImGui::MenuItem("Cone")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cube.fbx", "Cone");
+			}
+			ImGui::EndMenu();
+		}
+		
 
 	ImGui::EndMainMenuBar();
 	}
@@ -174,6 +191,12 @@ update_status ModuleEditor::PostUpdate(float dt)
 		if (App->scene_intro->selected != NULL)
 		{
 			FillInspector();
+		}
+		else
+		{
+			hasTransform = false;
+			hasMesh = false;
+			hasMaterial = false;
 		}
 		DrawInspector();
 		
@@ -347,22 +370,25 @@ void ModuleEditor::DrawInspector()
 
 		ImGui::Text("Size: (%i,%i)", material_width, material_height);
 		ImGui::Text("Bpp: %i", material_bpp);
-		if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
+		if (App->scene_intro->selected != NULL)
 		{
-			ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
-		}
-		else {
-			ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
+			if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
+			{
+				ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
+			}
+			else {
+				ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
+			}
 		}
 	}
 }
 
 void ModuleEditor::FillInspector()
 {
-	TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
-	MaterialComponent* materialComponent = App->scene_intro->selected->GetMaterialComponent();
-	MeshComponent* meshComponent = App->scene_intro->selected->GetMeshComponent();
-
+		TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
+		MaterialComponent* materialComponent = App->scene_intro->selected->GetMaterialComponent();
+		MeshComponent* meshComponent = App->scene_intro->selected->GetMeshComponent();
+	
 	if (transformComponent != NULL)
 	{
 		float tfposx = transformComponent->position.x;
@@ -419,6 +445,7 @@ void ModuleEditor::FillInspector()
 		hasMesh = false;
 	}
 }
+
 
 void ModuleEditor::PrintConsole()
 {
