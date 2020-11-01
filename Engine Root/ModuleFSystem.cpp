@@ -60,7 +60,7 @@ bool M_FileSystem::CleanUp()
 
 void M_FileSystem::CreateLibraryDirectories()
 {
-	CreateDir(LIBRARY_PATH);
+	/*CreateDir(LIBRARY_PATH);
 	CreateDir(FOLDERS_PATH);
 	CreateDir(MESHES_PATH);
 	CreateDir(TEXTURES_PATH);
@@ -69,7 +69,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ANIMATIONS_PATH);
 	CreateDir(PARTICLES_PATH);
 	CreateDir(SHADERS_PATH);
-	CreateDir(SCENES_PATH);
+	CreateDir(SCENES_PATH);*/
 }
 
 // Add a new zip file or folder
