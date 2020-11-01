@@ -49,6 +49,7 @@ public:
 	GameObject* firstGameObject = nullptr;
 
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
+	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 };
 
 #endif // !__ModuleGeometry_H__

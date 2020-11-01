@@ -60,6 +60,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	//Load aiScene from Fbx with Assimp
 	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
 
+	CreateTransformComponent(scene->mRootNode, firstGameObject);
 	//Create child GameObjects for each mesh
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
@@ -415,16 +416,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 	
 	}
 
-	aiVector3D translation, scaling;
-	aiQuaternion rotation;
-	
-	node->mTransformation.Decompose(scaling, rotation, translation);
-	TransformComponent* transformComponent = new TransformComponent(
-		float3(translation.x,translation.y, translation.z),
-		Quat(rotation.x, rotation.y, rotation.z, rotation.w),
-		float3(scaling.x, scaling.y, scaling.z));
-
-	gameObjectNode->AddComponent(transformComponent);
+	CreateTransformComponent(node, gameObjectNode);
 
 	//Create texture buffer 
 	//CreateTextureBuffer();
@@ -439,4 +431,18 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 			CheckNodeChilds(node->mChildren[i],newGameObject,scene, realDir);
 		}
 	}
+}
+
+void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObjectNode)
+{
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
+
+	node->mTransformation.Decompose(scaling, rotation, translation);
+	TransformComponent* transformComponent = new TransformComponent(
+		float3(translation.x, translation.y, translation.z),
+		Quat(rotation.x, rotation.y, rotation.z, rotation.w),
+		float3(scaling.x, scaling.y, scaling.z));
+
+	gameObjectNode->AddComponent(transformComponent);
 }
