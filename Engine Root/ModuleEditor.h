@@ -49,28 +49,6 @@ public:
 
 	int slider_frames = 60;
 
-	char tposx[64]="";
-	char tposy[64] = "";
-	char tposz[64] = "";
-	float rotx = 0.0;
-	float roty = 0.0;
-	float rotz = 0.0;
-	char tscalex[64] = "";
-	char tscaley[64] = "";
-	char tscalez[64] = "";
-
-	int numvertices=0;
-	int numnormals=0;
-	std::string meshname = "";
-	std::string meshpath = "";
-
-	std::string mname="";
-	std::string mpath="";
-	int mwidth=0;
-	int mheight = 0;
-	int mbpp = 0;
-	uint mbuffer = 0;
-
 	bool IsActive = true;
 	ImGuiTextBuffer input_log;
 	bool scroll = false;
@@ -91,6 +69,32 @@ private:
 	bool showInputWindow;
 	bool showHardwareWindow;
 	bool showConsoleWindow;
+
+	char tposx[64] = "";
+	char tposy[64] = "";
+	char tposz[64] = "";
+	char tscalex[64] = "";
+	char tscaley[64] = "";
+	char tscalez[64] = "";
+	float rotx = 0.0;
+	float roty = 0.0;
+	float rotz = 0.0;
+
+	std::string meshname = "";
+	std::string meshpath = "";
+	std::string material_name = "";
+	std::string material_path = "";
+	int numvertices = 0;
+	int numnormals = 0;
+
+	int material_width = 0;
+	int material_height = 0;
+	int material_bpp = 0;
+	uint material_buffer = 0;
+
+	bool hasTransform = false;
+	bool hasMaterial = false;
+	bool hasMesh = false;
 
 	std::vector<char*> items;
 };

@@ -8,6 +8,7 @@
 #include "Devil\include\ilut.h"
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
+
 class MaterialComponent: public Component
 {
 public :
