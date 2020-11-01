@@ -372,8 +372,10 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 
 				aiString path;
 				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-				LOG("s",path.C_Str());
-				std::string fileRoute = std::string(path.C_Str());
+				std::string stringPath = std::string(path.C_Str());
+				std::size_t pos = stringPath.find_last_of("\\");
+				
+				std::string fileRoute = stringPath.substr(pos +1);
 				std::string rootPath = std::string("Assets/Textures/");
 				rootPath = rootPath + fileRoute;
 				LOG("%s", rootPath.c_str());
