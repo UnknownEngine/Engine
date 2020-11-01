@@ -62,7 +62,7 @@ public:
 	std::string NormalizePath(const char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 	void DetectExtension(std::string path, std::string file, std::string extension ) const;
-
+	void CreatePrimitives(std::string path, std::string file);
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;

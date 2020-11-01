@@ -157,7 +157,24 @@ update_status ModuleEditor::PostUpdate(float dt)
 				showOpenGLWindow = !showOpenGLWindow;
 
 			ImGui::EndMenu();
-	}
+		}
+		if (ImGui::BeginMenu("Primitives"))
+		{
+			if (ImGui::MenuItem("Sphere")){
+				App->fsystem->CreatePrimitives("Assets/FBXs/Sphere.fbx", "Sphere");
+			}
+			if (ImGui::MenuItem("Cylinder")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cylinder.fbx", "Cylinder");
+			}
+			if (ImGui::MenuItem("Cube")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cube.fbx", "Cube");
+			}
+			if (ImGui::MenuItem("Cone")) {
+				App->fsystem->CreatePrimitives("Assets/FBXs/Cube.fbx", "Cone");
+			}
+			ImGui::EndMenu();
+		}
+		
 
 	ImGui::EndMainMenuBar();
 	}

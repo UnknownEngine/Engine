@@ -275,6 +275,17 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 	}
 }
 
+void M_FileSystem::CreatePrimitives(std::string path, std::string file)
+{
+	char* buffer = nullptr;
+	
+	uint size = Load(path.c_str(), &buffer);
+	if (buffer != nullptr)
+	{
+		App->geometry->LoadFbx(buffer, size, file, path);
+	}
+}
+
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
 {
 	std::string full_path(path);
