@@ -11,7 +11,8 @@
 #include "Devil\include\ilut.h"
 #pragma comment( lib, "Devil/libx86/ILUT.lib" )
 
-
+#define CHECKER_HEIGHT 128
+#define CHECKER_WIDTH 128
 
 
 class MeshComponent;
@@ -36,20 +37,23 @@ public:
 	void CreateBuffer(MeshComponent* mesh);
 
 	void CreateTextureBuffer(MaterialComponent* material);
+	void CreateCheckerTextureBuffer();
 
 	void LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
 
-	void RenderMeshes();
 	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
 	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 	bool CleanUp();
-	GameObject* firstGameObject = nullptr;
+	
 
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
+
+private:
+	GLuint bufferCheckerTexture = 0;
 };
 
 #endif // !__ModuleGeometry_H__

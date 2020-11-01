@@ -10,6 +10,8 @@
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
+
+
 struct aiLogStream stream;
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -30,6 +32,8 @@ bool ModuleGeometry::Start()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
+	CreateCheckerTextureBuffer();
+
 	return true;
 }
 
@@ -40,7 +44,10 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
-	DrawMeshFromGameObjectRoot(firstGameObject);
+	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+	{
+		DrawMeshFromGameObjectRoot(App->scene_intro->gameObjectsList[i]);
+	}
 	//RenderMeshes();
 	return UPDATE_CONTINUE;
 }
@@ -55,18 +62,19 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	bool ret = false;
 
 	//Create Root GameObject
-	firstGameObject = new GameObject(fileName);
+	GameObject* gameObject = new GameObject(fileName);
+	App->scene_intro->gameObjectsList.push_back(gameObject);
 	
 	//Load aiScene from Fbx with Assimp
 	const aiScene* scene = aiImportFileFromMemory(buffer,size, aiProcessPreset_TargetRealtime_MaxQuality,nullptr);
 
-	CreateTransformComponent(scene->mRootNode, firstGameObject);
+	CreateTransformComponent(scene->mRootNode, gameObject);
 	//Create child GameObjects for each mesh
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
 		aiNode* node = scene->mRootNode->mChildren[i];
 		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
-		firstGameObject->childs.push_back(newGameObject);
+		gameObject->childs.push_back(newGameObject);
 		CheckNodeChilds(node,newGameObject,scene, realDir);
 
 			
@@ -184,6 +192,31 @@ void ModuleGeometry::CreateTextureBuffer(MaterialComponent* material)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void ModuleGeometry::CreateCheckerTextureBuffer()
+{
+	GLubyte checkerImage[CHECKER_WIDTH][CHECKER_HEIGHT][4];
+	for (int i = 0; i < CHECKER_WIDTH; i++) {
+		for (int j = 0; j < CHECKER_HEIGHT; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+	//Texture buffer
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &bufferCheckerTexture);
+	glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKER_WIDTH, CHECKER_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void ModuleGeometry::LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh)
 {
 	ourMesh->num_vertices = aimesh->mNumVertices;
@@ -243,47 +276,6 @@ bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMes
 	return false;
 }
 
-void ModuleGeometry::RenderMeshes()
-{
-	for (uint i = 0; i < firstGameObject->childs.size(); i++)
-	{
-		
-		MeshComponent* mesh = static_cast<MeshComponent*>(firstGameObject->childs[i]->components[0]);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		//Vertices
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices); 
-		glVertexPointer(3, GL_FLOAT, 0, NULL); 
-
-		//normals
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-		glNormalPointer(GL_FLOAT, 0, NULL);
-
-		//UVs
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->id_coords);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-		//Textures
-		//glBindTexture(GL_TEXTURE_2D, mesh->texture.bufferTexture);
-		
-		//Indices
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices); 
-
-		//Drawing
-		glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL); 
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	}
-}
 
 void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 {
@@ -338,7 +330,13 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 
 	//Textures
 	if (material != nullptr && material->active) {
-		glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+		if (!material->useChecker) {
+			glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+
+		}
 	}
 
 	//Indices
