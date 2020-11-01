@@ -289,18 +289,18 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 	if (gameObject->components.size() > 0) {
 		for (uint i = 0; i < gameObject->components.size(); i++)
 		{
-			LOG("Drawing %s components", gameObject->nameID.c_str());
-			TransformComponent* transformComponent = gameObject->GetTransformComponent();
 
-			//glPopMatrix();
-			//mat3x3 matrix = mat3x3(transformComponent->scale.x, transformComponent->scale.y, transformComponent->scale.z,
-			//	transformComponent->rotation.x, transformComponent->rotation.y, transformComponent->rotation.z,
-			//	transformComponent->position.x, transformComponent->position.y, transformComponent->position.z);
-			//mat4x4 matrix3d;
-			//
+			LOG("Drawing %s components", gameObject->nameID.c_str());
+
+			TransformComponent* transformComponent = gameObject->GetTransformComponent();
 			MeshComponent* mesh = gameObject->GetMeshComponent();
 			MaterialComponent* material = gameObject->GetMaterialComponent();
+
+			glPushMatrix();
+			float4x4 transformMatrix = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
+			glMultMatrixf((float*)&transformMatrix);
 			DrawMesh(mesh,material);
+			glPopMatrix();
 			//gameObject->components[i]->Update();
 		}
 

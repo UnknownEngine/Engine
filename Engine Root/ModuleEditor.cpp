@@ -160,27 +160,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	ImGui::Begin("Hierarchy");
 
-		if (App->geometry->firstGameObject != NULL)
-		{
-			if (ImGui::TreeNode(App->geometry->firstGameObject->nameID.c_str()))
-			{
-				for (int i = 0; i < App->geometry->firstGameObject->childs.size(); i++)
-				{
-					if (i == 0)
-						ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-
-					if (ImGui::TreeNode(App->geometry->firstGameObject->childs[i]->nameID.c_str()))
-					{
-						if (ImGui::IsItemClicked)
-						{
-							
-						}
-						ImGui::TreePop();
-					}
-				}
-				ImGui::TreePop();
-			}
-		}
+	CreateHierarchy(App->geometry->firstGameObject);
 	ImGui::End();
 
 	
@@ -605,6 +585,31 @@ void ModuleEditor::ConsoleWindow()
 		PrintConsole();
 	}
 	ImGui::End();
+}
+
+void ModuleEditor::CreateHierarchy(GameObject* gameobject)
+{
+	if (gameobject != NULL)
+	{
+		if (ImGui::TreeNode(gameobject->nameID.c_str()))
+		{
+			if (ImGui::IsItemClicked(0)) {
+				LOG("XD");
+			}
+			
+			for (int i = 0; i < gameobject->childs.size(); i++)
+			{
+				if (i == 0)
+				{
+					ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+				}
+				GameObject* gobject = gameobject->childs[i];
+				CreateHierarchy(gobject);		
+			}
+		ImGui::TreePop();
+		}
+	}
+
 }
 
 void ModuleEditor::HyperLink(const char* tooltip, const char* url)

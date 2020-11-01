@@ -39,6 +39,8 @@ private:
 	void InputWindow();
 	void ConsoleWindow();
 
+	void CreateHierarchy(GameObject* gameobject);
+
 	void HyperLink(const char* tooltip, const char* url);
 
 public:
