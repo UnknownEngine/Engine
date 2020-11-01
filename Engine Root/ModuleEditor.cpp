@@ -318,6 +318,10 @@ void ModuleEditor::DrawInspector()
 		ImGui::PopStyleColor(1);
 
 		ImGui::Button("Change Source", ImVec2(200, 20));
+		if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
+			App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
+		}
+		ImGui::Text("");
 
 		ImGui::TextWrapped("Vertexs");
 		ImGui::SameLine(100);
@@ -358,9 +362,7 @@ void ModuleEditor::DrawInspector()
 			App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
 		}
 		
-		if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
-			App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
-		}
+
 		ImGui::Text("");
 		ImGui::Text("");
 		ImGui::SameLine(72.f);
