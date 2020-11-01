@@ -31,7 +31,7 @@ public:
 	update_status PostUpdate(float dt);
 
 	
-	bool LoadFbx(const char* path, int size, std::string fileName);
+	bool LoadFbx(const char* path, int size, std::string fileName,std::string realDir);
 	bool LoadTexture(const char* path, MaterialComponent* gameObject);
 	void CreateBuffer(MeshComponent* mesh);
 
@@ -48,7 +48,7 @@ public:
 	bool CleanUp();
 	GameObject* firstGameObject = nullptr;
 
-	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene);
+	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
 };
 
 #endif // !__ModuleGeometry_H__

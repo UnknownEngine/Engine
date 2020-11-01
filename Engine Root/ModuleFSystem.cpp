@@ -254,7 +254,7 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 		uint size =Load(realDir.c_str(), &buffer);
 		if (buffer != nullptr)
 		{
-			App->geometry->LoadFbx(buffer,size,file);
+			App->geometry->LoadFbx(buffer,size,file,realDir);
 		}
 	}
 	else if (extension == "png" || extension == "PNG")

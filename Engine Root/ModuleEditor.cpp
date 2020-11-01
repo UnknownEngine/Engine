@@ -11,6 +11,8 @@
 #include <gl/GL.h>
 #include <string>
 #include "MeshComponent.h"
+#include "TransformComponent.h"
+#include "MaterialComponent.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -163,172 +165,53 @@ update_status ModuleEditor::PostUpdate(float dt)
 	CreateHierarchy(App->geometry->firstGameObject);
 	ImGui::End();
 
-	
-
-
 	if (ImGui::Begin("Inspector"))
 	{
-	ImGui::CollapsingHeader("Transform");
-		
-			ImGui::PushItemWidth(60);
-			ImGui::Text("");
+		if (App->scene_intro->selected != NULL)
+		{
+			TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
+			MaterialComponent* materialComponent = App->scene_intro->selected->GetMaterialComponent();
+			MeshComponent* meshComponent = App->scene_intro->selected->GetMeshComponent();
 
-			ImGui::Text("Position:");
-			ImGui::SameLine(75.f);
-			ImGui::InputText("##posx", "0.0", 64);
-			ImGui::SameLine(142.f);
-			ImGui::InputText("##posy", "0.0", 64);
-			ImGui::SameLine(208.f);
-			ImGui::InputText(" ##posz", "0.0", 64);
+			float tfposx=transformComponent->position.x;
+			float tfposy=transformComponent->position.y;
+			float tfposz=transformComponent->position.z;
+			sprintf(tposx, "%f", tfposx);
+			sprintf(tposy, "%f", tfposy);
+			sprintf(tposz, "%f", tfposz);
 
-			ImGui::Text("");
-			ImGui::Separator();
-			ImGui::Text("");
+			float tfrotx=transformComponent->rotation.x;
+			float tfroty=transformComponent->rotation.y;
+			float tfrotz=transformComponent->rotation.z;
+			rotx = tfrotx;
+			roty = tfroty;
+			rotz = tfrotz;
 
-			ImGui::Text("Rotation:");
-			ImGui::SameLine(75.f);
-			ImGui::SliderFloat("##rotx", &rotx, -360, 360, "X: %1.f", 0.5f);
-			ImGui::SameLine(142.f);
-			ImGui::SliderFloat("##roty", &roty, -360, 360, "Y: %1.f", 0.5f);
-			ImGui::SameLine(208.f);
-			ImGui::SliderFloat("##rotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+			float tfscalex = transformComponent->scale.x;
+			float tfscaley = transformComponent->scale.y;
+			float tfscalez = transformComponent->scale.z;
+			sprintf(tscalex, "%f", tfscalex);
+			sprintf(tscaley, "%f", tfscaley);
+			sprintf(tscalez, "%f", tfscalez);
 
-			ImGui::Text("");
-			ImGui::Separator();
-			ImGui::Text("");
+			mname = materialComponent->name;
+			mpath = materialComponent->path;
+			mwidth = materialComponent->width;
+			mheight = materialComponent->height;
+			mbpp = materialComponent->bpp;
+			mbuffer = materialComponent->bufferTexture;
 
-			ImGui::Text("Scale:");
-			ImGui::SameLine(75.f);
-			ImGui::InputText("##scalex", "0.0", 64);
-			ImGui::SameLine(142.f);
-			ImGui::InputText("##scaley", "0.0", 64);
-			ImGui::SameLine(208.f);
-			ImGui::InputText("##scalez", "0.0", 64);
+			numvertices = meshComponent->num_vertices;
+			numnormals = meshComponent->num_normals;
+			meshname = meshComponent->name;
+			meshpath = meshComponent->path;
 
-			ImGui::PopItemWidth();
-
-			ImGui::Text("");
-			ImGui::Separator();
-			ImGui::Text("");
-
-			ImGui::Text("");
-			ImGui::SameLine(72.f);
-			ImGui::Button("Reset Transforms", ImVec2(200, 20));
-			ImGui::Text("");
-
-			
-		
-	ImGui::CollapsingHeader("Mesh");
-		
-			ImGui::TextWrapped("Name");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("Nombre");
-			ImGui::PopStyleColor(1);
-
-			ImGui::TextWrapped("Path");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("Ruta");
-			ImGui::PopStyleColor(1);
-
-			ImGui::Button("Change Source", ImVec2(200, 20));
-
-			ImGui::TextWrapped("Vertexs");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("num vertex");
-			ImGui::PopStyleColor(1);
-
-			ImGui::TextWrapped("Faces");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("num faces");
-			ImGui::PopStyleColor(1);
-
-			ImGui::TextWrapped("Normals");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("num normals");
-			ImGui::PopStyleColor(1);
-			ImGui::Text("");
-
-			ImGui::Text("");
-			ImGui::SameLine(72.f);
-			ImGui::Button("Delete Component", ImVec2(200, 20));
-			ImGui::Text("");
-
-	ImGui::CollapsingHeader("Material");
-		
-			ImGui::Checkbox("Active##material", &IsActive);
-			
-			ImGui::TextWrapped("Name");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("nombre");
-			ImGui::PopStyleColor(1);
-
-			ImGui::TextWrapped("File Path:");
-			ImGui::SameLine(100);
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-			ImGui::TextWrapped("Ruta de archivo");
-			ImGui::PopStyleColor(1);
-
-			ImGui::Button("Change Source", ImVec2(200, 20));
-
-			ImGui::PushItemWidth(95);
-			ImGui::Text("");
-
-			ImGui::Text("Position:");
-			ImGui::SameLine(75.f);
-			ImGui::InputText("##mposx", "0.0", 64);
-			ImGui::SameLine(175.f);
-			ImGui::InputText("##mposy", "0.0", 64);
-
-			ImGui::PopItemWidth();
-			ImGui::PushItemWidth(60);
-
-			ImGui::Text("Rotation:");
-			ImGui::SameLine(75.f);
-			ImGui::SliderFloat(" ##xrot", &mrotx, -360, 360, "X: %1.f", 0.5f);
-			ImGui::SameLine(142.f);
-			ImGui::SliderFloat(" ##yrot", &mroty, -360, 360, "Y: %1.f", 0.5f);
-			ImGui::SameLine(208.f);
-			ImGui::SliderFloat("##zrot", &mrotz, -360, 360, "Z: %1.f", 0.5f);
-
-			ImGui::PopItemWidth();
-			ImGui::PushItemWidth(95);
-
-			ImGui::Text("Scale:");
-			ImGui::SameLine(75.f);
-			ImGui::InputText("##mscalex", "0.0", 64);
-			ImGui::SameLine(175.f);
-			ImGui::InputText("##mscaley", "0.0", 64);
-
-			ImGui::PopItemWidth();
-
-			ImGui::Text("");
-			ImGui::SameLine(72.f);
-			ImGui::Button("Reset Transforms", ImVec2(200, 20));
-			ImGui::Text("");
-
-			ImGui::Text("");
-			ImGui::SameLine(72.f);
-			ImGui::Button("Delete Component", ImVec2(200, 20));
-
-			ImGui::Text("");
-			ImGui::Separator();
-			ImGui::Text("");
-
-			//if (App->geometry->ourMeshes.size()!=0)
-			//{
-			//	ImGui::Text("Size: (%i,%i)", App->geometry->ourMeshes[0]->texture.width, App->geometry->ourMeshes[0]->texture.height);
-			//	ImGui::Text("Bpp: %i", App->geometry->ourMeshes[0]->texture.bpp);
-			//	ImGui::Image((void*)(intptr_t)App->geometry->ourMeshes[0]->texture.bufferTexture, ImVec2(256, 256));
-			//	
-			//}
-		
-
+			InspectorSelected();
+		}
+		else
+		{
+			InspectorNotSelected();
+		}
 		ImGui::End();
 	}
 		
@@ -379,7 +262,312 @@ void ModuleEditor::AddLog(char* path)
 	items.push_back(strdup(path));
 }
 
-void ModuleEditor::PrintConsole() 
+void ModuleEditor::InspectorNotSelected()
+{
+	ImGui::CollapsingHeader("Transform");
+
+	ImGui::PushItemWidth(60);
+	ImGui::Text("");
+
+	ImGui::Text("Position:");
+	ImGui::SameLine(75.f);
+	ImGui::InputText("##posx", "0.0", 64);
+	ImGui::SameLine(142.f);
+	ImGui::InputText("##posy", "0.0", 64);
+	ImGui::SameLine(208.f);
+	ImGui::InputText(" ##posz", "0.0", 64);
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Rotation:");
+	ImGui::SameLine(75.f);
+	ImGui::SliderFloat("##rotx", &rotx, -360, 360, "X: %1.f", 0.5f);
+	ImGui::SameLine(142.f);
+	ImGui::SliderFloat("##roty", &roty, -360, 360, "Y: %1.f", 0.5f);
+	ImGui::SameLine(208.f);
+	ImGui::SliderFloat("##rotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Scale:");
+	ImGui::SameLine(75.f);
+	ImGui::InputText("##scalex", "0.0", 64);
+	ImGui::SameLine(142.f);
+	ImGui::InputText("##scaley", "0.0", 64);
+	ImGui::SameLine(208.f);
+	ImGui::InputText("##scalez", "0.0", 64);
+
+	ImGui::PopItemWidth();
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Reset Transforms", ImVec2(200, 20));
+	ImGui::Text("");
+
+
+
+	ImGui::CollapsingHeader("Mesh");
+
+	ImGui::TextWrapped("Name");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("Nombre");
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("Path");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("Ruta");
+	ImGui::PopStyleColor(1);
+
+	ImGui::Button("Change Source", ImVec2(200, 20));
+
+	ImGui::TextWrapped("Vertexs");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("num vertex");
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("Faces");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("num faces");
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("Normals");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("num normals");
+	ImGui::PopStyleColor(1);
+	ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Delete Component", ImVec2(200, 20));
+	ImGui::Text("");
+
+	ImGui::CollapsingHeader("Material");
+
+	ImGui::Checkbox("Active##material", &IsActive);
+
+	ImGui::TextWrapped("Name");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("nombre");
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("File Path:");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("Ruta de archivo");
+	ImGui::PopStyleColor(1);
+
+	ImGui::Button("Change Source", ImVec2(200, 20));
+
+	ImGui::PushItemWidth(95);
+	ImGui::Text("");
+
+	//ImGui::Text("Position:");
+	//ImGui::SameLine(75.f);
+	//ImGui::InputText("##mposx", "0.0", 64);
+	//ImGui::SameLine(175.f);
+	//ImGui::InputText("##mposy", "0.0", 64);
+
+	//ImGui::PopItemWidth();
+	//ImGui::PushItemWidth(60);
+
+	//ImGui::Text("Rotation:");
+	//ImGui::SameLine(75.f);
+	//ImGui::SliderFloat(" ##xrot", &mrotx, -360, 360, "X: %1.f", 0.5f);
+	//ImGui::SameLine(142.f);
+	//ImGui::SliderFloat(" ##yrot", &mroty, -360, 360, "Y: %1.f", 0.5f);
+	//ImGui::SameLine(208.f);
+	//ImGui::SliderFloat("##zrot", &mrotz, -360, 360, "Z: %1.f", 0.5f);
+
+	//ImGui::PopItemWidth();
+	//ImGui::PushItemWidth(95);
+
+	//ImGui::Text("Scale:");
+	//ImGui::SameLine(75.f);
+	//ImGui::InputText("##mscalex", "0.0", 64);
+	//ImGui::SameLine(175.f);
+	//ImGui::InputText("##mscaley", "0.0", 64);
+
+	//ImGui::PopItemWidth();
+
+	//ImGui::Text("");
+	//ImGui::SameLine(72.f);
+	//ImGui::Button("Reset Transforms", ImVec2(200, 20));
+	//ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Delete Component", ImVec2(200, 20));
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Size: (%i,%i)", 0,0);
+	ImGui::Text("Bpp: %i", 0);
+}
+
+void ModuleEditor::InspectorSelected()
+{
+	ImGui::CollapsingHeader("Transform");
+
+	ImGui::PushItemWidth(60);
+	ImGui::Text("");
+
+	ImGui::Text("Position:");
+	ImGui::SameLine(75.f);
+	ImGui::InputText("##posx", tposx, 64);
+	ImGui::SameLine(142.f);
+	ImGui::InputText("##posy", tposy, 64);
+	ImGui::SameLine(208.f);
+	ImGui::InputText(" ##posz", tposz, 64);
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Rotation:");
+	ImGui::SameLine(75.f);
+	ImGui::SliderFloat("##rotx", &rotx, -360, 360, "X: %1.f", 0.5f);
+	ImGui::SameLine(142.f);
+	ImGui::SliderFloat("##roty", &roty, -360, 360, "Y: %1.f", 0.5f);
+	ImGui::SameLine(208.f);
+	ImGui::SliderFloat("##rotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Scale:");
+	ImGui::SameLine(75.f);
+	ImGui::InputText("##scalex", tscalex, 64);
+	ImGui::SameLine(142.f);
+	ImGui::InputText("##scaley", tscaley, 64);
+	ImGui::SameLine(208.f);
+	ImGui::InputText("##scalez", tscalez, 64);
+
+	ImGui::PopItemWidth();
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Reset Transforms", ImVec2(200, 20));
+	ImGui::Text("");
+
+
+
+	ImGui::CollapsingHeader("Mesh");
+
+	ImGui::TextWrapped("Name");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped(meshname.c_str());
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("Path");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped(meshpath.c_str());
+	ImGui::PopStyleColor(1);
+
+	ImGui::Button("Change Source", ImVec2(200, 20));
+
+	ImGui::TextWrapped("Vertexs");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("%i",numvertices);
+	ImGui::PopStyleColor(1);
+
+	ImGui::TextWrapped("Normals");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped("%i",numnormals);
+	ImGui::PopStyleColor(1);
+	ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Delete Component", ImVec2(200, 20));
+	ImGui::Text("");
+
+	ImGui::CollapsingHeader("Material");
+
+	ImGui::Checkbox("Active##material", &IsActive);
+
+	ImGui::TextWrapped("File Path:");
+	ImGui::SameLine(100);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+	ImGui::TextWrapped(mpath.c_str());
+	ImGui::PopStyleColor(1);
+
+	ImGui::Button("Change Source", ImVec2(200, 20));
+
+	ImGui::PushItemWidth(95);
+	ImGui::Text("");
+
+	//ImGui::Text("Position:");
+	//ImGui::SameLine(75.f);
+	//ImGui::InputText("##mposx", "0.0", 64);
+	//ImGui::SameLine(175.f);
+	//ImGui::InputText("##mposy", "0.0", 64);
+
+	//ImGui::PopItemWidth();
+	//ImGui::PushItemWidth(60);
+
+	//ImGui::Text("Rotation:");
+	//ImGui::SameLine(75.f);
+	//ImGui::SliderFloat(" ##xrot", &mrotx, -360, 360, "X: %1.f", 0.5f);
+	//ImGui::SameLine(142.f);
+	//ImGui::SliderFloat(" ##yrot", &mroty, -360, 360, "Y: %1.f", 0.5f);
+	//ImGui::SameLine(208.f);
+	//ImGui::SliderFloat("##zrot", &mrotz, -360, 360, "Z: %1.f", 0.5f);
+
+	//ImGui::PopItemWidth();
+	//ImGui::PushItemWidth(95);
+
+	//ImGui::Text("Scale:");
+	//ImGui::SameLine(75.f);
+	//ImGui::InputText("##mscalex", "0.0", 64);
+	//ImGui::SameLine(175.f);
+	//ImGui::InputText("##mscaley", "0.0", 64);
+
+	//ImGui::PopItemWidth();
+
+	//ImGui::Text("");
+	//ImGui::SameLine(72.f);
+	//ImGui::Button("Reset Transforms", ImVec2(200, 20));
+	//ImGui::Text("");
+
+	ImGui::Text("");
+	ImGui::SameLine(72.f);
+	ImGui::Button("Delete Component", ImVec2(200, 20));
+
+	ImGui::Text("");
+	ImGui::Separator();
+	ImGui::Text("");
+
+	ImGui::Text("Size: (%i,%i)", mwidth, mheight);
+	ImGui::Text("Bpp: %i", mbpp);
+	ImGui::Image((void*)(intptr_t)mbuffer, ImVec2(256, 256));
+}
+
+void ModuleEditor::PrintConsole()
 {
 	ImGui::Text("----- Console -----");
 	for (uint i = 0; i < items.size(); i++)
@@ -594,7 +782,7 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 		if (ImGui::TreeNode(gameobject->nameID.c_str()))
 		{
 			if (ImGui::IsItemClicked(0)) {
-				LOG("XD");
+				App->scene_intro->selected = gameobject;
 			}
 			
 			for (int i = 0; i < gameobject->childs.size(); i++)

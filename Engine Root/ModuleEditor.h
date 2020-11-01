@@ -29,6 +29,8 @@ public:
 	bool CleanUp();
 
 private:
+	void InspectorNotSelected();
+	void InspectorSelected();
 	void PrintConsole();
 	void CleanConsole();
 	void AboutWindow();
@@ -46,12 +48,29 @@ private:
 public:
 
 	int slider_frames = 60;
+
+	char tposx[64];
+	char tposy[64];
+	char tposz[64];
 	float rotx = 0.0;
 	float roty = 0.0;
 	float rotz = 0.0;
-	float mrotx = 0.0;
-	float mroty = 0.0;
-	float mrotz = 0.0;
+	char tscalex[64];
+	char tscaley[64];
+	char tscalez[64];
+
+	int numvertices;
+	int numnormals;
+	std::string meshname;
+	std::string meshpath;
+
+	std::string mname;
+	std::string mpath;
+	int mwidth;
+	int mheight;
+	int mbpp;
+	uint mbuffer;
+
 	bool IsActive = true;
 	ImGuiTextBuffer input_log;
 	bool scroll = false;

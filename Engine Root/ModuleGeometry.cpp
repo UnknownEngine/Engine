@@ -50,7 +50,7 @@ update_status ModuleGeometry::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName) 
+bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, std::string realDir) 
 {
 	bool ret = false;
 
@@ -66,7 +66,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName)
 		aiNode* node = scene->mRootNode->mChildren[i];
 		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
 		firstGameObject->childs.push_back(newGameObject);
-		CheckNodeChilds(node,newGameObject,scene);
+		CheckNodeChilds(node,newGameObject,scene, realDir);
 
 			
 	}
@@ -129,6 +129,7 @@ bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
 	material->height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
 	material->bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
 	material->dataTexture = ilGetData();
+	material->path = path;
 
 	glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, material->width, material->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, material->dataTexture);
@@ -366,7 +367,7 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,const aiScene* scene)
+void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,const aiScene* scene, std::string realDir)
 {
 	LOG("Checking node: %s", node->mName.C_Str());
 	if (node->mNumMeshes > 0) {
@@ -375,6 +376,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 		if (node->mNumMeshes > 0) {
 			MeshComponent* ourMesh = new MeshComponent();
 			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+			ourMesh->name = node->mName.C_Str();
+			ourMesh->path = realDir;
 			//Copy Vertices
 			LoadVertices(aimesh, ourMesh);
 
@@ -433,7 +436,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 		LOG("GOT %d children", node->mNumChildren)
 		for (uint i = 0; i < node->mNumChildren; i++)
 		{
-			CheckNodeChilds(node->mChildren[i],newGameObject,scene);
+			CheckNodeChilds(node->mChildren[i],newGameObject,scene, realDir);
 		}
 	}
 }

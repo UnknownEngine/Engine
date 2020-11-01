@@ -24,5 +24,8 @@ public:
 
 	uint id_coords = 0;
 	float* tex_coords = nullptr;
+
+	std::string name;
+	std::string path;
 };
 

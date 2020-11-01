@@ -25,7 +25,7 @@ public:
 	bool CleanUp();
 
 public:
-	
+	GameObject* selected=nullptr;
 	GameObject* CreateGameObject(std::string name);
 	std::vector<GameObject*> gameObjectsList;
 

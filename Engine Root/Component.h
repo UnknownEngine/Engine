@@ -3,7 +3,7 @@
 
 #include "Globals.h"
 #include <vector>
-
+#include <string>
 
 
 class GameObject;
