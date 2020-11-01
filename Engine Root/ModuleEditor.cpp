@@ -304,7 +304,7 @@ void ModuleEditor::DrawInspector()
 	if (hasMesh)
 	{
 		ImGui::CollapsingHeader("Mesh");
-
+		ImGui::Checkbox("Active", &App->scene_intro->selected->GetMeshComponent()->active);
 		ImGui::TextWrapped("Name");
 		ImGui::SameLine(100);
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
@@ -341,7 +341,7 @@ void ModuleEditor::DrawInspector()
 	{
 		ImGui::CollapsingHeader("Material");
 
-		ImGui::Checkbox("Active##material", &IsActive);
+		ImGui::Checkbox("Active##material", &App->scene_intro->selected->GetMaterialComponent()->active);
 
 		ImGui::TextWrapped("File Path:");
 		ImGui::SameLine(100);
@@ -354,6 +354,14 @@ void ModuleEditor::DrawInspector()
 		ImGui::PushItemWidth(95);
 		ImGui::Text("");
 
+		if (ImGui::Button("Use Checkers", ImVec2(200, 20))) {
+			App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
+		}
+		
+		if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
+			App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
+		}
+		ImGui::Text("");
 		ImGui::Text("");
 		ImGui::SameLine(72.f);
 		ImGui::Button("Delete Component", ImVec2(200, 20));
@@ -361,9 +369,9 @@ void ModuleEditor::DrawInspector()
 		ImGui::Text("");
 		ImGui::Separator();
 		ImGui::Text("");
-		if (ImGui::Button("UseCheckers", ImVec2(200, 20))) {
-			App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
-		}
+
+
+
 
 		ImGui::Text("Size: (%i,%i)", material_width, material_height);
 		ImGui::Text("Bpp: %i", material_bpp);

@@ -282,7 +282,7 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 
 void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 {
-	if (mesh == nullptr) return;
+	if (mesh == nullptr || !mesh->active) return;
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -301,14 +301,17 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	//Textures
-	if (material != nullptr && material->active) {
-		if (!material->useChecker) {
-			glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
-		}
-		else {
-			glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+	if (material->active) {
+		if (material != nullptr) {
+			if (!material->useChecker) {
+				glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+			}
 		}
 	}
+	
 
 	//Indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
@@ -316,6 +319,19 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 	//Drawing
 	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
+	if (mesh->showNormalsVertices) {
+		glColor3f(0, 1, 0);
+		glBegin(GL_LINES);
+		float normalLenght = 0.1f;
+		for (int i = 0; i < mesh->num_normals * 3; i += 3)
+		{
+			glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+			glVertex3f(mesh->vertices[i] + mesh->normals[i] * normalLenght, mesh->vertices[i + 1] + mesh->normals[i + 1] * normalLenght, mesh->vertices[i + 2] + mesh->normals[i + 2] * normalLenght);
+		}
+
+		glEnd();
+		glColor3f(1, 1, 1);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);

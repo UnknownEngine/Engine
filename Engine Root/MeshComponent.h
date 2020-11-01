@@ -25,6 +25,8 @@ public:
 	uint id_coords = 0;
 	float* tex_coords = nullptr;
 
+	bool showNormalsVertices = false;
+
 	std::string name;
 	std::string path;
 };
