@@ -246,7 +246,9 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 	
 	if (extension == "fbx" || extension == "FBX")
 	{
-		std::string realName = "/FBXs/" + file + "." + extension;
+		std::string fileWithExtension = file + "." + extension;
+		std::string realName = "/FBXs/" + fileWithExtension;
+
 		char* buffer = nullptr;
 		std::string realDir = PHYSFS_getRealDir(realName.c_str());
 		realDir += realName;
@@ -254,24 +256,19 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 		uint size =Load(realDir.c_str(), &buffer);
 		if (buffer != nullptr)
 		{
-			App->geometry->LoadFbx(buffer,size,file,realDir);
+			App->geometry->LoadFbx(buffer,size,file,file);
 		}
 	}
 	else if (extension == "png" || extension == "PNG")
 	{
-		std::string realName = "/Textures/" + file + "." + extension;
 		char* buffer = nullptr;
-		std::string realDir = PHYSFS_getRealDir(realName.c_str());
-		realDir += realName;
-		uint size = Load(realDir.c_str(), &buffer);
-		//for (int i = 0; i < App->scene_intro->firstGameObject->childs.size(); i++)
-		//{
-		//	MeshComponent* mesh = static_cast<MeshComponent*>(App->scene_intro->firstGameObject->childs[i]->components[0]);
-		//	if (buffer != nullptr)
-		//	{
-		//		//App->geometry->LoadTexture(realDir.c_str(), mesh);
-		//	}
-		//}
+		std::string realName = "Assets/Textures/" + file + "." + extension;
+	
+		uint size = Load(realName.c_str(), &buffer);
+		GameObject* gameObject = App->scene_intro->selected;
+		if (gameObject == nullptr) return;
+		App->geometry->LoadTexture(realName.c_str(), gameObject->GetMaterialComponent());
+
 	}
 }
 
