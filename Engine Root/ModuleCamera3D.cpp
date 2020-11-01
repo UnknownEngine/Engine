@@ -47,15 +47,15 @@ update_status ModuleCamera3D::Update(float dt)
 {
 		vec3 target(0, 0, 0);
 		vec3 newPos(0, 0, 0);
-		float speed = 3.0f * dt;
+		float speed = 1.0f;
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			speed = 0.01f;
+			  speed = 2.0f;
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z ;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z ;
-
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= (Z*speed) ;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += (Z*speed) ;
+																		
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= (X*speed);
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += (X*speed);
 
 		newPos += App->input->GetMouseZ()*(-Z);
 		Position += newPos/6;

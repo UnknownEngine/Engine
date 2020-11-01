@@ -108,9 +108,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 		if (ImGui::BeginMenu("Help")) {
 
-			if (ImGui::MenuItem("Gui Demo"))
-				showcase = !showcase;
-
 			if (ImGui::MenuItem("Documentation"))
 				App->RequestBrowser("https://github.com/UnknownEngine/Engine/wiki");
 
