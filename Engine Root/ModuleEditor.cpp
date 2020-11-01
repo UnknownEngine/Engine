@@ -474,7 +474,7 @@ void ModuleEditor::AboutWindow()
 {	
 	if (ImGui::Begin("About",&showAboutWindow)) {
 		ImGui::TextWrapped("Unknown Engine v0.1");
-		HyperLink("Unkown Engine Github", "https://github.com/UnknownEngine/Engine/wiki");
+		HyperLink("Unkown Engine Github", "https://github.com/UnknownEngine/Engine");
 		ImGui::Spacing();
 		ImGui::TextWrapped("UnknownEngine Unkown Engine is our project for Engines subject at CITM's videogames design & development."
 			"This time, we will be working on the creation of the core of a videogames engine, focusing on basic level stuff in order to understand how a high level engine work. ");
@@ -590,7 +590,7 @@ void ModuleEditor::OpenGLSettings()
 		if (ImGui::Checkbox("Cull Face", &App->renderer3D->gl_cull_face)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_cull_face, 1); }
 		if (ImGui::Checkbox("Color Material", &App->renderer3D->gl_color_material)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_color_material, 2); }
 		ImGui::SameLine(150);
-		if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_lightning, 3); }
+		if (ImGui::Checkbox("Lighting", &App->renderer3D->gl_lightning)) { App->renderer3D->ActivateCheckBoxs(!App->renderer3D->gl_lightning, 3); }
 		if (ImGui::Checkbox("Texture 2D", &App->renderer3D->gl_texture_2d)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_texture_2d, 4); }
 		ImGui::SameLine(150);
 		if (ImGui::Checkbox("Ambient", &App->renderer3D->gl_ambient)) { App->renderer3D->ActivateCheckBoxs(App->renderer3D->gl_ambient, 5); }
