@@ -5,7 +5,7 @@
 #include "Glew/include/glew.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
-
+#include "TransformComponent.h"
 #include <math.h>
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -45,14 +45,14 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-		vec3 target(0, 2, 2);
+		vec3 target(0, 0, 0);
 		vec3 newPos(0, 0, 0);
 		float speed = 3.0f * dt;
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			speed = 8.0f * dt;
+			speed = 0.01f;
 
-		//if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-		//if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y += speed;
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y -= speed;
 
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z ;
@@ -62,13 +62,20 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X;
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X;
 
-		Position += newPos;
-		Reference += newPos;
+		Position += newPos/6;
+		Reference += newPos/6;
 
-		if (App->input->GetKey(SDL_SCANCODE_F)==KEY_DOWN)
+		if (App->scene_intro->selected != NULL)
 		{
-			Position = target - (normalize(target - Position) * 4);
-			LookAt(target);
+			TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
+			target.x=transformComponent->position.x;
+			target.y=transformComponent->position.y;
+			target.z=transformComponent->position.z;
+			if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+			{
+				Position = target - (normalize(target - Position) * 15);
+				LookAt(target);
+			}
 		}
 
 		// Mouse motion ----------------

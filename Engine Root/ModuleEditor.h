@@ -29,8 +29,8 @@ public:
 	bool CleanUp();
 
 private:
-	void InspectorNotSelected();
-	void InspectorSelected();
+	void FillInspector();
+	void DrawInspector();
 	void PrintConsole();
 	void CleanConsole();
 	void AboutWindow();
@@ -49,27 +49,27 @@ public:
 
 	int slider_frames = 60;
 
-	char tposx[64];
-	char tposy[64];
-	char tposz[64];
+	char tposx[64]="";
+	char tposy[64] = "";
+	char tposz[64] = "";
 	float rotx = 0.0;
 	float roty = 0.0;
 	float rotz = 0.0;
-	char tscalex[64];
-	char tscaley[64];
-	char tscalez[64];
+	char tscalex[64] = "";
+	char tscaley[64] = "";
+	char tscalez[64] = "";
 
-	int numvertices;
-	int numnormals;
-	std::string meshname;
-	std::string meshpath;
+	int numvertices=0;
+	int numnormals=0;
+	std::string meshname = "";
+	std::string meshpath = "";
 
-	std::string mname;
-	std::string mpath;
-	int mwidth;
-	int mheight;
-	int mbpp;
-	uint mbuffer;
+	std::string mname="";
+	std::string mpath="";
+	int mwidth=0;
+	int mheight = 0;
+	int mbpp = 0;
+	uint mbuffer = 0;
 
 	bool IsActive = true;
 	ImGuiTextBuffer input_log;
