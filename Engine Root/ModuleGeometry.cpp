@@ -468,6 +468,21 @@ uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
 	ourMesh->num_normals = ranges[2];
 	ourMesh->num_tex_coords = ranges[3];
 
+	bytes = sizeof(uint) * ourMesh->num_indices;
+	ourMesh->indices = new uint[ourMesh->num_indices];
+	memcpy(ourMesh->indices, cursor, bytes);
+
+	bytes = sizeof(uint) * ourMesh->num_vertices;
+	ourMesh->vertices = new float[ourMesh->num_vertices];
+	memcpy(ourMesh->vertices, cursor, bytes);
+
+	bytes = sizeof(uint) * ourMesh->num_normals;
+	ourMesh->normals = new float[ourMesh->num_normals];
+	memcpy(ourMesh->normals, cursor, bytes);
+
+	bytes = sizeof(uint) * ourMesh->num_tex_coords;
+	ourMesh->tex_coords = new float[ourMesh->num_tex_coords];
+	memcpy(ourMesh->tex_coords, cursor, bytes);
 
 	return uint();
 }
