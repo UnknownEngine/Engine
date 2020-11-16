@@ -23,6 +23,7 @@ public:
 	float* normals = nullptr;
 
 	uint id_coords = 0;
+	uint num_tex_coords = 0;
 	float* tex_coords = nullptr;
 
 	bool showNormalsVertices = false;

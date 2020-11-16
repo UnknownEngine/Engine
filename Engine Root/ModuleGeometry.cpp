@@ -239,7 +239,8 @@ bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMes
 	if (aimesh->HasTextureCoords(0))
 	{
 		ret = true;
-		ourMesh->tex_coords = new float[aimesh->mNumVertices * 2];
+		ourMesh->num_tex_coords = ourMesh->num_vertices;
+		ourMesh->tex_coords = new float[ourMesh->num_tex_coords * 2];
 		for (unsigned int i = 0; i < aimesh->mNumVertices; i++)
 		{
 			ourMesh->tex_coords[i * 2] = aimesh->mTextureCoords[0][i].x;
@@ -375,11 +376,14 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 
 			//Copy Normals
 			ret = CheckAndLoadNormals(aimesh, ourMesh);
+
+			//Post Loading
 			if (ret)
 			{
 				gameObjectNode->AddComponent(ourMesh);
 				CreateBuffer(ourMesh);
 			}
+
 			if (scene->HasMaterials()) {
 				aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 				uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
@@ -405,10 +409,6 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 	}
 
 	CreateTransformComponent(node, gameObjectNode);
-
-	//Create texture buffer 
-	//CreateTextureBuffer();
-
 	
 	if (node->mNumChildren > 0) {
 		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
@@ -419,6 +419,57 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 			CheckNodeChilds(node->mChildren[i],newGameObject,scene, realDir);
 		}
 	}
+}
+
+uint ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, char** filebuffer)
+{
+	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,(uint)ourMesh->tex_coords };
+	uint size = sizeof(ranges) + sizeof(uint) * ourMesh->num_indices + sizeof(float) * ourMesh->num_vertices * 3 + sizeof(float) * ourMesh->num_normals * 3 + sizeof(float) * ourMesh->num_tex_coords * 2;
+
+	char* fileBuffer = new char[size];
+	char* cursor = fileBuffer;
+
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+	cursor += bytes;
+
+	//Store indices
+	bytes = sizeof(uint) * ourMesh->num_indices;
+	memcpy(cursor, ourMesh->indices, bytes);
+	cursor += bytes;
+
+	//Store vertices
+	bytes = sizeof(uint) * ourMesh->num_vertices;
+	memcpy(cursor, ourMesh->indices, bytes);
+	cursor += bytes;
+
+	//Store normals
+	bytes = sizeof(uint) * ourMesh->num_normals;
+	memcpy(cursor, ourMesh->normals, bytes);
+	cursor += bytes;
+
+	//Store tex coords
+	bytes = sizeof(uint) * ourMesh->num_tex_coords;
+	memcpy(cursor, ourMesh->tex_coords, bytes);
+	cursor += bytes;
+	return size;
+}
+
+uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
+{
+	uint ranges[3];
+	uint bytes = sizeof(ranges);
+	char* cursor = filebuffer;
+	memcpy(ranges, cursor, bytes);
+	cursor += bytes;
+
+	ourMesh->num_indices = ranges[0];
+	ourMesh->num_vertices = ranges[1];
+	ourMesh->num_normals = ranges[2];
+	ourMesh->num_tex_coords = ranges[3];
+
+
+	return uint();
 }
 
 void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObjectNode)
