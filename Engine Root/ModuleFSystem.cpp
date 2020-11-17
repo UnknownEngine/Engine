@@ -86,6 +86,38 @@ bool M_FileSystem::Exists(const char* file) const
 	return PHYSFS_exists(file) != 0;
 }
 
+uint M_FileSystem::WriteFile(char* file, char* buffer, uint size)
+{
+
+	uint ret = 0;
+	bool overwrite = PHYSFS_exists(file) != 0;
+	PHYSFS_file* fs_file= PHYSFS_openWrite(file);
+	const char* writedir = PHYSFS_getWriteDir();
+	if (fs_file != nullptr)
+	{
+		uint written = (uint)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
+
+		if (written != size)
+		{
+			LOG("Couldn't write file");
+		}
+		else
+		{
+			LOG("File written");
+			ret = written;
+		}	
+
+		if (PHYSFS_close(fs_file) == 0)
+			LOG("[error] File System error while closing file %s: %s", file, PHYSFS_getLastError());
+	}
+	else
+	{
+		LOG("Error while opening file");
+	}
+
+	return ret;
+}
+
 bool M_FileSystem::CreateDir(const char* dir)
 {
 	if (IsDirectory(dir) == false)

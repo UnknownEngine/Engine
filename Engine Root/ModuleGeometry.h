@@ -50,7 +50,8 @@ public:
 	
 
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
-	uint SaveOurMesh(MeshComponent* ourMesh, char** filebuffer);
+	uint SaveOurMesh(MeshComponent* ourMesh, char* filebuffer);
+
 	uint LoadOurMesh(char* filebuffer, MeshComponent* ourMesh);
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 

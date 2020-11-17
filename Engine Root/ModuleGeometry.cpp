@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleGeometry.h"
+#include "ModuleFSystem.h"
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -377,8 +378,14 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 			//Copy Normals
 			ret = CheckAndLoadNormals(aimesh, ourMesh);
 
+
+			char* buffer = new char;
+			uint size = SaveOurMesh(ourMesh, buffer);
+
+			
+			App->fsystem->WriteFile("Library/Meshes/MyMesh", buffer, size);
 			//Post Loading
-			if (ret)
+			/*if (ret)
 			{
 				gameObjectNode->AddComponent(ourMesh);
 				CreateBuffer(ourMesh);
@@ -403,7 +410,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 				LoadTexture(rootPath.c_str(),materialComponent);
 				gameObjectNode->AddComponent(materialComponent);
 
-			}
+			}*/
 		}
 	
 	}
@@ -421,9 +428,9 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 	}
 }
 
-uint ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, char** filebuffer)
+uint ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, char* filebuffer)
 {
-	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,(uint)ourMesh->tex_coords };
+	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
 	uint size = sizeof(ranges) + sizeof(uint) * ourMesh->num_indices + sizeof(float) * ourMesh->num_vertices * 3 + sizeof(float) * ourMesh->num_normals * 3 + sizeof(float) * ourMesh->num_tex_coords * 2;
 
 	char* fileBuffer = new char[size];
@@ -454,6 +461,9 @@ uint ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, char** filebuffer)
 	cursor += bytes;
 	return size;
 }
+
+
+
 
 uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
 {
