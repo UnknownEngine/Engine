@@ -303,16 +303,16 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh,MaterialComponent* material)
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	//Textures
-	//if (material->active) {
-	//	if (material != nullptr) {
-	//		if (!material->useChecker) {
-	//			glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
-	//		}
-	//		else {
-	//			glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
-	//		}
-	//	}
-	//}
+	if (material->active) {
+		if (material != nullptr) {
+			if (!material->useChecker) {
+				glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+			}
+		}
+	}
 	
 
 	//Indices
@@ -391,7 +391,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 				CreateBuffer(ourMesh);
 			}
 
-			/*if (scene->HasMaterials()) {
+			if (scene->HasMaterials()) {
 				aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 				uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 
@@ -410,7 +410,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 				LoadTexture(rootPath.c_str(),materialComponent);
 				gameObjectNode->AddComponent(materialComponent);
 
-			}*/
+			}
 		}
 	
 	}
@@ -430,13 +430,13 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 
 uint ModuleGeometry::GetMeshSize(MeshComponent* ourMesh)
 {
-	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
-	return sizeof(ranges) + sizeof(uint) * ourMesh->num_indices + sizeof(uint) * ourMesh->num_vertices * 3 + sizeof(uint) * ourMesh->num_normals * 3 + sizeof(uint) * ourMesh->num_tex_coords * 2;;
+	uint ranges[4];
+	return (sizeof(ranges) + (sizeof(uint) * ourMesh->num_indices) + (sizeof(float) * ourMesh->num_vertices * 3) + (sizeof(float) * ourMesh->num_normals * 3) + (sizeof(float) * ourMesh->num_tex_coords * 2));
 }
 
 char* ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, uint size)
 {
-	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
+	uint ranges[4] ;
 
 	char* buffer = new char[size];
 	char* cursor = buffer;
@@ -451,55 +451,86 @@ char* ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, uint size)
 	cursor += bytes;
 
 	//Store vertices
-	bytes = sizeof(uint) * ourMesh->num_vertices;
-	memcpy(cursor, ourMesh->indices, bytes);
+	bytes = sizeof(float) * ourMesh->num_vertices * 3;
+	memcpy(cursor, ourMesh->vertices, bytes);
 	cursor += bytes;
 
 	//Store normals
-	bytes = sizeof(uint) * ourMesh->num_normals;
+	bytes = sizeof(float) * ourMesh->num_normals * 3;
 	memcpy(cursor, ourMesh->normals, bytes);
 	cursor += bytes;
 
 	//Store tex coords
-	bytes = sizeof(uint) * ourMesh->num_tex_coords;
+	bytes = sizeof(float) * ourMesh->num_tex_coords * 2;
 	memcpy(cursor, ourMesh->tex_coords, bytes);
 	cursor += bytes;
 	return buffer;
 }
 
+char* ModuleGeometry::SaveOurMaterial(MaterialComponent* ourMaterial, uint size)
+{
+	char* buffer;
+	ilEnable(IL_FILE_OVERWRITE);
 
+	ILuint saveBufferSize;
+	ILubyte* saveBuffer;
 
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+	saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
+
+	if (saveBufferSize > 0)
+	{
+		saveBuffer = new ILubyte[saveBufferSize];
+		if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+		{
+			buffer = (char*)saveBuffer;
+		}
+	}
+	return buffer;
+}
 
 uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
 {
-	uint ranges[4];
-	uint bytes = sizeof(ranges);
+	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
 	char* cursor = filebuffer;
+
+	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
-
-	ourMesh->num_indices = ranges[0];
-	ourMesh->num_vertices = ranges[1];
-	ourMesh->num_normals = ranges[2];
-	ourMesh->num_tex_coords = ranges[3];
 
 	bytes = sizeof(uint) * ourMesh->num_indices;
 	ourMesh->indices = new uint[ourMesh->num_indices];
 	memcpy(ourMesh->indices, cursor, bytes);
+	cursor += bytes;
 
-	bytes = sizeof(uint) * ourMesh->num_vertices;
+	bytes = sizeof(float) * ourMesh->num_vertices*3;
 	ourMesh->vertices = new float[ourMesh->num_vertices*3];
 	memcpy(ourMesh->vertices, cursor, bytes);
+	cursor += bytes;
 
-	bytes = sizeof(uint) * ourMesh->num_normals;
+	bytes = sizeof(float) * ourMesh->num_normals*3;
 	ourMesh->normals = new float[ourMesh->num_normals*3];
 	memcpy(ourMesh->normals, cursor, bytes);
+	cursor += bytes;
 
-	bytes = sizeof(uint) * ourMesh->num_tex_coords;
+	bytes = sizeof(float) * ourMesh->num_tex_coords*2;
 	ourMesh->tex_coords = new float[ourMesh->num_tex_coords*2];
 	memcpy(ourMesh->tex_coords, cursor, bytes);
+	cursor += bytes;
 
-	return uint();
+	return 1;
+}
+
+void ModuleGeometry::LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size)
+{
+	ILuint ImageName;
+	ilGenImages(1, &ImageName);
+	ilBindImage(ImageName);
+
+	ilLoadL(IL_TYPE_UNKNOWN, (const void*)filebuffer, size);
+	ourMaterial->bufferTexture = ilutGLBindTexImage();
+
+	ilDeleteImages(1, &ImageName);
 }
 
 void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObjectNode)
