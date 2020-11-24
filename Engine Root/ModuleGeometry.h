@@ -50,12 +50,15 @@ public:
 	
 
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
+
 	uint  GetMeshSize(MeshComponent* ourMesh);
 	char* SaveOurMesh(MeshComponent* ourMesh, uint size);
-	char* SaveOurMaterial(MaterialComponent* ourMaterial, uint size);
-
 	uint LoadOurMesh(char* filebuffer, MeshComponent* ourMesh);
+
+	uint GetMatSize();
+	char* SaveOurMaterial(MaterialComponent* ourMaterial, uint size);
 	void LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size);
+
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 
 	GLuint bufferCheckerTexture = 0;

@@ -48,6 +48,7 @@ public:
 	bool AddPath(const char* path_or_zip);
 	bool Exists(const char* file) const;
 	uint WriteFile(char* file, char* buffer, uint size);
+	uint ReadFile(char* file, char** buffer);
 	bool CreateDir(const char* dir);
 	bool IsDirectory(const char* file) const;
 	const char* GetWriteDir() const;

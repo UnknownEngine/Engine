@@ -118,6 +118,41 @@ uint M_FileSystem::WriteFile(char* file, char* buffer, uint size)
 	return ret;
 }
 
+uint M_FileSystem::ReadFile(char* file, char** buffer)
+{
+	uint ret = 0;
+
+	PHYSFS_file* fs_file = PHYSFS_openRead(file);
+	if (fs_file != nullptr)
+	{
+		PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(fs_file);
+
+		if (size > 0)
+		{
+			*buffer = new char[size + 1];
+			uint readed = (uint)PHYSFS_read(fs_file, *buffer, 1, size);
+			if (readed != size)
+			{
+				LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
+				RELEASE_ARRAY(buffer);
+			}
+			else
+			{
+				ret = readed;
+				//Adding end of file at the end of the buffer. Loading a shader file does not add this for some reason
+				(*buffer)[size] = '\0';
+			}
+		}
+
+		if (PHYSFS_close(fs_file) == 0)
+			LOG("File System error while closing file %s: %s\n", file, PHYSFS_getLastError());
+	}
+	else
+		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
+
+	return ret;
+}
+
 bool M_FileSystem::CreateDir(const char* dir)
 {
 	if (IsDirectory(dir) == false)

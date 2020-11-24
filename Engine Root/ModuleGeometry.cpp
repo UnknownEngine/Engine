@@ -383,6 +383,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 
 			
 			App->fsystem->WriteFile("Library/Meshes/MyMesh", fileBuffer, size);
+			App->fsystem->ReadFile("Library/Meshes/MyMesh", &fileBuffer);
 			LoadOurMesh(fileBuffer, ourMesh);
 			//Post Loading
 			if (ret)
@@ -408,6 +409,11 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node,GameObject* gameObjectNode,con
 				MaterialComponent* materialComponent = new MaterialComponent;
 				CreateTextureBuffer(materialComponent);
 				LoadTexture(rootPath.c_str(),materialComponent);
+				uint sizemat = GetMatSize();
+				char* buffermat=SaveOurMaterial(materialComponent, sizemat);
+				App->fsystem->WriteFile("Library/Textures/MyMat", buffermat, sizemat);
+				App->fsystem->ReadFile("Library/Textures/MyMat", &fileBuffer);
+				LoadOurMaterial(buffermat, materialComponent, sizemat);
 				gameObjectNode->AddComponent(materialComponent);
 
 			}
@@ -467,21 +473,23 @@ char* ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, uint size)
 	return buffer;
 }
 
+uint ModuleGeometry::GetMatSize()
+{
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+	return(ilSaveL(IL_DDS, nullptr, 0));
+}
+
 char* ModuleGeometry::SaveOurMaterial(MaterialComponent* ourMaterial, uint size)
 {
 	char* buffer;
 	ilEnable(IL_FILE_OVERWRITE);
 
-	ILuint saveBufferSize;
 	ILubyte* saveBuffer;
 
-	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-	saveBufferSize = ilSaveL(IL_DDS, nullptr, 0);
-
-	if (saveBufferSize > 0)
+	if (size > 0)
 	{
-		saveBuffer = new ILubyte[saveBufferSize];
-		if (ilSaveL(IL_DDS, saveBuffer, saveBufferSize) > 0)
+		saveBuffer = new ILubyte[size];
+		if (ilSaveL(IL_DDS, saveBuffer, size) > 0)
 		{
 			buffer = (char*)saveBuffer;
 		}
@@ -528,7 +536,7 @@ void ModuleGeometry::LoadOurMaterial(char* filebuffer, MaterialComponent* ourMat
 	ilBindImage(ImageName);
 
 	ilLoadL(IL_TYPE_UNKNOWN, (const void*)filebuffer, size);
-	ourMaterial->bufferTexture = ilutGLBindTexImage();
+	ourMaterial->bufferTexture = ilutGLBindTexImage()-1;
 
 	ilDeleteImages(1, &ImageName);
 }
