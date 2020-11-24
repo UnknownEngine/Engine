@@ -30,26 +30,21 @@ public:
 	update_status PreUpdate(float dt) override;
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
+	bool CleanUp();
 
-	
 	bool LoadFbx(const char* path, int size, std::string fileName,std::string realDir);
-	bool LoadTexture(const char* path, MaterialComponent* gameObject);
-	void CreateBuffer(MeshComponent* mesh);
 
-	void CreateTextureBuffer(MaterialComponent* material);
-	void CreateCheckerTextureBuffer();
+	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
 
 	void LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh);
 	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
+	void CreateBuffer(MeshComponent* mesh);
 
-	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
-	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
-	bool CleanUp();
-	
-
-	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
+	bool LoadTexture(const char* path, MaterialComponent* gameObject);
+	void CreateTextureBuffer(MaterialComponent* material);
+	void CreateCheckerTextureBuffer();
 
 	uint  GetMeshSize(MeshComponent* ourMesh);
 	char* SaveOurMesh(MeshComponent* ourMesh, uint size);
@@ -58,8 +53,10 @@ public:
 	uint GetMatSize();
 	char* SaveOurMaterial(MaterialComponent* ourMaterial, uint size);
 	void LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size);
-
+	
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
+	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
+	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 
 	GLuint bufferCheckerTexture = 0;
 private:
