@@ -59,6 +59,8 @@ public:
 	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 
 	GLuint bufferCheckerTexture = 0;
+	std::string texturesPath;
+	std::string meshesPath;
 private:
 };
 

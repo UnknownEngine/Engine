@@ -19,10 +19,15 @@ public:
 	int width = 0;
 	int height = 0;
 	int bpp = 0;
+
 	std::string name;
 	std::string path;
+
 	GLuint bufferTexture = 0;
 	ILubyte* dataTexture = nullptr;
+
+	uint size = 0;
+	char* materialBuffer = 0;
 	bool useChecker = false;
 };
 

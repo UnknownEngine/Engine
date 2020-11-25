@@ -39,6 +39,8 @@ bool ModuleGeometry::Start()
 {
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
+	texturesPath = TEXTURES_PATH;
+	meshesPath = MESHES_PATH;
 
 	ilInit();
 	iluInit();
@@ -108,12 +110,15 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 	LOG("Checking node: %s", node->mName.C_Str());
 	if (node->mNumMeshes > 0) {
 		LOG("I HAVE MESHES!");
-		bool ret = false;
 		if (node->mNumMeshes > 0) {
+			bool ret = false;
+
+			//Get AI data
 			MeshComponent* ourMesh = new MeshComponent();
 			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
 			ourMesh->name = node->mName.C_Str();
 			ourMesh->path = realDir;
+
 			//Copy Vertices
 			LoadVertices(aimesh, ourMesh);
 
@@ -126,13 +131,17 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			//Copy Normals
 			ret = CheckAndLoadNormals(aimesh, ourMesh);
 
-			uint size = GetMeshSize(ourMesh);
-			char* fileBuffer = SaveOurMesh(ourMesh, size);
+			//Gets size of mesh and stores attributes on the meshBuffer
+			ourMesh->size = GetMeshSize(ourMesh);
+			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
+			
+			//Write and read on/from library
+			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
 
+			//Loads mesh attributes from meshBuffer
+			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
 
-			App->fsystem->WriteFile("Library/Meshes/MyMesh", fileBuffer, size);
-			App->fsystem->ReadFile("Library/Meshes/MyMesh", &fileBuffer);
-			LoadOurMesh(fileBuffer, ourMesh);
 			//Post Loading
 			if (ret)
 			{
@@ -141,12 +150,14 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			}
 
 			if (scene->HasMaterials()) {
+				//Gets AI data
 				aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
 				uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 
 				aiString path;
 				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 				LOG("s", path.C_Str());
+
 				std::string stringPath = std::string(path.C_Str());
 				std::size_t pos = stringPath.find_last_of("\\");
 
@@ -155,15 +166,26 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 				rootPath = rootPath + fileRoute;
 
 				MaterialComponent* materialComponent = new MaterialComponent;
+
+				materialComponent->name = fileRoute;
+				materialComponent->name.erase(materialComponent->name.size() - 4);
+
+				//Creates buffer for the texture and loads attributes 
 				CreateTextureBuffer(materialComponent);
 				LoadTexture(rootPath.c_str(), materialComponent);
-				uint sizemat = GetMatSize();
-				char* buffermat = SaveOurMaterial(materialComponent, sizemat);
-				App->fsystem->WriteFile("Library/Textures/MyMat", buffermat, sizemat);
-				App->fsystem->ReadFile("Library/Textures/MyMat", &fileBuffer);
-				LoadOurMaterial(buffermat, materialComponent, sizemat);
-				gameObjectNode->AddComponent(materialComponent);
 
+				//Gets size of material and loads attributes into materialBuffer
+				materialComponent->size = GetMatSize();
+				materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
+
+				//Writes and reads from/in materials library
+				App->fsystem->WriteFile((texturesPath+materialComponent->name).c_str(), materialComponent->materialBuffer, materialComponent->size);
+				App->fsystem->ReadFile((texturesPath + materialComponent->name).c_str(), &materialComponent->materialBuffer);
+
+				//Loads material attributes from materialBuffer
+				LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
+
+				gameObjectNode->AddComponent(materialComponent);
 			}
 		}
 

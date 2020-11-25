@@ -20,6 +20,9 @@ public:
 
 	uint id_normals = 0;
 	uint num_normals = 0;
+
+	uint size = 0;
+	char* meshBuffer;
 	float* normals = nullptr;
 
 	uint id_coords = 0;

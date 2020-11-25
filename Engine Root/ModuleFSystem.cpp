@@ -86,7 +86,7 @@ bool M_FileSystem::Exists(const char* file) const
 	return PHYSFS_exists(file) != 0;
 }
 
-uint M_FileSystem::WriteFile(char* file, char* buffer, uint size)
+uint M_FileSystem::WriteFile(const char* file, char* buffer, uint size)
 {
 
 	uint ret = 0;
@@ -118,7 +118,7 @@ uint M_FileSystem::WriteFile(char* file, char* buffer, uint size)
 	return ret;
 }
 
-uint M_FileSystem::ReadFile(char* file, char** buffer)
+uint M_FileSystem::ReadFile(const char* file, char** buffer)
 {
 	uint ret = 0;
 
