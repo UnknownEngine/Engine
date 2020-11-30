@@ -27,6 +27,13 @@ struct aiFileIO;
 class Config;
 struct PathNode;
 
+class JsonObj;
+class JsonArray;
+class GameObject;
+
+
+//DELETE AFTER
+
 class M_FileSystem : public Module
 {
 public:
@@ -65,6 +72,13 @@ public:
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
 	void DetectExtension(std::string path, std::string file, std::string extension ) const;
 	void CreatePrimitives(std::string path, std::string file);
+
+	void SaveScene(char** sceneBuffer);
+	JsonArray SaveGameObjects(JsonObj scene);
+	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
+	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
+
+	void LoadScene(JsonObj scene);
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;

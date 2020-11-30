@@ -22,6 +22,7 @@ public:
 
 	std::string name;
 	std::string path;
+	uint UID;
 
 	GLuint bufferTexture = 0;
 	ILubyte* dataTexture = nullptr;

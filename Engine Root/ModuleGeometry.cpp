@@ -6,8 +6,10 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
+
 #include "MeshComponent.h"
 #include "TransformComponent.h"
+#include "Json.h"
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
@@ -59,6 +61,11 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_REPEAT)
+	{
+		char* trying = "asda";
+		App->fsystem->SaveScene(&trying);
+	}
 	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 	{
 		DrawMeshFromGameObjectRoot(App->scene_intro->gameObjectsList[i]);
@@ -87,6 +94,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	}
 	//Create Root GameObject
 	GameObject* gameObject = new GameObject(fileName);
+	gameObject->UID=LCG().Int();
 	App->scene_intro->gameObjectsList.push_back(gameObject);
 
 
@@ -117,7 +125,9 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			MeshComponent* ourMesh = new MeshComponent();
 			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
 			ourMesh->name = node->mName.C_Str();
+			ourMesh->UID = LCG().Int();
 			ourMesh->path = realDir;
+
 
 			//Copy Vertices
 			LoadVertices(aimesh, ourMesh);
@@ -136,8 +146,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
+			App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
@@ -169,6 +179,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 				materialComponent->name = fileRoute;
 				materialComponent->name.erase(materialComponent->name.size() - 4);
+				materialComponent->UID = LCG().Int();
 
 				//Creates buffer for the texture and loads attributes 
 				CreateTextureBuffer(materialComponent);
@@ -179,16 +190,17 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 				materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
 				//Writes and reads from/in materials library
-				App->fsystem->WriteFile((texturesPath+materialComponent->name).c_str(), materialComponent->materialBuffer, materialComponent->size);
-				App->fsystem->ReadFile((texturesPath + materialComponent->name).c_str(), &materialComponent->materialBuffer);
+				App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
+				App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
 
 				//Loads material attributes from materialBuffer
 				LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
 
 				gameObjectNode->AddComponent(materialComponent);
-			}
-		}
 
+			}		
+		}
+		 
 	}
 	CreateTransformComponent(node, gameObjectNode);
 
@@ -508,7 +520,7 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 		float3(translation.x, translation.y, translation.z),
 		Quat(rotation.x, rotation.y, rotation.z, rotation.w),
 		float3(scaling.x, scaling.y, scaling.z));
-
+	transformComponent->UID = LCG().Int();
 	gameObjectNode->AddComponent(transformComponent);
 }
 

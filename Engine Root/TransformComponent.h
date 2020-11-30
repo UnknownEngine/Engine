@@ -10,6 +10,7 @@ public:
 	TransformComponent(float3 pos, Quat rot, float3 scale);
 	~TransformComponent();
 
+	uint UID;
 	float3 position;
 	float3 scale;
 	Quat rotation;

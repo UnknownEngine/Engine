@@ -10,6 +10,9 @@
 #include "Assimp/include/types.h"
 #include "SDL/include/SDL.h"
 #include "MeshComponent.h"
+#include "MaterialComponent.h"
+#include "TransformComponent.h"
+#include "Json.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
@@ -341,6 +344,130 @@ void M_FileSystem::CreatePrimitives(std::string path, std::string file)
 	{
 		App->geometry->LoadFbx(buffer, size, file, path);
 	}
+}
+
+void M_FileSystem::SaveScene(char** sceneBuffer)
+{
+	JsonObj myScene;
+	if (!App->scene_intro->gameObjectsList.empty())
+	{
+		myScene.AddArray("GameObjects");
+		SaveGameObjects(myScene);
+	}
+	else
+	{
+		LOG("Any gameObjects to be saved");
+	}
+	uint size = myScene.Save(sceneBuffer);
+	App->fsystem->WriteFile("Library/tryingstuff2.json", *sceneBuffer, size);
+
+	LoadScene(myScene);
+}
+
+JsonArray M_FileSystem::SaveGameObjects(JsonObj scene)
+{
+	JsonArray gameObjects = scene.GetArray("GameObjects");
+
+	for (int it = 0; it < App->scene_intro->gameObjectsList.size(); it++)
+	{
+		JsonObj gameObject;
+		gameObjects.AddObject(gameObject);
+		gameObject.AddInt("UID", App->scene_intro->gameObjectsList.at(it)->UID);
+		gameObject.AddString("Name", App->scene_intro->gameObjectsList.at(it)->nameID.c_str());
+		gameObject.AddBool("Active", App->scene_intro->gameObjectsList.at(it)->active);
+		if (!App->scene_intro->gameObjectsList.at(it)->childs.empty())
+		{
+			SaveGobjsChilds(App->scene_intro->gameObjectsList.at(it), gameObject);
+		}
+		if (!App->scene_intro->gameObjectsList.at(it)->components.empty())
+		{
+			SaveGobjsComponentes(App->scene_intro->gameObjectsList.at(it), gameObject);
+		}
+		gameObject.AddBool("Active", App->scene_intro->gameObjectsList.at(it)->active);
+	}
+	return gameObjects;
+}
+
+void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
+{
+	JsonArray childs = JsonGob.AddArray("Childs");
+	for (int i = 0; i < gameObject->childs.size(); i++)
+	{
+		JsonObj child;
+		childs.AddObject(child);
+		child.AddInt("UID", gameObject->UID);
+		child.AddString("Owner", gameObject->childs.at(i)->parent->nameID.c_str());
+		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
+		child.AddBool("Active", gameObject->childs.at(i)->active);
+		if (!gameObject->childs.at(i)->components.empty())
+		{
+			SaveGobjsComponentes(gameObject->childs.at(i), child);
+		}
+	}
+}
+
+void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
+{
+	JsonArray components = JsonGob.AddArray("Components");
+	for (int i = 0; i < gameObject->components.size(); i++)
+	{
+		JsonObj component;
+		components.AddObject(component);
+		if (gameObject->components.at(i)->type == ComponentType::Mesh)
+		{
+			MeshComponent* mesh = gameObject->GetMeshComponent();
+
+			component.AddInt("UID", mesh->UID);
+			component.AddString("TYPE", "Mesh");
+			component.AddString("Name", mesh->name.c_str());
+			component.AddString("Path", mesh->path.c_str());
+
+			component.AddInt("Num vertices", mesh->num_vertices);
+			component.AddFloat("Vertices", *mesh->vertices);
+
+			component.AddInt("Num indices", mesh->num_indices);
+			component.AddFloat("Indices", *mesh->indices);
+
+			component.AddInt("Num normals", mesh->num_normals);
+			component.AddFloat("Normals", *mesh->normals);
+
+			component.AddInt("Num Texture Coords", mesh->num_tex_coords);
+			component.AddFloat("Texture Coordinates", *mesh->tex_coords);
+		}
+		if (gameObject->components.at(i)->type == ComponentType::Material)
+		{
+			MaterialComponent* material = gameObject->GetMaterialComponent();
+
+			component.AddInt("UID", material->UID);
+			component.AddString("TYPE", "Material");
+			component.AddString("Name", material->name.c_str());
+			component.AddString("Path", material->path.c_str());
+
+			component.AddInt("buffer Data", material->bufferTexture);
+
+			component.AddInt("Size", material->size);
+			component.AddBool("Using Checker", material->useChecker);	
+		}
+		if (gameObject->components.at(i)->type == ComponentType::Transform)
+		{
+			TransformComponent* transform = gameObject->GetTransformComponent();
+			component.AddString("TYPE", "Transform");
+			component.AddInt("UID", transform->UID);
+			JsonArray position=component.AddArray("Position");
+			JsonArray scale=component.AddArray("Scale");
+			JsonArray rotation=component.AddArray("Rotation");
+
+			position.AddFloat3(transform->position.x, transform->position.y, transform->position.z);
+			scale.AddFloat3(transform->scale.x, transform->scale.y, transform->scale.z);
+			rotation.AddQuaternion(transform->rotation.w, transform->rotation.x, transform->rotation.y,transform->rotation.z);
+			
+		}
+	}
+}
+
+void M_FileSystem::LoadScene(JsonObj scene)
+{
+	scene.GetArray("GameObjects");
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
