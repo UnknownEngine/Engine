@@ -2,6 +2,9 @@
 
 #include "Component.h"
 #include "MaterialComponent.h"
+#include "MathGeoLib/include/Geometry/AABB.h"
+
+
 class MeshComponent : public Component
 {
 public:
@@ -9,6 +12,10 @@ public:
 	~MeshComponent();
 
 	void Update() override;
+
+	void CreateAABB();
+
+	AABB& GetAABB();
 
 	uint id_vertices = 0;
 	uint num_vertices = 0;
@@ -34,5 +41,7 @@ public:
 	std::string name;
 	std::string path;
 	uint UID;
+
+	AABB aabb;
 };
 
