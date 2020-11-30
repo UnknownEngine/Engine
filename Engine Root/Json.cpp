@@ -109,7 +109,6 @@ void JsonObj::AddFloat(const char* name, float num)
 void JsonObj::AddBool(const char* name, bool b)
 {
 	json_object_set_boolean(obj, name, b);
-
 }
 
 void JsonObj::AddString(const char* name, const char* string)
@@ -185,24 +184,57 @@ JsonObj JsonArray::GetObjectAt(int index)
 	return JsonObj(object);
 }
 
+double JsonArray::GetDouble(int index)
+{
+	return json_array_get_number(array, index);
+}
+
+float3 JsonArray::GetFloat3(int index)
+{
+	float3 ret;
+
+	ret.x = GetDouble(index);
+	ret.y = GetDouble(index+1);
+	ret.z = GetDouble(index+2);
+
+	return ret;
+}
+
+Quat JsonArray::GetRotation(int index)
+{
+	Quat ret;
+
+	ret.w= GetDouble(index);
+	ret.x= GetDouble(index+1);
+	ret.y= GetDouble(index+2);
+	ret.z= GetDouble(index+3);
+
+	return ret;
+
+}
+
 void JsonArray::AddObject(JsonObj& object)
 {
 	json_array_append_value(array, object.GetVal());
+	elements++;
 }
 
 void JsonArray::AddInt(int num)
 {
 	json_array_append_number(array, num);
+	elements++;
 }
 
 void JsonArray::AddFloat(float num)
 {
 	json_array_append_number(array, num);
+	elements++;
 }
 
 void JsonArray::AddString(const char* string)
 {
 	json_array_append_string(array, string);
+	elements++;
 }
 
 void JsonArray::AddQuaternion(float a, float x, float y, float z)
@@ -211,6 +243,7 @@ void JsonArray::AddQuaternion(float a, float x, float y, float z)
 	json_array_append_number(array, x);
 	json_array_append_number(array, y);
 	json_array_append_number(array, z);
+	elements += 4;
 }
 
 void JsonArray::AddFloat3(float x, float y, float z)
@@ -218,4 +251,5 @@ void JsonArray::AddFloat3(float x, float y, float z)
 	json_array_append_number(array, x);
 	json_array_append_number(array, y);
 	json_array_append_number(array, z);
+	elements +=3;
 }

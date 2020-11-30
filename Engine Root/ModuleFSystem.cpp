@@ -396,7 +396,7 @@ void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
 		JsonObj child;
 		childs.AddObject(child);
 		child.AddInt("UID", gameObject->UID);
-		child.AddString("Owner", gameObject->childs.at(i)->parent->nameID.c_str());
+		child.AddString("Parent", gameObject->childs.at(i)->parent->nameID.c_str());
 		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
 		child.AddBool("Active", gameObject->childs.at(i)->active);
 		if (!gameObject->childs.at(i)->components.empty())
@@ -467,7 +467,50 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 
 void M_FileSystem::LoadScene(JsonObj scene)
 {
-	scene.GetArray("GameObjects");
+	JsonArray gameObjects=scene.GetArray("GameObjects");
+	for (int i = 0; i <= gameObjects.Size(); i++)
+	{
+		GameObject* created_gameobject;
+		JsonObj object = gameObjects.GetObjectAt(i);
+		
+		if (object.GetString("Parent")!="null")
+		{
+			for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+			{
+				const char* a = App->scene_intro->gameObjectsList.at(i)->nameID.c_str();
+				const char* b = object.GetString("Parent");
+				if (App->scene_intro->gameObjectsList.at(i)->nameID.c_str() == object.GetString("Parent"))
+				{
+					created_gameobject = new GameObject(object.GetString("Name"), App->scene_intro->gameObjectsList.at(i));
+				}
+			}
+			
+		}
+		else
+		{
+			created_gameobject = new GameObject(object.GetString("Name"));
+		}
+		
+		//created_gameobject->active = object.GetBool("Active");
+
+		JsonArray childs = object.GetArray("Childs");
+
+		for (int i = 0; i <= childs.Size(); i++)
+		{
+
+		}
+
+		JsonArray components = object.GetArray("Components");
+
+		for (int i = 0; i <= components.Size(); i++);
+		{
+
+		}
+
+		
+
+	}
+
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const

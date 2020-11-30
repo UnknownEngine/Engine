@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Globals.h"
-
+#include "MathGeoLib/include/MathGeoLib.h"
 class JsonArray;
+
 
 struct json_array_t;
 typedef json_array_t JSON_Array;
@@ -26,7 +27,7 @@ public:
 	JSON_Array* GetArray(const char* name);
 
 	uint Save(char** buffer);
-
+	
 	//Getters
 	int GetInt(const char* name);
 	float GetFloat(const char* name);
@@ -56,6 +57,9 @@ public:
 	int Size();
 	JsonObj GetObjectInArray(const char* name);
 	JsonObj GetObjectAt(int index);
+	double GetDouble(int index);
+	float3 GetFloat3(int index);
+	Quat GetRotation(int index);
 
 	void AddObject(JsonObj& object);
 	void AddInt(int num);
@@ -63,7 +67,9 @@ public:
 	void AddString(const char* string);
 	void AddQuaternion(float a, float x, float y, float z);
 	void AddFloat3(float x, float y, float z);
+	uint elements;
 private:
 	JSON_Array* array;
 	JSON_Value* val;
+	
 };
