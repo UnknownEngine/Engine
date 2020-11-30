@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include <vector>
 #include <string>
+#include "MathGeoLib/include/Geometry/AABB.h"
+#include "MathGeoLib/include/Geometry/OBB.h"
 
 class Component;
 class MaterialComponent;
@@ -24,6 +26,10 @@ public:
 	MaterialComponent* GetMaterialComponent();
 	TransformComponent* GetTransformComponent();
 	MeshComponent* GetMeshComponent();
+	AABB& GetAABB();
+	OBB& GetOBB();
+
+	void UpdateAABB();
 
 public:
 	bool active;
@@ -32,6 +38,11 @@ public:
 	std::vector<Component*> components;
 	std::vector<GameObject*> childs;
 	GameObject* parent;
+
+private:
+	AABB aabb;
+	OBB obb;
+
 };
 
 #endif

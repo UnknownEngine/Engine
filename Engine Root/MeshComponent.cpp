@@ -45,3 +45,18 @@ void MeshComponent::Update()
 	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 }
+
+void MeshComponent::CreateAABB()
+{
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((float3*)vertices, num_vertices);
+}
+
+AABB& MeshComponent::GetAABB()
+{
+	return aabb;
+}
+
+
+
+

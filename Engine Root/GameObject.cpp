@@ -95,3 +95,26 @@ MeshComponent* GameObject::GetMeshComponent()
 	return nullptr;
 }
 
+AABB& GameObject::GetAABB()
+{
+	return aabb;
+}
+
+OBB& GameObject::GetOBB()
+{
+	return obb;
+}
+
+void GameObject::UpdateAABB()
+{
+	MeshComponent* mesh = GetMeshComponent();
+	if (mesh)
+	{
+		obb = mesh->GetAABB();
+		//Get global transform 
+
+		aabb.SetNegativeInfinity();
+		aabb.Enclose(obb);
+	}
+}
+

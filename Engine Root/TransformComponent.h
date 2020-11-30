@@ -14,5 +14,7 @@ public:
 	float3 position;
 	float3 scale;
 	Quat rotation;
+
+	float4x4 transform;
 };
 

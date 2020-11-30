@@ -141,6 +141,9 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			//Copy Normals
 			ret = CheckAndLoadNormals(aimesh, ourMesh);
 
+			//Create AABB
+			ourMesh->CreateAABB();
+
 			//Gets size of mesh and stores attributes on the meshBuffer
 			ourMesh->size = GetMeshSize(ourMesh);
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
@@ -541,8 +544,8 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			MaterialComponent* material = gameObject->GetMaterialComponent();
 
 			glPushMatrix();
-			float4x4 transformMatrix = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
-			glMultMatrixf((float*)&transformMatrix);
+			transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
+			glMultMatrixf((float*)&transformComponent->transform);
 			DrawMesh(mesh, material);
 			glPopMatrix();
 		}
