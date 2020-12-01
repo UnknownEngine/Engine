@@ -144,6 +144,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 		//Accumulate transforms without creating new gameObjects
 
 			GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
+			newGameObject->ParentUID = gameObject->UID;
 			gameObject->childs.push_back(newGameObject);
 			CheckNodeChilds(node, newGameObject, scene, realDir);
 		
@@ -191,8 +192,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
+			//App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			//App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
@@ -235,8 +236,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 				materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
 				//Writes and reads from/in materials library
-				App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
-				App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
+				//App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
+				//App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
 
 				//Loads material attributes from materialBuffer
 				LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
