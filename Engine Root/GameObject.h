@@ -34,6 +34,7 @@ public:
 public:
 	bool active;
 	uint UID;
+	uint ParentUID;
 	std::string nameID;
 	std::vector<Component*> components;
 	std::vector<GameObject*> childs;

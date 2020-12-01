@@ -79,6 +79,10 @@ public:
 	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
 
 	void LoadScene(JsonObj scene);
+	GameObject* LoadGameObjects(JsonObj current_node);
+	void LoadParentRelation(GameObject* gameObject);
+	void LoadGobjsChilds(GameObject* gameObject, JsonObj current_node);
+	void LoadGobjsComponents(GameObject* gameObject, JsonObj current_node);
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;

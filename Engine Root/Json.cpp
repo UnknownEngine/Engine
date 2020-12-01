@@ -200,7 +200,7 @@ float3 JsonArray::GetFloat3(int index)
 	return ret;
 }
 
-Quat JsonArray::GetRotation(int index)
+Quat JsonArray::GetQuaternion(int index)
 {
 	Quat ret;
 

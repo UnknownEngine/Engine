@@ -59,7 +59,7 @@ public:
 	JsonObj GetObjectAt(int index);
 	double GetDouble(int index);
 	float3 GetFloat3(int index);
-	Quat GetRotation(int index);
+	Quat GetQuaternion(int index);
 
 	void AddObject(JsonObj& object);
 	void AddInt(int num);

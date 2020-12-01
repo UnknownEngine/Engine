@@ -395,7 +395,8 @@ void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
 	{
 		JsonObj child;
 		childs.AddObject(child);
-		child.AddInt("UID", gameObject->UID);
+		child.AddInt("UID", gameObject->childs.at(i)->UID);
+		child.AddInt("Parent UID", gameObject->childs.at(i)->ParentUID);
 		child.AddString("Parent", gameObject->childs.at(i)->parent->nameID.c_str());
 		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
 		child.AddBool("Active", gameObject->childs.at(i)->active);
@@ -424,15 +425,19 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 
 			component.AddInt("Num vertices", mesh->num_vertices);
 			component.AddFloat("Vertices", *mesh->vertices);
+			component.AddInt("ID Vertices", mesh->id_vertices);
 
 			component.AddInt("Num indices", mesh->num_indices);
 			component.AddFloat("Indices", *mesh->indices);
+			component.AddInt("ID Indices", mesh->id_indices);
 
 			component.AddInt("Num normals", mesh->num_normals);
 			component.AddFloat("Normals", *mesh->normals);
+			component.AddInt("ID Normals", mesh->id_normals);
 
 			component.AddInt("Num Texture Coords", mesh->num_tex_coords);
 			component.AddFloat("Texture Coordinates", *mesh->tex_coords);
+			component.AddInt("ID Coords", mesh->id_coords);
 		}
 		if (gameObject->components.at(i)->type == ComponentType::Material)
 		{
@@ -467,50 +472,128 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 
 void M_FileSystem::LoadScene(JsonObj scene)
 {
+	App->scene_intro->gameObjectsList.clear();
 	JsonArray gameObjects=scene.GetArray("GameObjects");
 	for (int i = 0; i <= gameObjects.Size(); i++)
 	{
-		GameObject* created_gameobject;
 		JsonObj object = gameObjects.GetObjectAt(i);
 		
-		if (object.GetString("Parent")!="null")
+		GameObject* created_gameobject = LoadGameObjects(object);
+
+		if (object.GetArray("Childs") != NULL)
 		{
-			for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
-			{
-				const char* a = App->scene_intro->gameObjectsList.at(i)->nameID.c_str();
-				const char* b = object.GetString("Parent");
-				if (App->scene_intro->gameObjectsList.at(i)->nameID.c_str() == object.GetString("Parent"))
-				{
-					created_gameobject = new GameObject(object.GetString("Name"), App->scene_intro->gameObjectsList.at(i));
-				}
-			}
-			
+			LoadGobjsChilds(created_gameobject, object);
 		}
-		else
+		if (object.GetArray("Components") != NULL)
 		{
-			created_gameobject = new GameObject(object.GetString("Name"));
+			LoadGobjsComponents(created_gameobject, object);
 		}
-		
-		//created_gameobject->active = object.GetBool("Active");
-
-		JsonArray childs = object.GetArray("Childs");
-
-		for (int i = 0; i <= childs.Size(); i++)
-		{
-
-		}
-
-		JsonArray components = object.GetArray("Components");
-
-		for (int i = 0; i <= components.Size(); i++);
-		{
-
-		}
-
-		
-
+		App->scene_intro->gameObjectsList.push_back(created_gameobject);
 	}
+}
 
+GameObject* M_FileSystem::LoadGameObjects(JsonObj current_node)
+{
+	GameObject* gameObject = new GameObject(current_node.GetString("Name"));
+
+	gameObject->UID = current_node.GetInt("UID");
+	gameObject->active = current_node.GetBool("Active");
+
+	return gameObject;
+}
+
+void M_FileSystem::LoadGobjsChilds(GameObject* gameObject, JsonObj current_node)
+{
+	JsonArray childs_array=current_node.GetArray("Childs");
+	JsonObj childs_iterator;
+	for (int i = 0; i < childs_array.Size(); ++i)
+	{
+		childs_iterator = childs_array.GetObjectAt(i);
+
+		GameObject* newGameObject = new GameObject(childs_iterator.GetString("Name"));
+		newGameObject->UID = childs_iterator.GetInt("UID");
+		newGameObject->ParentUID = childs_iterator.GetInt("Parent UID");
+		newGameObject->active = childs_iterator.GetBool("Active");
+
+		if (childs_iterator.GetArray("Components") != NULL)
+		{
+			LoadGobjsComponents(newGameObject, childs_iterator);
+		}
+		gameObject->childs.push_back(newGameObject);
+	}
+}
+
+void M_FileSystem::LoadGobjsComponents(GameObject* gameObject, JsonObj current_node)
+{
+	JsonArray components_array = current_node.GetArray("Components");
+	JsonObj components_iterator;
+	for (int i = 0; i < components_array.Size(); ++i)
+	{
+		components_iterator = components_array.GetObjectAt(i);
+
+			std::string type = components_iterator.GetString("TYPE");
+			if (type=="Mesh")
+			{
+				MeshComponent* loadedMesh = new MeshComponent();
+				loadedMesh->type = ComponentType::Mesh;
+				loadedMesh->UID = components_iterator.GetInt("UID");
+				loadedMesh->name = components_iterator.GetString("Name");
+				loadedMesh->path = components_iterator.GetString("Path");
+
+				loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
+				loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
+				float vertices = components_iterator.GetFloat("Vertices");
+				loadedMesh->vertices = &vertices;
+
+				loadedMesh->num_indices = components_iterator.GetInt("Num indices");
+				loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
+				int indices = components_iterator.GetInt("Indices");
+				uint indexes = indices;
+				loadedMesh->indices = &indexes;
+
+				loadedMesh->num_normals = components_iterator.GetInt("Num normals");
+				loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
+				float normals = components_iterator.GetFloat("Normals");
+				loadedMesh->normals = &normals;
+
+				loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
+				loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
+				float texcoords = components_iterator.GetFloat("Texture Coordinates");
+				loadedMesh->tex_coords = &texcoords;
+
+				gameObject->AddComponent(loadedMesh);
+			}
+			else if (type == "Material")
+			{
+				MaterialComponent* loadedMaterial = new MaterialComponent();
+				loadedMaterial->type = ComponentType::Material;
+				loadedMaterial->UID = components_iterator.GetInt("UID");
+				loadedMaterial->name = components_iterator.GetString("Name");
+				loadedMaterial->path = components_iterator.GetString("Path");
+				loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
+				loadedMaterial->size = components_iterator.GetInt("Size");
+				loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
+
+				gameObject->AddComponent(loadedMaterial);
+			}
+			else if (type == "Transform")
+			{
+				TransformComponent* loadedTransform = new TransformComponent();
+				loadedTransform->type = ComponentType::Transform;
+				loadedTransform->UID = components_iterator.GetInt("UID");
+
+				JsonArray position = components_iterator.GetArray("Position");
+				loadedTransform->position = position.GetFloat3(0);
+
+				JsonArray scale = components_iterator.GetArray("Scale");
+				loadedTransform->scale = scale.GetFloat3(0);
+
+				JsonArray rotation = components_iterator.GetArray("Rotation");
+				loadedTransform->rotation = scale.GetQuaternion(0);
+
+				gameObject->AddComponent(loadedTransform);
+			}
+	}
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
