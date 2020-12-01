@@ -97,15 +97,56 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	gameObject->UID=LCG().Int();
 	App->scene_intro->gameObjectsList.push_back(gameObject);
 
+	aiVector3D translation, scaling;
+	aiQuaternion rotation;
 
-	CreateTransformComponent(scene->mRootNode, gameObject);
+	scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+
+	float3 pos(translation.x, translation.y, translation.z);
+	float3 scale(scaling.x, scaling.y, scaling.z);
+	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+	//CreateTransformComponent(scene->mRootNode, gameObject);
 	//Create child GameObjects for each mesh
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
 		aiNode* node = scene->mRootNode->mChildren[i];
-		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()),gameObject);
-		gameObject->childs.push_back(newGameObject);
-		CheckNodeChilds(node,newGameObject,scene, realDir);	
+		std::string nodeName = node->mName.C_Str();
+
+		bool dummyFound = true;
+
+		while (dummyFound)
+		{
+			dummyFound = false;
+
+			if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
+				LOG("Has Assimp fbx child");
+
+				node = node->mChildren[0];
+
+				node->mTransformation.Decompose(scaling, rotation, translation);
+
+				
+				pos += float3(translation.x, translation.y, translation.z);
+				rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+				scale = float3(scaling.x, scaling.y, scaling.z);
+
+				nodeName = node->mName.C_Str();
+				dummyFound = true;
+			}
+		}
+
+				//transformComponent->UID = LCG().Int();
+		TransformComponent* transformComponent = new TransformComponent(pos,rot,scale);
+		gameObject->AddComponent(transformComponent);
+
+
+		//Accumulate transforms without creating new gameObjects
+
+			GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
+			gameObject->childs.push_back(newGameObject);
+			CheckNodeChilds(node, newGameObject, scene, realDir);
+		
 	}
 	aiReleaseImport(scene);
 
@@ -116,6 +157,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir)
 {
 	LOG("Checking node: %s", node->mName.C_Str());
+
 	if (node->mNumMeshes > 0) {
 		LOG("I HAVE MESHES!");
 		if (node->mNumMeshes > 0) {
@@ -519,6 +561,7 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 	aiQuaternion rotation;
 
 	node->mTransformation.Decompose(scaling, rotation, translation);
+
 	TransformComponent* transformComponent = new TransformComponent(
 		float3(translation.x, translation.y, translation.z),
 		Quat(rotation.x, rotation.y, rotation.z, rotation.w),

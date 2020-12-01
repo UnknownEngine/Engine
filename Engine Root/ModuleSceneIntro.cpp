@@ -33,12 +33,12 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	//App->geometry->LoadFbx(buffer, size, file, file);
-	char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
-	std::string  path = "";
-	std::string  file = "";
-	std::string  extension = "";
-	App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
-	App->fsystem->DetectExtension(path, file, extension);
+	//char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
+	//std::string  path = "";
+	//std::string  file = "";
+	//std::string  extension = "";
+	//App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
+	//App->fsystem->DetectExtension(path, file, extension);
 
 	return ret;
 }

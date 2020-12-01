@@ -16,5 +16,6 @@ public:
 	Quat rotation;
 
 	float4x4 transform;
+	float4x4 global_transform;
 };
 
