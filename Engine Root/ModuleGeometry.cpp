@@ -251,7 +251,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 	CreateTransformComponent(node, gameObjectNode);
 
 	if (node->mNumChildren > 0) {
-		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()));
+		GameObject* newGameObject = new GameObject(std::string(node->mChildren[0]->mName.C_Str()),gameObjectNode);
 		gameObjectNode->childs.push_back(newGameObject);
 		LOG("GOT %d children", node->mNumChildren)
 			for (uint i = 0; i < node->mNumChildren; i++)
@@ -589,7 +589,15 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 
 			glPushMatrix();
 			transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
-			glMultMatrixf((float*)&transformComponent->transform);
+			float4x4 globalTransform = transformComponent->transform;
+			if (gameObject->parent != nullptr) {
+				if (gameObject->parent->GetTransformComponent() != nullptr) {
+					float4x4 parentGlobal = gameObject->parent->GetTransformComponent()->transform;
+					globalTransform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;	
+				}
+			}
+			
+			glMultMatrixf((float*)&globalTransform.Transposed());
 			DrawMesh(mesh, material);
 			glPopMatrix();
 		}
