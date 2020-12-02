@@ -362,6 +362,7 @@ void M_FileSystem::SaveScene(char** sceneBuffer)
 	App->fsystem->WriteFile("Library/tryingstuff2.json", *sceneBuffer, size);
 
 	LoadScene(myScene);
+
 }
 
 JsonArray M_FileSystem::SaveGameObjects(JsonObj scene)
@@ -383,7 +384,6 @@ JsonArray M_FileSystem::SaveGameObjects(JsonObj scene)
 		{
 			SaveGobjsComponentes(App->scene_intro->gameObjectsList.at(it), gameObject);
 		}
-		gameObject.AddBool("Active", App->scene_intro->gameObjectsList.at(it)->active);
 	}
 	return gameObjects;
 }
@@ -474,7 +474,7 @@ void M_FileSystem::LoadScene(JsonObj scene)
 {
 	App->scene_intro->gameObjectsList.clear();
 	JsonArray gameObjects=scene.GetArray("GameObjects");
-	for (int i = 0; i <= gameObjects.Size(); i++)
+	for (int i = 0; i < gameObjects.Size(); ++i)
 	{
 		JsonObj object = gameObjects.GetObjectAt(i);
 		
@@ -510,7 +510,7 @@ void M_FileSystem::LoadGobjsChilds(GameObject* gameObject, JsonObj current_node)
 	{
 		childs_iterator = childs_array.GetObjectAt(i);
 
-		GameObject* newGameObject = new GameObject(childs_iterator.GetString("Name"));
+		GameObject* newGameObject = new GameObject(childs_iterator.GetString("Name"),gameObject);
 		newGameObject->UID = childs_iterator.GetInt("UID");
 		newGameObject->ParentUID = childs_iterator.GetInt("Parent UID");
 		newGameObject->active = childs_iterator.GetBool("Active");
@@ -589,7 +589,7 @@ void M_FileSystem::LoadGobjsComponents(GameObject* gameObject, JsonObj current_n
 				loadedTransform->scale = scale.GetFloat3(0);
 
 				JsonArray rotation = components_iterator.GetArray("Rotation");
-				loadedTransform->rotation = scale.GetQuaternion(0);
+				loadedTransform->rotation = rotation.GetQuaternion(0);
 
 				gameObject->AddComponent(loadedTransform);
 			}

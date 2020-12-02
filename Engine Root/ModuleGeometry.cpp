@@ -223,30 +223,35 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 				MaterialComponent* materialComponent = new MaterialComponent;
 
-				materialComponent->name = fileRoute;
-				materialComponent->name.erase(materialComponent->name.size() - 4);
-				materialComponent->UID = LCG().Int();
+				if (fileRoute.c_str() != "")
+				{
+					materialComponent->name = fileRoute;
+					materialComponent->name.erase(materialComponent->name.size() - 4);
+				}
+				else
+				{
+					materialComponent->name = "";
+				}
+					materialComponent->UID = LCG().Int();
 
-				//Creates buffer for the texture and loads attributes 
-				CreateTextureBuffer(materialComponent);
-				LoadTexture(rootPath.c_str(), materialComponent);
+					//Creates buffer for the texture and loads attributes 
+					CreateTextureBuffer(materialComponent);
+					LoadTexture(rootPath.c_str(), materialComponent);
 
-				//Gets size of material and loads attributes into materialBuffer
-				materialComponent->size = GetMatSize();
-				materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
+					//Gets size of material and loads attributes into materialBuffer
+					materialComponent->size = GetMatSize();
+					materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
-				//Writes and reads from/in materials library
-				//App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
-				//App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
+					//Writes and reads from/in materials library
+					//App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
+					//App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
 
-				//Loads material attributes from materialBuffer
-				LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
+					//Loads material attributes from materialBuffer
+					LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
 
-				gameObjectNode->AddComponent(materialComponent);
-
-			}		
-		}
-		 
+					gameObjectNode->AddComponent(materialComponent);
+			}	
+		}	 
 	}
 	CreateTransformComponent(node, gameObjectNode);
 
