@@ -63,8 +63,13 @@ update_status ModuleGeometry::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_REPEAT)
 	{
-		char* trying = "asda";
-		App->fsystem->SaveScene(&trying);
+		char* buffer;
+		App->fsystem->SaveScene(&buffer);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_REPEAT)
+	{
+
+		App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
 	}
 	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 	{
@@ -192,8 +197,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			//App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			//App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
+			App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
@@ -223,7 +228,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 				MaterialComponent* materialComponent = new MaterialComponent;
 
-				if (fileRoute.c_str() != "")
+				if (fileRoute != "")
 				{
 					materialComponent->name = fileRoute;
 					materialComponent->name.erase(materialComponent->name.size() - 4);
@@ -243,8 +248,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 					materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
 					//Writes and reads from/in materials library
-					//App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
-					//App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
+					App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
+					App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
 
 					//Loads material attributes from materialBuffer
 					LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);

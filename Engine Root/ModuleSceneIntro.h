@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Primitive.h"
+#include "Json.h"
 #include <vector>
 
 #include "Glew/include/glew.h"
@@ -28,4 +29,6 @@ public:
 	GameObject* selected=nullptr;
 	GameObject* CreateGameObject(std::string name);
 	std::vector<GameObject*> gameObjectsList;
+	JsonObj myScene;
+	char* sceneBuffer;
 };

@@ -1,47 +1,47 @@
 {
     "GameObjects": [
         {
-            "UID": 975138154,
-            "Name": "BakerHouse",
+            "UID": 1285427514,
+            "Name": "street2",
             "Active": true,
             "Childs": [
                 {
                     "UID": -842150451,
-                    "Parent UID": 975138154,
-                    "Parent": "BakerHouse",
-                    "Name": "Chimney",
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_041",
                     "Active": true,
                     "Components": [
                         {
-                            "UID": 1105329424,
+                            "UID": 1604361315,
                             "TYPE": "Mesh",
-                            "Name": "Chimney",
-                            "Path": "BakerHouse",
-                            "Num vertices": 160,
-                            "Vertices": -107374176,
-                            "ID Vertices": 3,
-                            "Num indices": 324,
-                            "Indices": 3435973888,
-                            "ID Indices": 6,
-                            "Num normals": 160,
-                            "Normals": -107374176,
-                            "ID Normals": 4,
-                            "Num Texture Coords": 160,
-                            "Texture Coordinates": -107374176,
-                            "ID Coords": 5
+                            "Name": "City_building_041",
+                            "Path": "street2",
+                            "Num vertices": 2104,
+                            "ID Vertices": 1563,
+                            "Num indices": 4176,
+                            "ID Indices": 1566,
+                            "Num normals": 2104,
+                            "ID Normals": 1564,
+                            "Num Texture Coords": 2104,
+                            "ID Coords": 1565
                         },
                         {
-                            "UID": 1344686422,
+                            "UID": 1797233302,
                             "TYPE": "Material",
-                            "Name": "Baker_house",
-                            "Path": "Assets\/Textures\/Baker_house.png",
+                            "Name": "Building_V02_C",
+                            "Path": "Assets\/Textures\/Building_V02_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370827296,
                             "buffer Data": 3,
                             "Size": 4224,
                             "Using Checker": false
                         },
                         {
                             "TYPE": "Transform",
-                            "UID": 1165312569,
+                            "UID": 1813474727,
                             "Position": [
                                 0,
                                 0,
@@ -63,41 +63,1609 @@
                 },
                 {
                     "UID": -842150451,
-                    "Parent UID": 975138154,
-                    "Parent": "BakerHouse",
-                    "Name": "Baker_house",
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_040",
                     "Active": true,
                     "Components": [
                         {
-                            "UID": 1319871189,
+                            "UID": 309289120,
                             "TYPE": "Mesh",
-                            "Name": "Baker_house",
-                            "Path": "BakerHouse",
-                            "Num vertices": 1641,
-                            "Vertices": -107374176,
-                            "ID Vertices": 7,
-                            "Num indices": 2751,
-                            "Indices": 3435973888,
-                            "ID Indices": 10,
-                            "Num normals": 1641,
-                            "Normals": -107374176,
-                            "ID Normals": 8,
-                            "Num Texture Coords": 1641,
-                            "Texture Coordinates": -107374176,
-                            "ID Coords": 9
+                            "Name": "City_building_040",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1567,
+                            "Num indices": 8292,
+                            "ID Indices": 1570,
+                            "Num normals": 6069,
+                            "ID Normals": 1568,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1569
                         },
                         {
-                            "UID": 1872383445,
+                            "UID": 2078241305,
                             "TYPE": "Material",
-                            "Name": "Baker_house",
-                            "Path": "Assets\/Textures\/Baker_house.png",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370860064,
                             "buffer Data": 5,
                             "Size": 4224,
                             "Using Checker": false
                         },
                         {
                             "TYPE": "Transform",
-                            "UID": 2125773728,
+                            "UID": 740121515,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_039",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1002244580,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_039",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1571,
+                            "Num indices": 8292,
+                            "ID Indices": 1574,
+                            "Num normals": 6069,
+                            "ID Normals": 1572,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1573
+                        },
+                        {
+                            "UID": 620719415,
+                            "TYPE": "Material",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370810912,
+                            "buffer Data": 7,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1715111646,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_038",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 2003621070,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_038",
+                            "Path": "street2",
+                            "Num vertices": 3912,
+                            "ID Vertices": 1575,
+                            "Num indices": 7389,
+                            "ID Indices": 1578,
+                            "Num normals": 3912,
+                            "ID Normals": 1576,
+                            "Num Texture Coords": 3912,
+                            "ID Coords": 1577
+                        },
+                        {
+                            "UID": 555711048,
+                            "TYPE": "Material",
+                            "Name": "building05 _c",
+                            "Path": "Assets\/Textures\/building05 _c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370860064,
+                            "buffer Data": 9,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1036257007,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_037",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1302139606,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_037",
+                            "Path": "street2",
+                            "Num vertices": 2548,
+                            "ID Vertices": 1579,
+                            "Num indices": 4530,
+                            "ID Indices": 1582,
+                            "Num normals": 2548,
+                            "ID Normals": 1580,
+                            "Num Texture Coords": 2548,
+                            "ID Coords": 1581
+                        },
+                        {
+                            "UID": 1553145128,
+                            "TYPE": "Material",
+                            "Name": "building05 _c",
+                            "Path": "Assets\/Textures\/building05 _c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370806816,
+                            "buffer Data": 11,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1968525831,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_036",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 214400834,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_036",
+                            "Path": "street2",
+                            "Num vertices": 2452,
+                            "ID Vertices": 1583,
+                            "Num indices": 4197,
+                            "ID Indices": 1586,
+                            "Num normals": 2452,
+                            "ID Normals": 1584,
+                            "Num Texture Coords": 2452,
+                            "ID Coords": 1585
+                        },
+                        {
+                            "UID": 645376641,
+                            "TYPE": "Material",
+                            "Name": "building 06_ c",
+                            "Path": "Assets\/Textures\/building 06_ c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 374022176,
+                            "buffer Data": 13,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1489692325,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_035",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1739353231,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_035",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1587,
+                            "Num indices": 8292,
+                            "ID Indices": 1590,
+                            "Num normals": 6069,
+                            "ID Normals": 1588,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1589
+                        },
+                        {
+                            "UID": 1166648800,
+                            "TYPE": "Material",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370823200,
+                            "buffer Data": 15,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1747238051,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_034",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 2066241473,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_034",
+                            "Path": "street2",
+                            "Num vertices": 3481,
+                            "ID Vertices": 1591,
+                            "Num indices": 6378,
+                            "ID Indices": 1594,
+                            "Num normals": 3481,
+                            "ID Normals": 1592,
+                            "Num Texture Coords": 3481,
+                            "ID Coords": 1593
+                        },
+                        {
+                            "UID": 315828206,
+                            "TYPE": "Material",
+                            "Name": "building05 _c",
+                            "Path": "Assets\/Textures\/building05 _c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370843680,
+                            "buffer Data": 17,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 266419113,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_033",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 535573899,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_033",
+                            "Path": "street2",
+                            "Num vertices": 4772,
+                            "ID Vertices": 1595,
+                            "Num indices": 7986,
+                            "ID Indices": 1598,
+                            "Num normals": 4772,
+                            "ID Normals": 1596,
+                            "Num Texture Coords": 4772,
+                            "ID Coords": 1597
+                        },
+                        {
+                            "UID": 1419619272,
+                            "TYPE": "Material",
+                            "Name": "building 06_ c",
+                            "Path": "Assets\/Textures\/building 06_ c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 374054944,
+                            "buffer Data": 19,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 253674300,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_032",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 501385818,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_032",
+                            "Path": "street2",
+                            "Num vertices": 3830,
+                            "ID Vertices": 1599,
+                            "Num indices": 5988,
+                            "ID Indices": 1602,
+                            "Num normals": 3830,
+                            "ID Normals": 1600,
+                            "Num Texture Coords": 3830,
+                            "ID Coords": 1601
+                        },
+                        {
+                            "UID": 1163085619,
+                            "TYPE": "Material",
+                            "Name": "building03_c",
+                            "Path": "Assets\/Textures\/building03_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370860064,
+                            "buffer Data": 21,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1810165010,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_031",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 2120048081,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_031",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1603,
+                            "Num indices": 8292,
+                            "ID Indices": 1606,
+                            "Num normals": 6069,
+                            "ID Normals": 1604,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1605
+                        },
+                        {
+                            "UID": 1466304806,
+                            "TYPE": "Material",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370806816,
+                            "buffer Data": 23,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 12266051,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_030",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 304674251,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_030",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1607,
+                            "Num indices": 8292,
+                            "ID Indices": 1610,
+                            "Num normals": 6069,
+                            "ID Normals": 1608,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1609
+                        },
+                        {
+                            "UID": 1727540445,
+                            "TYPE": "Material",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370823200,
+                            "buffer Data": 25,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 812507472,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "Object010",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1093428207,
+                            "TYPE": "Mesh",
+                            "Name": "Object010",
+                            "Path": "street2",
+                            "Num vertices": 1440,
+                            "ID Vertices": 1611,
+                            "Num indices": 2160,
+                            "ID Indices": 1614,
+                            "Num normals": 1440,
+                            "ID Normals": 1612,
+                            "Num Texture Coords": 0,
+                            "ID Coords": 1613
+                        },
+                        {
+                            "UID": 1202963857,
+                            "TYPE": "Material",
+                            "Name": "",
+                            "Path": "",
+                            "Width": 0,
+                            "Height": 0,
+                            "BPP": 0,
+                            "dataTexture": 0,
+                            "buffer Data": 27,
+                            "Size": 144,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1049286408,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_028",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1238655528,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_028",
+                            "Path": "street2",
+                            "Num vertices": 6069,
+                            "ID Vertices": 1615,
+                            "Num indices": 8292,
+                            "ID Indices": 1618,
+                            "Num normals": 6069,
+                            "ID Normals": 1616,
+                            "Num Texture Coords": 6069,
+                            "ID Coords": 1617
+                        },
+                        {
+                            "UID": 1072816221,
+                            "TYPE": "Material",
+                            "Name": "Building_V01_C",
+                            "Path": "Assets\/Textures\/Building_V01_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370847776,
+                            "buffer Data": 29,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 303569622,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_026",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 632180742,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_026",
+                            "Path": "street2",
+                            "Num vertices": 4523,
+                            "ID Vertices": 1619,
+                            "Num indices": 8232,
+                            "ID Indices": 1622,
+                            "Num normals": 4523,
+                            "ID Normals": 1620,
+                            "Num Texture Coords": 4523,
+                            "ID Coords": 1621
+                        },
+                        {
+                            "UID": 1310659204,
+                            "TYPE": "Material",
+                            "Name": "building05 _c",
+                            "Path": "Assets\/Textures\/building05 _c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370860064,
+                            "buffer Data": 31,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 71612182,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_024",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 378571171,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_024",
+                            "Path": "street2",
+                            "Num vertices": 419,
+                            "ID Vertices": 1623,
+                            "Num indices": 864,
+                            "ID Indices": 1626,
+                            "Num normals": 419,
+                            "ID Normals": 1624,
+                            "Num Texture Coords": 419,
+                            "ID Coords": 1625
+                        },
+                        {
+                            "UID": 566430446,
+                            "TYPE": "Material",
+                            "Name": "building_025_c",
+                            "Path": "Assets\/Textures\/building_025_c.tga",
+                            "Width": 256,
+                            "Height": 256,
+                            "BPP": 4,
+                            "dataTexture": 206110808,
+                            "buffer Data": 33,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1047139549,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_023",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1300072642,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_023",
+                            "Path": "street2",
+                            "Num vertices": 424,
+                            "ID Vertices": 1627,
+                            "Num indices": 684,
+                            "ID Indices": 1630,
+                            "Num normals": 424,
+                            "ID Normals": 1628,
+                            "Num Texture Coords": 424,
+                            "ID Coords": 1629
+                        },
+                        {
+                            "UID": 1311442682,
+                            "TYPE": "Material",
+                            "Name": "building_016_c",
+                            "Path": "Assets\/Textures\/building_016_c.tga",
+                            "Width": 256,
+                            "Height": 256,
+                            "BPP": 4,
+                            "dataTexture": 206110808,
+                            "buffer Data": 35,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1601251003,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_022",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1924919032,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_022",
+                            "Path": "street2",
+                            "Num vertices": 4670,
+                            "ID Vertices": 1631,
+                            "Num indices": 8496,
+                            "ID Indices": 1634,
+                            "Num normals": 4670,
+                            "ID Normals": 1632,
+                            "Num Texture Coords": 4670,
+                            "ID Coords": 1633
+                        },
+                        {
+                            "UID": 580396195,
+                            "TYPE": "Material",
+                            "Name": "building05 _c",
+                            "Path": "Assets\/Textures\/building05 _c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370827296,
+                            "buffer Data": 37,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1560333587,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_017",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1906837304,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_017",
+                            "Path": "street2",
+                            "Num vertices": 4,
+                            "ID Vertices": 1635,
+                            "Num indices": 6,
+                            "ID Indices": 1638,
+                            "Num normals": 4,
+                            "ID Normals": 1636,
+                            "Num Texture Coords": 4,
+                            "ID Coords": 1637
+                        },
+                        {
+                            "UID": 1982073703,
+                            "TYPE": "Material",
+                            "Name": "building 01_c",
+                            "Path": "Assets\/Textures\/building 01_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370847776,
+                            "buffer Data": 39,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 539663740,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_016",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 883869964,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_016",
+                            "Path": "street2",
+                            "Num vertices": 4,
+                            "ID Vertices": 1639,
+                            "Num indices": 6,
+                            "ID Indices": 1642,
+                            "Num normals": 4,
+                            "ID Normals": 1640,
+                            "Num Texture Coords": 4,
+                            "ID Coords": 1641
+                        },
+                        {
+                            "UID": 905915919,
+                            "TYPE": "Material",
+                            "Name": "building 01_c",
+                            "Path": "Assets\/Textures\/building 01_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370839584,
+                            "buffer Data": 41,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 727638355,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_014",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1037591047,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_014",
+                            "Path": "street2",
+                            "Num vertices": 4160,
+                            "ID Vertices": 1643,
+                            "Num indices": 6636,
+                            "ID Indices": 1646,
+                            "Num normals": 4160,
+                            "ID Normals": 1644,
+                            "Num Texture Coords": 4160,
+                            "ID Coords": 1645
+                        },
+                        {
+                            "UID": 1685436269,
+                            "TYPE": "Material",
+                            "Name": "building03_c",
+                            "Path": "Assets\/Textures\/building03_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370802720,
+                            "buffer Data": 43,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1998822207,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_013",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 133025126,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_013",
+                            "Path": "street2",
+                            "Num vertices": 2452,
+                            "ID Vertices": 1647,
+                            "Num indices": 4197,
+                            "ID Indices": 1650,
+                            "Num normals": 2452,
+                            "ID Normals": 1648,
+                            "Num Texture Coords": 2452,
+                            "ID Coords": 1649
+                        },
+                        {
+                            "UID": 740907894,
+                            "TYPE": "Material",
+                            "Name": "building 06_ c",
+                            "Path": "Assets\/Textures\/building 06_ c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 374030368,
+                            "buffer Data": 45,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 2126596474,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_011",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 231210468,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_011",
+                            "Path": "street2",
+                            "Num vertices": 424,
+                            "ID Vertices": 1651,
+                            "Num indices": 684,
+                            "ID Indices": 1654,
+                            "Num normals": 424,
+                            "ID Normals": 1652,
+                            "Num Texture Coords": 424,
+                            "ID Coords": 1653
+                        },
+                        {
+                            "UID": 153465628,
+                            "TYPE": "Material",
+                            "Name": "building_016_c",
+                            "Path": "Assets\/Textures\/building_016_c.tga",
+                            "Width": 256,
+                            "Height": 256,
+                            "BPP": 4,
+                            "dataTexture": 206110808,
+                            "buffer Data": 47,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 471888180,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_010",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 789359940,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_010",
+                            "Path": "street2",
+                            "Num vertices": 4,
+                            "ID Vertices": 1655,
+                            "Num indices": 6,
+                            "ID Indices": 1658,
+                            "Num normals": 4,
+                            "ID Normals": 1656,
+                            "Num Texture Coords": 4,
+                            "ID Coords": 1657
+                        },
+                        {
+                            "UID": 903792962,
+                            "TYPE": "Material",
+                            "Name": "building 01_c",
+                            "Path": "Assets\/Textures\/building 01_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370810912,
+                            "buffer Data": 49,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1358996877,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "Plane001",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1705709457,
+                            "TYPE": "Mesh",
+                            "Name": "Plane001",
+                            "Path": "street2",
+                            "Num vertices": 25,
+                            "ID Vertices": 1659,
+                            "Num indices": 96,
+                            "ID Indices": 1662,
+                            "Num normals": 25,
+                            "ID Normals": 1660,
+                            "Num Texture Coords": 25,
+                            "ID Coords": 1661
+                        },
+                        {
+                            "UID": 1298541947,
+                            "TYPE": "Material",
+                            "Name": "",
+                            "Path": "",
+                            "Width": 0,
+                            "Height": 0,
+                            "BPP": 0,
+                            "dataTexture": 0,
+                            "buffer Data": 51,
+                            "Size": 144,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1059509152,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "Line002",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1345233736,
+                            "TYPE": "Mesh",
+                            "Name": "Line002",
+                            "Path": "street2",
+                            "Num vertices": 48,
+                            "ID Vertices": 1663,
+                            "Num indices": 72,
+                            "ID Indices": 1666,
+                            "Num normals": 48,
+                            "ID Normals": 1664,
+                            "Num Texture Coords": 0,
+                            "ID Coords": 1665
+                        },
+                        {
+                            "UID": 986731305,
+                            "TYPE": "Material",
+                            "Name": "",
+                            "Path": "",
+                            "Width": 0,
+                            "Height": 0,
+                            "BPP": 0,
+                            "dataTexture": 0,
+                            "buffer Data": 53,
+                            "Size": 144,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 440297893,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_008",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 740364403,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_008",
+                            "Path": "street2",
+                            "Num vertices": 419,
+                            "ID Vertices": 1667,
+                            "Num indices": 864,
+                            "ID Indices": 1670,
+                            "Num normals": 419,
+                            "ID Normals": 1668,
+                            "Num Texture Coords": 419,
+                            "ID Coords": 1669
+                        },
+                        {
+                            "UID": 916248866,
+                            "TYPE": "Material",
+                            "Name": "building_025_c",
+                            "Path": "Assets\/Textures\/building_025_c.tga",
+                            "Width": 256,
+                            "Height": 256,
+                            "BPP": 4,
+                            "dataTexture": 206119008,
+                            "buffer Data": 55,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1286190958,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_007",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1544484868,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_007",
+                            "Path": "street2",
+                            "Num vertices": 424,
+                            "ID Vertices": 1671,
+                            "Num indices": 684,
+                            "ID Indices": 1674,
+                            "Num normals": 424,
+                            "ID Normals": 1672,
+                            "Num Texture Coords": 424,
+                            "ID Coords": 1673
+                        },
+                        {
+                            "UID": 1437220724,
+                            "TYPE": "Material",
+                            "Name": "building_016_c",
+                            "Path": "Assets\/Textures\/building_016_c.tga",
+                            "Width": 256,
+                            "Height": 256,
+                            "BPP": 4,
+                            "dataTexture": 206119008,
+                            "buffer Data": 57,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 43708605,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_001",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 307502574,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_001",
+                            "Path": "street2",
+                            "Num vertices": 2104,
+                            "ID Vertices": 1675,
+                            "Num indices": 4176,
+                            "ID Indices": 1678,
+                            "Num normals": 2104,
+                            "ID Normals": 1676,
+                            "Num Texture Coords": 2104,
+                            "ID Coords": 1677
+                        },
+                        {
+                            "UID": 670946011,
+                            "TYPE": "Material",
+                            "Name": "Building_V02_C",
+                            "Path": "Assets\/Textures\/Building_V02_C.png",
+                            "Width": 512,
+                            "Height": 512,
+                            "BPP": 4,
+                            "dataTexture": 370847776,
+                            "buffer Data": 59,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 1062166142,
+                            "Position": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "Scale": [
+                                1,
+                                1,
+                                1
+                            ],
+                            "Rotation": [
+                                1,
+                                0,
+                                0,
+                                0
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": -842150451,
+                    "Parent UID": 1285427514,
+                    "Parent": "street2",
+                    "Name": "City_building_004",
+                    "Active": true,
+                    "Components": [
+                        {
+                            "UID": 1322896787,
+                            "TYPE": "Mesh",
+                            "Name": "City_building_004",
+                            "Path": "street2",
+                            "Num vertices": 3830,
+                            "ID Vertices": 1679,
+                            "Num indices": 5988,
+                            "ID Indices": 1682,
+                            "Num normals": 3830,
+                            "ID Normals": 1680,
+                            "Num Texture Coords": 3830,
+                            "ID Coords": 1681
+                        },
+                        {
+                            "UID": 53773493,
+                            "TYPE": "Material",
+                            "Name": "building03_c",
+                            "Path": "Assets\/Textures\/building03_c.tga",
+                            "Width": 1024,
+                            "Height": 1024,
+                            "BPP": 4,
+                            "dataTexture": 370860064,
+                            "buffer Data": 61,
+                            "Size": 4224,
+                            "Using Checker": false
+                        },
+                        {
+                            "TYPE": "Transform",
+                            "UID": 571427445,
                             "Position": [
                                 0,
                                 0,
@@ -133,10 +1701,10 @@
                         1
                     ],
                     "Rotation": [
-                        1,
-                        0,
-                        0,
-                        0
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
                     ]
                 },
                 {
@@ -153,77 +1721,12 @@
                         1
                     ],
                     "Rotation": [
-                        1,
-                        0,
-                        0,
-                        0
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1076825704,
-            "Name": "chest",
-            "Active": true,
-            "Childs": [
-                {
-                    "UID": -842150451,
-                    "Parent UID": 1076825704,
-                    "Parent": "chest",
-                    "Name": "treasure_chest",
-                    "Active": true,
-                    "Components": [
-                        {
-                            "UID": 1170257086,
-                            "TYPE": "Mesh",
-                            "Name": "treasure_chest",
-                            "Path": "chest",
-                            "Num vertices": 515,
-                            "Vertices": -107374176,
-                            "ID Vertices": 11,
-                            "Num indices": 1050,
-                            "Indices": 3435973888,
-                            "ID Indices": 14,
-                            "Num normals": 515,
-                            "Normals": -107374176,
-                            "ID Normals": 12,
-                            "Num Texture Coords": 515,
-                            "Texture Coordinates": -107374176,
-                            "ID Coords": 13
-                        },
-                        {
-                            "UID": 1469000797,
-                            "TYPE": "Material",
-                            "Name": "treasure_chest",
-                            "Path": "Assets\/Textures\/treasure_chest.png",
-                            "buffer Data": 7,
-                            "Size": 4224,
-                            "Using Checker": false
-                        },
-                        {
-                            "TYPE": "Transform",
-                            "UID": 1583107531,
-                            "Position": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "Scale": [
-                                1,
-                                1,
-                                1
-                            ],
-                            "Rotation": [
-                                1,
-                                0,
-                                0,
-                                0
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "Components": [
+                },
                 {
                     "TYPE": "Transform",
                     "UID": -842150451,
@@ -238,83 +1741,18 @@
                         1
                     ],
                     "Rotation": [
-                        1,
-                        0,
-                        0,
-                        0
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1140491119,
-            "Name": "watch_tower",
-            "Active": true,
-            "Childs": [
-                {
-                    "UID": -842150451,
-                    "Parent UID": 1140491119,
-                    "Parent": "watch_tower",
-                    "Name": "watchtowerHigh",
-                    "Active": true,
-                    "Components": [
-                        {
-                            "UID": 1452184336,
-                            "TYPE": "Mesh",
-                            "Name": "watchtowerHigh",
-                            "Path": "watch_tower",
-                            "Num vertices": 4020,
-                            "Vertices": -107374176,
-                            "ID Vertices": 15,
-                            "Num indices": 6108,
-                            "Indices": 3435973888,
-                            "ID Indices": 18,
-                            "Num normals": 4020,
-                            "Normals": -107374176,
-                            "ID Normals": 16,
-                            "Num Texture Coords": 4020,
-                            "Texture Coordinates": -107374176,
-                            "ID Coords": 17
-                        },
-                        {
-                            "UID": 203368557,
-                            "TYPE": "Material",
-                            "Name": "Wood_Tower_Col",
-                            "Path": "Assets\/Textures\/Wood_Tower_Col.png",
-                            "buffer Data": 9,
-                            "Size": 4224,
-                            "Using Checker": false
-                        },
-                        {
-                            "TYPE": "Transform",
-                            "UID": 370646819,
-                            "Position": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "Scale": [
-                                1,
-                                1,
-                                1
-                            ],
-                            "Rotation": [
-                                1,
-                                0,
-                                0,
-                                0
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "Components": [
+                },
                 {
                     "TYPE": "Transform",
                     "UID": -842150451,
                     "Position": [
                         0,
-                        0.028952613472938538,
+                        0,
                         0
                     ],
                     "Scale": [
@@ -323,10 +1761,530 @@
                         1
                     ],
                     "Rotation": [
-                        1,
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
                         0,
                         0,
                         0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ]
+                },
+                {
+                    "TYPE": "Transform",
+                    "UID": -842150451,
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
                     ]
                 }
             ]

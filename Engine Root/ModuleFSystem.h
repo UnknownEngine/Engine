@@ -78,9 +78,8 @@ public:
 	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
 	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
 
-	void LoadScene(JsonObj scene);
+	void LoadScene(char* sceneBuffer);
 	GameObject* LoadGameObjects(JsonObj current_node);
-	void LoadParentRelation(GameObject* gameObject);
 	void LoadGobjsChilds(GameObject* gameObject, JsonObj current_node);
 	void LoadGobjsComponents(GameObject* gameObject, JsonObj current_node);
 	// Open for Read/Write

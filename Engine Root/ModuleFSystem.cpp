@@ -348,20 +348,18 @@ void M_FileSystem::CreatePrimitives(std::string path, std::string file)
 
 void M_FileSystem::SaveScene(char** sceneBuffer)
 {
-	JsonObj myScene;
+	JsonObj scene;
 	if (!App->scene_intro->gameObjectsList.empty())
 	{
-		myScene.AddArray("GameObjects");
-		SaveGameObjects(myScene);
+		scene.AddArray("GameObjects");
+		SaveGameObjects(scene);
 	}
 	else
 	{
 		LOG("Any gameObjects to be saved");
 	}
-	uint size = myScene.Save(sceneBuffer);
+	uint size = scene.Save(sceneBuffer);
 	App->fsystem->WriteFile("Library/tryingstuff2.json", *sceneBuffer, size);
-
-	LoadScene(myScene);
 
 }
 
@@ -424,19 +422,15 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 			component.AddString("Path", mesh->path.c_str());
 
 			component.AddInt("Num vertices", mesh->num_vertices);
-			component.AddFloat("Vertices", *mesh->vertices);
 			component.AddInt("ID Vertices", mesh->id_vertices);
 
 			component.AddInt("Num indices", mesh->num_indices);
-			component.AddFloat("Indices", *mesh->indices);
 			component.AddInt("ID Indices", mesh->id_indices);
 
 			component.AddInt("Num normals", mesh->num_normals);
-			component.AddFloat("Normals", *mesh->normals);
 			component.AddInt("ID Normals", mesh->id_normals);
 
 			component.AddInt("Num Texture Coords", mesh->num_tex_coords);
-			component.AddFloat("Texture Coordinates", *mesh->tex_coords);
 			component.AddInt("ID Coords", mesh->id_coords);
 		}
 		if (gameObject->components.at(i)->type == ComponentType::Material)
@@ -447,6 +441,11 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 			component.AddString("TYPE", "Material");
 			component.AddString("Name", material->name.c_str());
 			component.AddString("Path", material->path.c_str());
+			component.AddInt("Width", material->width);
+			component.AddInt("Height", material->height);
+			component.AddInt("BPP", material->bpp);
+
+			component.AddInt("dataTexture", int(material->dataTexture));
 
 			component.AddInt("buffer Data", material->bufferTexture);
 
@@ -470,10 +469,13 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 	}
 }
 
-void M_FileSystem::LoadScene(JsonObj scene)
+void M_FileSystem::LoadScene(char* sceneBuffer)
 {
 	App->scene_intro->gameObjectsList.clear();
-	JsonArray gameObjects=scene.GetArray("GameObjects");
+	ReadFile("Library/tryingstuff2.json",&sceneBuffer);
+	JsonObj* myScene = new JsonObj(sceneBuffer);
+
+	JsonArray gameObjects= myScene->GetArray("GameObjects");
 	for (int i = 0; i < gameObjects.Size(); ++i)
 	{
 		JsonObj object = gameObjects.GetObjectAt(i);
@@ -539,40 +541,50 @@ void M_FileSystem::LoadGobjsComponents(GameObject* gameObject, JsonObj current_n
 				loadedMesh->UID = components_iterator.GetInt("UID");
 				loadedMesh->name = components_iterator.GetString("Name");
 				loadedMesh->path = components_iterator.GetString("Path");
+				
 
 				loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
 				loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
-				float vertices = components_iterator.GetFloat("Vertices");
-				loadedMesh->vertices = &vertices;
 
 				loadedMesh->num_indices = components_iterator.GetInt("Num indices");
 				loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
-				int indices = components_iterator.GetInt("Indices");
-				uint indexes = indices;
-				loadedMesh->indices = &indexes;
 
 				loadedMesh->num_normals = components_iterator.GetInt("Num normals");
 				loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
-				float normals = components_iterator.GetFloat("Normals");
-				loadedMesh->normals = &normals;
 
 				loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
 				loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
-				float texcoords = components_iterator.GetFloat("Texture Coordinates");
-				loadedMesh->tex_coords = &texcoords;
+
+				loadedMesh->CreateAABB();
+				//Load vertices,indices... from mesh File
+				std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
+				std::string bufferPath = App->geometry->meshesPath + UID_string;
+				ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
+				App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
 
 				gameObject->AddComponent(loadedMesh);
+				App->geometry->CreateBuffer(loadedMesh);
 			}
 			else if (type == "Material")
 			{
 				MaterialComponent* loadedMaterial = new MaterialComponent();
+				App->geometry->CreateTextureBuffer(loadedMaterial);
 				loadedMaterial->type = ComponentType::Material;
+				loadedMaterial->size = components_iterator.GetInt("Size");
 				loadedMaterial->UID = components_iterator.GetInt("UID");
 				loadedMaterial->name = components_iterator.GetString("Name");
 				loadedMaterial->path = components_iterator.GetString("Path");
-				loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
-				loadedMaterial->size = components_iterator.GetInt("Size");
 				loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
+
+
+				std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
+				std::string bufferPath = App->geometry->texturesPath + UID_string;
+
+				ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
+				App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
+				loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
+				
+				App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
 
 				gameObject->AddComponent(loadedMaterial);
 			}
