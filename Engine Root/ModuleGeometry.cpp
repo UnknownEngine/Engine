@@ -176,7 +176,6 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->UID = LCG().Int();
 			ourMesh->path = realDir;
 
-
 			//Copy Vertices
 			LoadVertices(aimesh, ourMesh);
 

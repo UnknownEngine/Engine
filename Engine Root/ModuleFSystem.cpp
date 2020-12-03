@@ -414,57 +414,15 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 		components.AddObject(component);
 		if (gameObject->components.at(i)->type == ComponentType::Mesh)
 		{
-			MeshComponent* mesh = gameObject->GetMeshComponent();
-
-			component.AddInt("UID", mesh->UID);
-			component.AddString("TYPE", "Mesh");
-			component.AddString("Name", mesh->name.c_str());
-			component.AddString("Path", mesh->path.c_str());
-
-			component.AddInt("Num vertices", mesh->num_vertices);
-			component.AddInt("ID Vertices", mesh->id_vertices);
-
-			component.AddInt("Num indices", mesh->num_indices);
-			component.AddInt("ID Indices", mesh->id_indices);
-
-			component.AddInt("Num normals", mesh->num_normals);
-			component.AddInt("ID Normals", mesh->id_normals);
-
-			component.AddInt("Num Texture Coords", mesh->num_tex_coords);
-			component.AddInt("ID Coords", mesh->id_coords);
+			SaveMesh(component, gameObject);
 		}
 		if (gameObject->components.at(i)->type == ComponentType::Material)
 		{
-			MaterialComponent* material = gameObject->GetMaterialComponent();
-
-			component.AddInt("UID", material->UID);
-			component.AddString("TYPE", "Material");
-			component.AddString("Name", material->name.c_str());
-			component.AddString("Path", material->path.c_str());
-			component.AddInt("Width", material->width);
-			component.AddInt("Height", material->height);
-			component.AddInt("BPP", material->bpp);
-
-			component.AddInt("dataTexture", int(material->dataTexture));
-
-			component.AddInt("buffer Data", material->bufferTexture);
-
-			component.AddInt("Size", material->size);
-			component.AddBool("Using Checker", material->useChecker);	
+			SaveMaterial(component, gameObject);
 		}
 		if (gameObject->components.at(i)->type == ComponentType::Transform)
 		{
-			TransformComponent* transform = gameObject->GetTransformComponent();
-			component.AddString("TYPE", "Transform");
-			component.AddInt("UID", transform->UID);
-			JsonArray position=component.AddArray("Position");
-			JsonArray scale=component.AddArray("Scale");
-			JsonArray rotation=component.AddArray("Rotation");
-
-			position.AddFloat3(transform->position.x, transform->position.y, transform->position.z);
-			scale.AddFloat3(transform->scale.x, transform->scale.y, transform->scale.z);
-			rotation.AddQuaternion(transform->rotation.w, transform->rotation.x, transform->rotation.y,transform->rotation.z);
-			
+			SaveTransform(component, gameObject);
 		}
 	}
 }
@@ -536,76 +494,147 @@ void M_FileSystem::LoadGobjsComponents(GameObject* gameObject, JsonObj current_n
 			std::string type = components_iterator.GetString("TYPE");
 			if (type=="Mesh")
 			{
-				MeshComponent* loadedMesh = new MeshComponent();
-				loadedMesh->type = ComponentType::Mesh;
-				loadedMesh->UID = components_iterator.GetInt("UID");
-				loadedMesh->name = components_iterator.GetString("Name");
-				loadedMesh->path = components_iterator.GetString("Path");
-				
-
-				loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
-				loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
-
-				loadedMesh->num_indices = components_iterator.GetInt("Num indices");
-				loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
-
-				loadedMesh->num_normals = components_iterator.GetInt("Num normals");
-				loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
-
-				loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
-				loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
-
-				loadedMesh->CreateAABB();
-				//Load vertices,indices... from mesh File
-				std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
-				std::string bufferPath = App->geometry->meshesPath + UID_string;
-				ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
-				App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
-
-				gameObject->AddComponent(loadedMesh);
-				App->geometry->CreateBuffer(loadedMesh);
+				LoadMesh(components_iterator, gameObject);
 			}
 			else if (type == "Material")
 			{
-				MaterialComponent* loadedMaterial = new MaterialComponent();
-				App->geometry->CreateTextureBuffer(loadedMaterial);
-				loadedMaterial->type = ComponentType::Material;
-				loadedMaterial->size = components_iterator.GetInt("Size");
-				loadedMaterial->UID = components_iterator.GetInt("UID");
-				loadedMaterial->name = components_iterator.GetString("Name");
-				loadedMaterial->path = components_iterator.GetString("Path");
-				loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
-
-
-				std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
-				std::string bufferPath = App->geometry->texturesPath + UID_string;
-
-				ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
-				App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
-				loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
-				
-				App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
-
-				gameObject->AddComponent(loadedMaterial);
+				LoadMaterial(components_iterator, gameObject);
 			}
 			else if (type == "Transform")
 			{
-				TransformComponent* loadedTransform = new TransformComponent();
-				loadedTransform->type = ComponentType::Transform;
-				loadedTransform->UID = components_iterator.GetInt("UID");
-
-				JsonArray position = components_iterator.GetArray("Position");
-				loadedTransform->position = position.GetFloat3(0);
-
-				JsonArray scale = components_iterator.GetArray("Scale");
-				loadedTransform->scale = scale.GetFloat3(0);
-
-				JsonArray rotation = components_iterator.GetArray("Rotation");
-				loadedTransform->rotation = rotation.GetQuaternion(0);
-
-				gameObject->AddComponent(loadedTransform);
+				LoadTransform(components_iterator, gameObject);
 			}
 	}
+}
+
+void M_FileSystem::SaveMesh(JsonObj component, GameObject* gameObject)
+{
+	MeshComponent* mesh = gameObject->GetMeshComponent();
+
+	component.AddInt("UID", mesh->UID);
+	component.AddString("TYPE", "Mesh");
+	component.AddString("Name", mesh->name.c_str());
+	component.AddString("Path", mesh->path.c_str());
+
+	component.AddInt("Num vertices", mesh->num_vertices);
+	//component.AddInt("ID Vertices", mesh->id_vertices);
+
+	component.AddInt("Num indices", mesh->num_indices);
+	//component.AddInt("ID Indices", mesh->id_indices);
+
+	component.AddInt("Num normals", mesh->num_normals);
+	//component.AddInt("ID Normals", mesh->id_normals);
+
+	component.AddInt("Num Texture Coords", mesh->num_tex_coords);
+	//component.AddInt("ID Coords", mesh->id_coords);
+}
+
+void M_FileSystem::SaveMaterial(JsonObj component, GameObject* gameObject)
+{
+	MaterialComponent* material = gameObject->GetMaterialComponent();
+
+	component.AddInt("UID", material->UID);
+	component.AddString("TYPE", "Material");
+	component.AddString("Name", material->name.c_str());
+	component.AddString("Path", material->path.c_str());
+	component.AddInt("Width", material->width);
+	component.AddInt("Height", material->height);
+	component.AddInt("BPP", material->bpp);
+
+	component.AddInt("dataTexture", int(material->dataTexture));
+
+	component.AddInt("buffer Data", material->bufferTexture);
+
+	component.AddInt("Size", material->size);
+	component.AddBool("Using Checker", material->useChecker);
+}
+
+void M_FileSystem::SaveTransform(JsonObj component, GameObject* gameObject)
+{
+	TransformComponent* transform = gameObject->GetTransformComponent();
+	component.AddString("TYPE", "Transform");
+	component.AddInt("UID", transform->UID);
+	JsonArray position = component.AddArray("Position");
+	JsonArray scale = component.AddArray("Scale");
+	JsonArray rotation = component.AddArray("Rotation");
+
+	position.AddFloat3(transform->position.x, transform->position.y, transform->position.z);
+	scale.AddFloat3(transform->scale.x, transform->scale.y, transform->scale.z);
+	rotation.AddQuaternion(transform->rotation.w, transform->rotation.x, transform->rotation.y, transform->rotation.z);
+}
+
+void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
+{
+	MeshComponent* loadedMesh = new MeshComponent();
+	loadedMesh->type = ComponentType::Mesh;
+	loadedMesh->UID = components_iterator.GetInt("UID");
+	loadedMesh->name = components_iterator.GetString("Name");
+	loadedMesh->path = components_iterator.GetString("Path");
+
+
+	loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
+	//loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
+
+	loadedMesh->num_indices = components_iterator.GetInt("Num indices");
+	//loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
+
+	loadedMesh->num_normals = components_iterator.GetInt("Num normals");
+	//loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
+
+	loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
+	//loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
+
+	loadedMesh->CreateAABB();
+	//Load vertices,indices... from mesh File
+	std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
+	std::string bufferPath = App->geometry->meshesPath + UID_string;
+	ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
+	App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
+
+	gameObject->AddComponent(loadedMesh);
+	App->geometry->CreateBuffer(loadedMesh);
+}
+
+void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObject)
+{
+	MaterialComponent* loadedMaterial = new MaterialComponent();
+	App->geometry->CreateTextureBuffer(loadedMaterial);
+	loadedMaterial->type = ComponentType::Material;
+	loadedMaterial->size = components_iterator.GetInt("Size");
+	loadedMaterial->UID = components_iterator.GetInt("UID");
+	loadedMaterial->name = components_iterator.GetString("Name");
+	loadedMaterial->path = components_iterator.GetString("Path");
+	loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
+
+
+	std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
+	std::string bufferPath = App->geometry->texturesPath + UID_string;
+
+	ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
+	App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
+	loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
+
+	App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
+
+	gameObject->AddComponent(loadedMaterial);
+}
+
+void M_FileSystem::LoadTransform(JsonObj components_iterator, GameObject* gameObject)
+{
+	TransformComponent* loadedTransform = new TransformComponent();
+	loadedTransform->type = ComponentType::Transform;
+	loadedTransform->UID = components_iterator.GetInt("UID");
+
+	JsonArray position = components_iterator.GetArray("Position");
+	loadedTransform->position = position.GetFloat3(0);
+
+	JsonArray scale = components_iterator.GetArray("Scale");
+	loadedTransform->scale = scale.GetFloat3(0);
+
+	JsonArray rotation = components_iterator.GetArray("Rotation");
+	loadedTransform->rotation = rotation.GetQuaternion(0);
+
+	gameObject->AddComponent(loadedTransform);
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const
