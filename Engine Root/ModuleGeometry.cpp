@@ -61,16 +61,6 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_REPEAT)
-	{
-		char* buffer;
-		App->fsystem->SaveScene(&buffer);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_REPEAT)
-	{
-
-		App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
-	}
 	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 	{
 		DrawMeshFromGameObjectRoot(App->scene_intro->gameObjectsList[i]);

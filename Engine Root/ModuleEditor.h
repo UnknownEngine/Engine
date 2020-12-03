@@ -40,6 +40,7 @@ private:
 	void HardwareWindow();
 	void InputWindow();
 	void ConsoleWindow();
+	void LoadWindow();
 
 	void CreateHierarchy(GameObject* gameobject);
 
@@ -69,6 +70,7 @@ private:
 	bool showInputWindow;
 	bool showHardwareWindow;
 	bool showConsoleWindow;
+	bool showLoadWindow;
 
 	char tposx[64] = "";
 	char tposy[64] = "";

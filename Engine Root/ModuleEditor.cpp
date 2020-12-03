@@ -24,6 +24,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 	showHardwareWindow = false;
 	showConsoleWindow = false;
 	showOpenGLWindow = false;
+	showLoadWindow = false;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -98,6 +99,18 @@ update_status ModuleEditor::PostUpdate(float dt)
 	//ImGui::End();
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+
+			if (ImGui::MenuItem("Save Scene"))
+			{
+				char* buffer;
+				App->fsystem->SaveScene(&buffer);
+			}
+
+			if (ImGui::MenuItem("Load Scene",nullptr,nullptr,&showLoadWindow))
+			{
+				showLoadWindow = !showLoadWindow;
+			}
+			
 
 			if (ImGui::MenuItem("Exit", NULL, false, true)) {
 				return UPDATE_STOP;
@@ -212,7 +225,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 		InputWindow();
 	if (showConsoleWindow)
 		ConsoleWindow();
-
+	if (showLoadWindow)
+		LoadWindow();
 	if (showAboutWindow)
 		AboutWindow();
 
@@ -658,6 +672,24 @@ void ModuleEditor::ConsoleWindow()
 			CleanConsole();
 		}
 		PrintConsole();
+	}
+	ImGui::End();
+}
+
+void ModuleEditor::LoadWindow()
+{
+	if (ImGui::Begin("Are you sure?", &showLoadWindow)) {
+
+		if (ImGui::Button("Yeah, sure", ImVec2(100, 20)))
+		{
+			App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
+			showLoadWindow = !showLoadWindow;
+		}
+		ImGui::SameLine(150.f);
+		if (ImGui::Button("Wait, no", ImVec2(100, 20)))
+		{
+			showLoadWindow = !showLoadWindow;
+		}
 	}
 	ImGui::End();
 }

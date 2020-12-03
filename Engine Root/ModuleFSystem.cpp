@@ -507,6 +507,10 @@ void M_FileSystem::LoadGobjsComponents(GameObject* gameObject, JsonObj current_n
 	}
 }
 
+//  ----------------------------------------------------------------------------------------------
+//  --------------------------------------------COMPONENTS SAVING----------------------------------
+//  ----------------------------------------------------------------------------------------------
+
 void M_FileSystem::SaveMesh(JsonObj component, GameObject* gameObject)
 {
 	MeshComponent* mesh = gameObject->GetMeshComponent();
@@ -562,6 +566,10 @@ void M_FileSystem::SaveTransform(JsonObj component, GameObject* gameObject)
 	scale.AddFloat3(transform->scale.x, transform->scale.y, transform->scale.z);
 	rotation.AddQuaternion(transform->rotation.w, transform->rotation.x, transform->rotation.y, transform->rotation.z);
 }
+
+//  ----------------------------------------------------------------------------------------------
+//  --------------------------------------------COMPONENTS LOADING--------------------------------
+//  ----------------------------------------------------------------------------------------------
 
 void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
 {
