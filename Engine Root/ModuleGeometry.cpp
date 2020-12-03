@@ -131,8 +131,10 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 			}
 		}
 
-				//transformComponent->UID = LCG().Int();
 		TransformComponent* transformComponent = new TransformComponent(pos,rot,scale);
+		transformComponent->UID = LCG().Int();
+		transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
+		transformComponent->global_transform = transformComponent->transform;
 		gameObject->AddComponent(transformComponent);
 
 
@@ -566,6 +568,15 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 		float3(translation.x, translation.y, translation.z),
 		Quat(rotation.x, rotation.y, rotation.z, rotation.w),
 		float3(scaling.x, scaling.y, scaling.z));
+
+	transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
+	transformComponent->global_transform = transformComponent->transform;
+	if (gameObjectNode->parent != nullptr) {
+		if (gameObjectNode->parent->GetTransformComponent() != nullptr) {
+			float4x4 parent_global_transform = gameObjectNode->parent->GetTransformComponent()->transform;
+			transformComponent->global_transform = parent_global_transform * transformComponent->transform;
+		}
+	}
 	transformComponent->UID = LCG().Int();
 	gameObjectNode->AddComponent(transformComponent);
 }
@@ -587,16 +598,8 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			MaterialComponent* material = gameObject->GetMaterialComponent();
 
 			glPushMatrix();
-			transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
-			float4x4 globalTransform = transformComponent->transform;
-			if (gameObject->parent != nullptr) {
-				if (gameObject->parent->GetTransformComponent() != nullptr) {
-					float4x4 parentGlobal = gameObject->parent->GetTransformComponent()->transform;
-					globalTransform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;	
-				}
-			}
 			
-			glMultMatrixf((float*)&globalTransform.Transposed());
+			glMultMatrixf((float*)&transformComponent->global_transform.Transposed());
 			DrawMesh(mesh, material);
 			glPopMatrix();
 		}
