@@ -2,7 +2,6 @@
 #define _GAMEOBJECTS_H_
 
 #include "Globals.h"
-#include "Application.h"
 #include <vector>
 #include <string>
 #include "MathGeoLib/include/Geometry/AABB.h"

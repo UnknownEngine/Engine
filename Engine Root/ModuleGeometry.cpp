@@ -61,6 +61,16 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
+	if (App->gameMode)
+	{
+		if (!App->gameModePaused)
+		{
+			for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+			{
+				App->scene_intro->gameObjectsList.at(i)->Update(dt);
+			}
+		}
+	}
 	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 	{
 		DrawMeshFromGameObjectRoot(App->scene_intro->gameObjectsList[i]);
@@ -184,8 +194,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			App->fsystem->WriteFile((meshesPath+std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			App->fsystem->ReadFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), &ourMesh->meshBuffer);
+			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
@@ -235,8 +245,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 					materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
 					//Writes and reads from/in materials library
-					App->fsystem->WriteFile((texturesPath+std::to_string(materialComponent->UID)).c_str(), materialComponent->materialBuffer, materialComponent->size);
-					App->fsystem->ReadFile((texturesPath + std::to_string(materialComponent->UID)).c_str(), &materialComponent->materialBuffer);
+					App->fsystem->WriteFile((texturesPath+materialComponent->name).c_str(), materialComponent->materialBuffer, materialComponent->size);
+					App->fsystem->ReadFile((texturesPath + materialComponent->name).c_str(), &materialComponent->materialBuffer);
 
 					//Loads material attributes from materialBuffer
 					LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);

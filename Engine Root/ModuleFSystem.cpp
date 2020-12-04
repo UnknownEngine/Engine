@@ -673,7 +673,7 @@ void M_FileSystem::LoadTransform(JsonObj components_iterator, GameObject* gameOb
 	JsonArray rotation = components_iterator.GetArray("Rotation");
 	loadedTransform->rotation = rotation.GetQuaternion(0);
 
-	App->geometry->CreateTransformComponent(loadedTransform->position, loadedTransform->scale, loadedTransform->rotation,gameObject);
+	gameObject->AddComponent(loadedTransform);
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const

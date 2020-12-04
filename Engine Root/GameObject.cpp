@@ -13,14 +13,22 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Update()
+void GameObject::Update(float dt)
 {
+	for (int i = 0; i<components.size(); i++)
+	{
+		if (components[i]->type == ComponentType::Transform)
+		{
+			TransformComponent* transform = new TransformComponent();
+			transform = GetTransformComponent();
+			transform->position.x += 0.01;
+			components[i] = transform;
+		}
+	}
 }
 
 Component* GameObject::CreateComponent(std::string type, bool active)
 {
-
-
 	return nullptr;
 }
 
