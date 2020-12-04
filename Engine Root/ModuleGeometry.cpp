@@ -131,17 +131,15 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 			}
 		}
 
-				//transformComponent->UID = LCG().Int();
 		TransformComponent* transformComponent = new TransformComponent(pos,rot,scale);
+		transformComponent->UID = LCG().Int();
 		gameObject->AddComponent(transformComponent);
 
 
-		//Accumulate transforms without creating new gameObjects
-
-			GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
-			newGameObject->ParentUID = gameObject->UID;
-			gameObject->childs.push_back(newGameObject);
-			CheckNodeChilds(node, newGameObject, scene, realDir);
+		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
+		newGameObject->ParentUID = gameObject->UID;
+		gameObject->childs.push_back(newGameObject);
+		CheckNodeChilds(node, newGameObject, scene, realDir);
 		
 	}
 	aiReleaseImport(scene);
@@ -580,8 +578,6 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 	if (gameObject->components.size() > 0) {
 		for (uint i = 0; i < gameObject->components.size(); i++)
 		{
-			LOG("Drawing %s components", gameObject->nameID.c_str());
-
 			TransformComponent* transformComponent = gameObject->GetTransformComponent();
 			MeshComponent* mesh = gameObject->GetMeshComponent();
 			MaterialComponent* material = gameObject->GetMaterialComponent();
