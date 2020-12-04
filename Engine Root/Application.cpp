@@ -35,6 +35,11 @@ Application::Application()
 	AddModule(scene_intro);
 	// Renderer last!
 	AddModule(renderer3D);
+
+	onStart = true;
+	editorMode = true;
+	gameMode = false;
+	gameModePaused = false;
 }
 
 Application::~Application()

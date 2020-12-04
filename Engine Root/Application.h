@@ -45,6 +45,11 @@ public:
 	float	seconds_since_startup = 0;
 	float maxcapTime;
 
+	bool editorMode;
+	bool gameMode;
+	bool gameModePaused;
+	bool onStart;
+
 	std::vector<float> frames_log;
 	std::vector<float> ms_log;
 	std::vector<float> primitive_list;

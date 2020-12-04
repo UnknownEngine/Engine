@@ -349,6 +349,7 @@ void M_FileSystem::CreatePrimitives(std::string path, std::string file)
 void M_FileSystem::SaveScene(char** sceneBuffer)
 {
 	JsonObj scene;
+	SaveSceneMode(scene);
 	if (!App->scene_intro->gameObjectsList.empty())
 	{
 		scene.AddArray("GameObjects");
@@ -359,7 +360,7 @@ void M_FileSystem::SaveScene(char** sceneBuffer)
 		LOG("Any gameObjects to be saved");
 	}
 	uint size = scene.Save(sceneBuffer);
-	App->fsystem->WriteFile("Library/tryingstuff2.json", *sceneBuffer, size);
+	App->fsystem->WriteFile("Library/Config.json", *sceneBuffer, size);
 
 }
 
@@ -384,6 +385,19 @@ JsonArray M_FileSystem::SaveGameObjects(JsonObj scene)
 		}
 	}
 	return gameObjects;
+}
+
+JsonArray M_FileSystem::SaveSceneMode(JsonObj scene)
+{
+	JsonArray sceneModes = scene.AddArray("Scene Mode");
+	JsonObj mode;
+	sceneModes.AddObject(mode);
+
+	mode.AddBool("EditorMode", App->editorMode);
+	mode.AddBool("GameMode", App->gameMode);
+	mode.AddBool("Paused", App->gameModePaused);
+
+	return sceneModes;
 }
 
 void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
@@ -430,8 +444,14 @@ void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 void M_FileSystem::LoadScene(char* sceneBuffer)
 {
 	App->scene_intro->gameObjectsList.clear();
-	ReadFile("Library/tryingstuff2.json",&sceneBuffer);
+	ReadFile("Library/Config.json",&sceneBuffer);
 	JsonObj* myScene = new JsonObj(sceneBuffer);
+
+	if (App->onStart)
+	{
+		LoadSceneMode(myScene);
+		App->onStart = false;
+	}
 
 	JsonArray gameObjects= myScene->GetArray("GameObjects");
 	for (int i = 0; i < gameObjects.Size(); ++i)
@@ -449,6 +469,19 @@ void M_FileSystem::LoadScene(char* sceneBuffer)
 			LoadGobjsComponents(created_gameobject, object);
 		}
 		App->scene_intro->gameObjectsList.push_back(created_gameobject);
+	}
+}
+
+void M_FileSystem::LoadSceneMode(JsonObj* scene)
+{
+	JsonArray mode=scene->GetArray("Scene Mode");
+
+	for (int i = 0; i < mode.Size(); i++)
+	{
+		JsonObj node = mode.GetObjectAt(i);
+		App->editorMode = node.GetBool("EditorMode");
+		App->gameMode = node.GetBool("GameMode");
+		App->gameModePaused = node.GetBool("Paused");
 	}
 }
 
@@ -593,9 +626,9 @@ void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
 	//loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
 
 	loadedMesh->CreateAABB();
+
 	//Load vertices,indices... from mesh File
-	std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
-	std::string bufferPath = App->geometry->meshesPath + UID_string;
+	std::string bufferPath = App->geometry->meshesPath + loadedMesh->name;
 	ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
 	App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
 
@@ -614,9 +647,7 @@ void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObj
 	loadedMaterial->path = components_iterator.GetString("Path");
 	loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
 
-
-	std::string UID_string = std::to_string(components_iterator.GetInt("UID"));
-	std::string bufferPath = App->geometry->texturesPath + UID_string;
+	std::string bufferPath = App->geometry->texturesPath + loadedMaterial->name;
 
 	ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
 	App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
@@ -642,7 +673,7 @@ void M_FileSystem::LoadTransform(JsonObj components_iterator, GameObject* gameOb
 	JsonArray rotation = components_iterator.GetArray("Rotation");
 	loadedTransform->rotation = rotation.GetQuaternion(0);
 
-	gameObject->AddComponent(loadedTransform);
+	App->geometry->CreateTransformComponent(loadedTransform->position, loadedTransform->scale, loadedTransform->rotation,gameObject);
 }
 
 unsigned int M_FileSystem::Load(const char * path, const char * file, char ** buffer) const

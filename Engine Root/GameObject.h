@@ -2,6 +2,7 @@
 #define _GAMEOBJECTS_H_
 
 #include "Globals.h"
+#include "Application.h"
 #include <vector>
 #include <string>
 #include "MathGeoLib/include/Geometry/AABB.h"
@@ -17,7 +18,7 @@ public:
 	GameObject(std::string name, GameObject* parent = nullptr);
 	~GameObject();
 
-	void Update();
+	void Update(float dt);
 	Component* CreateComponent(std::string type, bool active);
 	void AddComponent(Component* component);
 	void ChangeParent(GameObject* newParent);

@@ -75,6 +75,7 @@ public:
 
 	void SaveScene(char** sceneBuffer);
 	JsonArray SaveGameObjects(JsonObj scene);
+	JsonArray SaveSceneMode(JsonObj scene);
 	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
 	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
 	void SaveMesh(JsonObj component, GameObject* gameObject);
@@ -82,6 +83,7 @@ public:
 	void SaveTransform(JsonObj component, GameObject* gameObject);
 
 	void LoadScene(char* sceneBuffer);
+	void LoadSceneMode(JsonObj* scene);
 	GameObject* LoadGameObjects(JsonObj current_node);
 	void LoadGobjsChilds(GameObject* gameObject, JsonObj current_node);
 	void LoadGobjsComponents(GameObject* gameObject, JsonObj current_node);

@@ -212,7 +212,40 @@ update_status ModuleEditor::PostUpdate(float dt)
 		
 		ImGui::End();
 	}
-		
+
+	if (ImGui::Begin("Time Manager"))
+	{
+		if (ImGui::Button("Play", ImVec2(100, 20)))
+		{
+			if (App->editorMode)
+			{
+				char* buffer;
+				App->fsystem->SaveScene(&buffer);
+				App->editorMode = !App->editorMode;
+				App->gameMode = !App->gameMode;
+			}
+		}
+		ImGui::SameLine(150.f);
+		if (ImGui::Button("Pause", ImVec2(100, 20)))
+		{
+			if (App->gameMode)
+			{
+				App->gameModePaused = !App->gameModePaused;
+			}
+		}
+		ImGui::SameLine(300.f);
+		if (ImGui::Button("Stop", ImVec2(100, 20)))
+		{
+			if (App->gameMode)
+			{
+				App->gameModePaused = false;
+				App->editorMode = !App->editorMode;
+				App->gameMode = !App->gameMode;
+				App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
+			}
+		}
+	}
+	ImGui::End();
 	if (showApplicationWindow)
 		ApplicationWindow();
 	if (showWindowWindow)
