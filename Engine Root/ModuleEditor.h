@@ -79,6 +79,9 @@ private:
 	float rotyInsp = 0.0;
 	float rotzInsp = 0.0;
 
+	int childIndex = 0;
+	int gobIndex = 0;
+
 	std::string meshname = "";
 	std::string meshpath = "";
 	std::string material_name = "";

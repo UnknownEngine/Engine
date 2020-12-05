@@ -192,6 +192,25 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 	ImGui::Begin("Hierarchy");
 
+	if (ImGui::Button("Create Empty", ImVec2(200, 20)))
+	{
+		gobIndex ++;
+		std::string gobName = "Empty Gobject ";
+		gobName += std::to_string(gobIndex);
+		GameObject* emptyGob = new GameObject(gobName.c_str());
+		emptyGob->UID = LCG().Int();
+
+		float3 pos(0, 0, 0);
+		float3 scale(1, 1, 1);
+		Quat rot(0, 0, 0, 1);
+
+		TransformComponent* transform = new TransformComponent(pos, rot, scale);
+		transform->UID = LCG().Int();
+		emptyGob->AddComponent(transform);
+
+		App->scene_intro->gameObjectsList.push_back(emptyGob);
+	}
+
 	for (uint i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 	{
 		CreateHierarchy(App->scene_intro->gameObjectsList[i]);
@@ -335,7 +354,10 @@ void ModuleEditor::DrawInspector()
 	{
 		if (ImGui::Button("Create Empty Child", ImVec2(200, 20)))
 		{
-			GameObject* emptychild = new GameObject("Empty Child");
+			childIndex++;
+			std::string childName = "Empty Child ";
+			childName += std::to_string(childIndex);
+			GameObject* emptychild = new GameObject(childName.c_str());
 			emptychild->UID = LCG().Int();
 
 			float3 pos(App->scene_intro->selected->GetTransformComponent()->position.x, App->scene_intro->selected->GetTransformComponent()->position.y, App->scene_intro->selected->GetTransformComponent()->position.z);
@@ -849,6 +871,7 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 {
 	if (gameobject != NULL)
 	{
+
 		if (ImGui::TreeNode(gameobject->nameID.c_str()))
 		{
 			if (ImGui::IsItemClicked(0)) {
@@ -865,9 +888,9 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 				CreateHierarchy(gobject);		
 			}
 		ImGui::TreePop();
+
 		}
 	}
-
 }
 
 void ModuleEditor::HyperLink(const char* tooltip, const char* url)
