@@ -10,6 +10,8 @@
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "MeshComponent.h"
 #include "TransformComponent.h"
 #include "MaterialComponent.h"
@@ -299,207 +301,242 @@ void ModuleEditor::AddLog(char* path)
 
 void ModuleEditor::DrawInspector()
 {
-	if (hasTransform)
+	if (App->scene_intro->selected != NULL)
 	{
-		ImGui::CollapsingHeader("Transform");
-		ImGui::PushItemWidth(60);
-		ImGui::Text("");
-
-		ImGui::Text("Position:");
-		ImGui::PushItemWidth(150);
-		ImGui::Text("X:");
-		ImGui::SameLine(72.f);
-		ImGui::InputFloat("##posx", &App->scene_intro->selected->GetTransformComponent()->position.x, 0.5, 1);
-		ImGui::Text("Y:");
-		ImGui::SameLine(72.f);
-		ImGui::InputFloat("##posy", &App->scene_intro->selected->GetTransformComponent()->position.y, 0.5, 1);
-		ImGui::Text("Z:");
-		ImGui::SameLine(72.f);
-		ImGui::InputFloat("##posz", &App->scene_intro->selected->GetTransformComponent()->position.z, 0.5, 1);
-		ImGui::PopItemWidth();
-
-
-		ImGui::Text("");
-		ImGui::Separator();
-		ImGui::Text("");
-
-		ImGui::Text("Rotation:");
-		ImGui::Text("X:");
-		ImGui::SameLine(22.f);
-		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.x);
-		ImGui::SameLine(92.f);
-		ImGui::PushItemWidth(1);
-		if (ImGui::InputFloat("##rotx", &rotx, 1, 1))
+		if (ImGui::Button("Delete Game Object", ImVec2(200, 20)))
 		{
-			rotx = rotx * pi / 180;
-			Quat q2(float3(1,0,0),rotx);
-
-			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
-			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
-		}
-		ImGui::PopItemWidth();
-
-		ImGui::Text("Y:");
-		ImGui::SameLine(22.f);
-		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.y);
-		ImGui::SameLine(92.f);
-		ImGui::PushItemWidth(1);
-		if(ImGui::InputFloat("##roty", &roty, 1, 1))
-		{
-			roty = roty * pi / 180;
-			Quat q2(float3(0, 1, 0), roty);
-
-			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
-			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
-		}
-		ImGui::PopItemWidth();
-		ImGui::Text("Z:");
-		ImGui::SameLine(22.f);
-		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.z);
-		ImGui::SameLine(92.f);
-		ImGui::PushItemWidth(1);
-		if (ImGui::InputFloat("##rotz", &rotz, 1, 1))
-		{
-			rotz = rotz * pi / 180;
-			Quat q2(float3(0, 0, 1), rotz);
-
-			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
-			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
-		}
-		ImGui::PopItemWidth();
-
-		ImGui::Text("");
-		ImGui::Separator();
-		ImGui::Text("");
-
-		ImGui::Text("Scale:");
-		ImGui::PushItemWidth(150);
-		ImGui::InputFloat("##scalex", &App->scene_intro->selected->GetTransformComponent()->scale.x, 0.1, 0.3);
-		ImGui::InputFloat("##scaley", &App->scene_intro->selected->GetTransformComponent()->scale.y, 0.1, 0.3);
-		ImGui::InputFloat("##scalez", &App->scene_intro->selected->GetTransformComponent()->scale.z, 0.1, 0.3);
-		ImGui::PopItemWidth();
-
-		ImGui::PopItemWidth();
-
-		ImGui::Text("");
-		ImGui::Separator();
-		ImGui::Text("");
-
-		ImGui::Text("");
-		ImGui::SameLine(72.f);
-		if (ImGui::Button("Reset Transforms", ImVec2(200, 20)))
-		{
-			App->scene_intro->selected->GetTransformComponent()->position = float3(0, 0, 0);
-			App->scene_intro->selected->GetTransformComponent()->scale = float3(1, 1, 1);
-			App->scene_intro->selected->GetTransformComponent()->rotation = Quat(0, 0, 0, 1);
-		}
-		ImGui::Text("");
-	}
-
-	if (hasMesh)
-	{
-		ImGui::CollapsingHeader("Mesh");
-		ImGui::Checkbox("Active", &App->scene_intro->selected->GetMeshComponent()->active);
-		ImGui::TextWrapped("Name");
-		ImGui::SameLine(100);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-		ImGui::TextWrapped(meshname.c_str());
-		ImGui::PopStyleColor(1);
-
-		ImGui::TextWrapped("Path");
-		ImGui::SameLine(100);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-		ImGui::TextWrapped(meshpath.c_str());
-		ImGui::PopStyleColor(1);
-
-		ImGui::Button("Change Source", ImVec2(200, 20));
-		if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
-			App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
-		}
-		ImGui::Text("");
-
-		ImGui::TextWrapped("Vertexs");
-		ImGui::SameLine(100);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-		ImGui::TextWrapped("%i", numvertices);
-		ImGui::PopStyleColor(1);
-
-		ImGui::TextWrapped("Normals");
-		ImGui::SameLine(100);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-		ImGui::TextWrapped("%i", numnormals);
-		ImGui::PopStyleColor(1);
-		ImGui::Text("");
-
-		ImGui::Text("");
-		ImGui::SameLine(72.f);
-		if (ImGui::Button("Delete Component", ImVec2(200, 20)))
-		{
-			for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
+			for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 			{
-				if (App->scene_intro->selected->components.at(i)->type == ComponentType::Mesh)
+				if (App->scene_intro->selected->parent != NULL)
 				{
-					delete App->scene_intro->selected->components.at(i);
-					App->scene_intro->selected->components.pop_back();
+					for (int j = 0; j < App->scene_intro->gameObjectsList.at(i)->childs.size(); j++)
+					{
+						if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->childs.at(j)->UID)
+						{
+							delete App->scene_intro->gameObjectsList.at(i)->childs.at(j);
+							auto it = std::find(App->scene_intro->gameObjectsList.at(i)->childs.begin(), App->scene_intro->gameObjectsList.at(i)->childs.end(), App->scene_intro->gameObjectsList.at(i)->childs.at(j));
+							App->scene_intro->gameObjectsList.at(i)->childs.erase(it);
+							App->scene_intro->selected = nullptr;
+						}
+					}
+				}
+				else
+				{
+					if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->UID)
+					{
+						delete App->scene_intro->gameObjectsList.at(i);
+						auto it = std::find(App->scene_intro->gameObjectsList.begin(), App->scene_intro->gameObjectsList.end(), App->scene_intro->gameObjectsList.at(i));
+						App->scene_intro->gameObjectsList.erase(it);
+						App->scene_intro->selected = nullptr;
+					}
 				}
 			}
 		}
-		ImGui::Text("");
 	}
-	if (hasMaterial)
+	if (App->scene_intro->selected != NULL)
 	{
-		ImGui::CollapsingHeader("Material");
-
-		ImGui::Checkbox("Active##material", &App->scene_intro->selected->GetMaterialComponent()->active);
-
-		ImGui::TextWrapped("File Path:");
-		ImGui::SameLine(100);
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
-		ImGui::TextWrapped(material_path.c_str());
-		ImGui::PopStyleColor(1);
-
-		ImGui::Button("Change Source", ImVec2(200, 20));
-
-		ImGui::PushItemWidth(95);
-		ImGui::Text("");
-
-		if (ImGui::Button("Use Checkers", ImVec2(200, 20))) {
-			App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
-		}
-		
-
-		ImGui::Text("");
-		ImGui::Text("");
-		ImGui::SameLine(72.f);
-		if (ImGui::Button("Delete Material", ImVec2(200, 20)))
+		if (hasTransform)
 		{
-			for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
+			ImGui::CollapsingHeader("Transform");
+			ImGui::PushItemWidth(60);
+			ImGui::Text("");
+
+			ImGui::Text("Position:");
+			ImGui::PushItemWidth(150);
+			ImGui::Text("X:");
+			ImGui::SameLine(72.f);
+			ImGui::InputFloat("##posx", &App->scene_intro->selected->GetTransformComponent()->position.x, 0.5, 1);
+			ImGui::Text("Y:");
+			ImGui::SameLine(72.f);
+			ImGui::InputFloat("##posy", &App->scene_intro->selected->GetTransformComponent()->position.y, 0.5, 1);
+			ImGui::Text("Z:");
+			ImGui::SameLine(72.f);
+			ImGui::InputFloat("##posz", &App->scene_intro->selected->GetTransformComponent()->position.z, 0.5, 1);
+			ImGui::PopItemWidth();
+
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("Rotation:");
+			ImGui::Text("X:");
+			ImGui::SameLine(22.f);
+			ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.x);
+			ImGui::SameLine(92.f);
+			ImGui::PushItemWidth(1);
+			if (ImGui::InputFloat("##rotx", &rotx, 1, 1))
 			{
-				if (App->scene_intro->selected->components.at(i)->type == ComponentType::Material)
+				rotx = rotx * pi / 180;
+				Quat q2(float3(1, 0, 0), rotx);
+
+				App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+				App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+			}
+			ImGui::PopItemWidth();
+
+			ImGui::Text("Y:");
+			ImGui::SameLine(22.f);
+			ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.y);
+			ImGui::SameLine(92.f);
+			ImGui::PushItemWidth(1);
+			if (ImGui::InputFloat("##roty", &roty, 1, 1))
+			{
+				roty = roty * pi / 180;
+				Quat q2(float3(0, 1, 0), roty);
+
+				App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+				App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+			}
+			ImGui::PopItemWidth();
+			ImGui::Text("Z:");
+			ImGui::SameLine(22.f);
+			ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.z);
+			ImGui::SameLine(92.f);
+			ImGui::PushItemWidth(1);
+			if (ImGui::InputFloat("##rotz", &rotz, 1, 1))
+			{
+				rotz = rotz * pi / 180;
+				Quat q2(float3(0, 0, 1), rotz);
+
+				App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+				App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+			}
+			ImGui::PopItemWidth();
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("Scale:");
+			ImGui::PushItemWidth(150);
+			ImGui::InputFloat("##scalex", &App->scene_intro->selected->GetTransformComponent()->scale.x, 0.1, 0.3);
+			ImGui::InputFloat("##scaley", &App->scene_intro->selected->GetTransformComponent()->scale.y, 0.1, 0.3);
+			ImGui::InputFloat("##scalez", &App->scene_intro->selected->GetTransformComponent()->scale.z, 0.1, 0.3);
+			ImGui::PopItemWidth();
+
+			ImGui::PopItemWidth();
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			if (ImGui::Button("Reset Transforms", ImVec2(200, 20)))
+			{
+				App->scene_intro->selected->GetTransformComponent()->position = float3(0, 0, 0);
+				App->scene_intro->selected->GetTransformComponent()->scale = float3(1, 1, 1);
+				App->scene_intro->selected->GetTransformComponent()->rotation = Quat(0, 0, 0, 1);
+			}
+			ImGui::Text("");
+		}
+
+		if (hasMesh)
+		{
+			ImGui::CollapsingHeader("Mesh");
+			ImGui::Checkbox("Active", &App->scene_intro->selected->GetMeshComponent()->active);
+			ImGui::TextWrapped("Name");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped(meshname.c_str());
+			ImGui::PopStyleColor(1);
+
+			ImGui::TextWrapped("Path");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped(meshpath.c_str());
+			ImGui::PopStyleColor(1);
+
+			ImGui::Button("Change Source", ImVec2(200, 20));
+			if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
+				App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
+			}
+			ImGui::Text("");
+
+			ImGui::TextWrapped("Vertexs");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("%i", numvertices);
+			ImGui::PopStyleColor(1);
+
+			ImGui::TextWrapped("Normals");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped("%i", numnormals);
+			ImGui::PopStyleColor(1);
+			ImGui::Text("");
+
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			if (ImGui::Button("Delete Mesh", ImVec2(200, 20)))
+			{
+				for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
 				{
-					delete App->scene_intro->selected->components.at(i);
-					App->scene_intro->selected->components.pop_back();
+					if (App->scene_intro->selected->components.at(i)->type == ComponentType::Mesh)
+					{
+						delete App->scene_intro->selected->components.at(i);
+						auto it = std::find(App->scene_intro->selected->components.begin(), App->scene_intro->selected->components.end(), App->scene_intro->selected->components.at(i));
+						App->scene_intro->selected->components.erase(it);
+
+					}
 				}
 			}
+			ImGui::Text("");
 		}
-
-		ImGui::Text("");
-		ImGui::Separator();
-		ImGui::Text("");
-
-
-
-
-		ImGui::Text("Size: (%i,%i)", material_width, material_height);
-		ImGui::Text("Bpp: %i", material_bpp);
-		if (App->scene_intro->selected != NULL && App->scene_intro->selected->GetMaterialComponent()!=NULL)
+		if (hasMaterial)
 		{
-			if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
-			{
-				ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
+			ImGui::CollapsingHeader("Material");
+
+			ImGui::Checkbox("Active##material", &App->scene_intro->selected->GetMaterialComponent()->active);
+
+			ImGui::TextWrapped("File Path:");
+			ImGui::SameLine(100);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
+			ImGui::TextWrapped(material_path.c_str());
+			ImGui::PopStyleColor(1);
+
+			ImGui::Button("Change Source", ImVec2(200, 20));
+
+			ImGui::PushItemWidth(95);
+			ImGui::Text("");
+
+			if (ImGui::Button("Use Checkers", ImVec2(200, 20))) {
+				App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
 			}
-			else {
-				ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
+
+
+			ImGui::Text("");
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			if (ImGui::Button("Delete Material", ImVec2(200, 20)))
+			{
+				for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
+				{
+					if (App->scene_intro->selected->components.at(i)->type == ComponentType::Material)
+					{
+						delete App->scene_intro->selected->components.at(i);
+						auto it = std::find(App->scene_intro->selected->components.begin(), App->scene_intro->selected->components.end(), App->scene_intro->selected->components.at(i));
+						App->scene_intro->selected->components.erase(it);
+					}
+				}
+			}
+
+			ImGui::Text("");
+			ImGui::Separator();
+			ImGui::Text("");
+
+			ImGui::Text("Size: (%i,%i)", material_width, material_height);
+			ImGui::Text("Bpp: %i", material_bpp);
+			if (App->scene_intro->selected != NULL && App->scene_intro->selected->GetMaterialComponent() != NULL)
+			{
+				if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
+				{
+					ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
+				}
+				else {
+					ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
+				}
 			}
 		}
 	}

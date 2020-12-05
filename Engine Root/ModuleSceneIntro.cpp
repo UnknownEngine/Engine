@@ -39,7 +39,7 @@ bool ModuleSceneIntro::Start()
 	//std::string  extension = "";
 	//App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
 	//App->fsystem->DetectExtension(path, file, extension);
-	App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
+	//App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
 	return ret;
 }
 
