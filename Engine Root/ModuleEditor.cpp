@@ -297,8 +297,6 @@ void ModuleEditor::AddLog(char* path)
 	items.push_back(strdup(path));
 }
 
-
-
 void ModuleEditor::DrawInspector()
 {
 	if (App->scene_intro->selected != NULL)
@@ -335,6 +333,20 @@ void ModuleEditor::DrawInspector()
 	}
 	if (App->scene_intro->selected != NULL)
 	{
+		if (ImGui::Button("Create Empty Child", ImVec2(200, 20)))
+		{
+			GameObject* emptychild = new GameObject("Empty Child");
+			emptychild->UID = LCG().Int();
+
+			float3 pos(App->scene_intro->selected->GetTransformComponent()->position.x, App->scene_intro->selected->GetTransformComponent()->position.y, App->scene_intro->selected->GetTransformComponent()->position.z);
+			float3 scale(App->scene_intro->selected->GetTransformComponent()->scale.x, App->scene_intro->selected->GetTransformComponent()->scale.y, App->scene_intro->selected->GetTransformComponent()->scale.z);
+			Quat rot(App->scene_intro->selected->GetTransformComponent()->rotation.x, App->scene_intro->selected->GetTransformComponent()->rotation.y, App->scene_intro->selected->GetTransformComponent()->rotation.z, App->scene_intro->selected->GetTransformComponent()->rotation.w);
+
+			TransformComponent* transform = new TransformComponent(pos,rot,scale);
+			transform->UID = LCG().Int();
+			emptychild->AddComponent(transform);
+			App->scene_intro->selected->childs.push_back(emptychild);
+		}
 		if (hasTransform)
 		{
 			ImGui::CollapsingHeader("Transform");
@@ -504,7 +516,6 @@ void ModuleEditor::DrawInspector()
 			if (ImGui::Button("Use Checkers", ImVec2(200, 20))) {
 				App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
 			}
-
 
 			ImGui::Text("");
 			ImGui::Text("");
