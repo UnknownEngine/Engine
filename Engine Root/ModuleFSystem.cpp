@@ -422,7 +422,7 @@ void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
 void M_FileSystem::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 {
 	JsonArray components = JsonGob.AddArray("Components");
-	for (int i = 0; i < gameObject->components.size(); i++)
+	for (int i = 0; i < gameObject->components.size(); ++i)
 	{
 		JsonObj component;
 		components.AddObject(component);
@@ -454,7 +454,7 @@ void M_FileSystem::LoadScene(char* sceneBuffer)
 	}
 
 	JsonArray gameObjects= myScene->GetArray("GameObjects");
-	for (int i = 0; i < gameObjects.Size(); ++i)
+	for (int i = 0; i < gameObjects.Size(); i++)
 	{
 		JsonObj object = gameObjects.GetObjectAt(i);
 		

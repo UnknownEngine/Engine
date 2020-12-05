@@ -200,7 +200,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	{
 		if (App->scene_intro->selected != NULL)
 		{
-			FillInspector();
+			FillInspector(App->scene_intro->selected);
 		}
 		else
 		{
@@ -238,6 +238,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 		{
 			if (App->gameMode)
 			{
+				App->scene_intro->selected = NULL;
 				App->gameModePaused = false;
 				App->editorMode = !App->editorMode;
 				App->gameMode = !App->gameMode;
@@ -305,36 +306,78 @@ void ModuleEditor::DrawInspector()
 		ImGui::Text("");
 
 		ImGui::Text("Position:");
-		ImGui::SameLine(75.f);
-		ImGui::InputText("##posx", tposx, 64);
-		ImGui::SameLine(142.f);
-		ImGui::InputText("##posy", tposy, 64);
-		ImGui::SameLine(208.f);
-		ImGui::InputText(" ##posz", tposz, 64);
+		ImGui::PushItemWidth(150);
+		ImGui::Text("X:");
+		ImGui::SameLine(72.f);
+		ImGui::InputFloat("##posx", &App->scene_intro->selected->GetTransformComponent()->position.x, 0.5, 1);
+		ImGui::Text("Y:");
+		ImGui::SameLine(72.f);
+		ImGui::InputFloat("##posy", &App->scene_intro->selected->GetTransformComponent()->position.y, 0.5, 1);
+		ImGui::Text("Z:");
+		ImGui::SameLine(72.f);
+		ImGui::InputFloat("##posz", &App->scene_intro->selected->GetTransformComponent()->position.z, 0.5, 1);
+		ImGui::PopItemWidth();
+
 
 		ImGui::Text("");
 		ImGui::Separator();
 		ImGui::Text("");
 
 		ImGui::Text("Rotation:");
-		ImGui::SameLine(75.f);
-		ImGui::SliderFloat("##rotx", &rotx, -360, 360, "X: %1.f", 0.5f);
-		ImGui::SameLine(142.f);
-		ImGui::SliderFloat("##roty", &roty, -360, 360, "Y: %1.f", 0.5f);
-		ImGui::SameLine(208.f);
-		ImGui::SliderFloat("##rotz", &rotz, -360, 360, "Z: %1.f", 0.5f);
+		ImGui::Text("X:");
+		ImGui::SameLine(22.f);
+		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.x);
+		ImGui::SameLine(92.f);
+		ImGui::PushItemWidth(1);
+		if (ImGui::InputFloat("##rotx", &rotx, 1, 1))
+		{
+			rotx = rotx * pi / 180;
+			Quat q2(float3(1,0,0),rotx);
+
+			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+		}
+		ImGui::PopItemWidth();
+
+		ImGui::Text("Y:");
+		ImGui::SameLine(22.f);
+		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.y);
+		ImGui::SameLine(92.f);
+		ImGui::PushItemWidth(1);
+		if(ImGui::InputFloat("##roty", &roty, 1, 1))
+		{
+			roty = roty * pi / 180;
+			Quat q2(float3(0, 1, 0), roty);
+
+			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+		}
+		ImGui::PopItemWidth();
+		ImGui::Text("Z:");
+		ImGui::SameLine(22.f);
+		ImGui::Text("%f", App->scene_intro->selected->GetTransformComponent()->rotation.z);
+		ImGui::SameLine(92.f);
+		ImGui::PushItemWidth(1);
+		if (ImGui::InputFloat("##rotz", &rotz, 1, 1))
+		{
+			rotz = rotz * pi / 180;
+			Quat q2(float3(0, 0, 1), rotz);
+
+			App->scene_intro->selected->GetTransformComponent()->rotation = App->scene_intro->selected->GetTransformComponent()->rotation * q2;
+			App->scene_intro->selected->GetTransformComponent()->rotation.Normalize();
+		}
+		ImGui::PopItemWidth();
 
 		ImGui::Text("");
 		ImGui::Separator();
 		ImGui::Text("");
 
 		ImGui::Text("Scale:");
-		ImGui::SameLine(75.f);
-		ImGui::InputText("##scalex", tscalex, 64);
-		ImGui::SameLine(142.f);
-		ImGui::InputText("##scaley", tscaley, 64);
-		ImGui::SameLine(208.f);
-		ImGui::InputText("##scalez", tscalez, 64);
+		ImGui::PushItemWidth(150);
+		ImGui::InputFloat("##scalex", &App->scene_intro->selected->GetTransformComponent()->scale.x, 0.1, 0.3);
+		ImGui::InputFloat("##scaley", &App->scene_intro->selected->GetTransformComponent()->scale.y, 0.1, 0.3);
+		ImGui::InputFloat("##scalez", &App->scene_intro->selected->GetTransformComponent()->scale.z, 0.1, 0.3);
+		ImGui::PopItemWidth();
 
 		ImGui::PopItemWidth();
 
@@ -437,35 +480,37 @@ void ModuleEditor::DrawInspector()
 	}
 }
 
-void ModuleEditor::FillInspector()
+void ModuleEditor::FillInspector(GameObject* selected)
 {
-		TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
-		MaterialComponent* materialComponent = App->scene_intro->selected->GetMaterialComponent();
-		MeshComponent* meshComponent = App->scene_intro->selected->GetMeshComponent();
+		TransformComponent* transformComponent = selected->GetTransformComponent();
+		MaterialComponent* materialComponent = selected->GetMaterialComponent();
+		MeshComponent* meshComponent = selected->GetMeshComponent();
 	
 	if (transformComponent != NULL)
 	{
-		float tfposx = transformComponent->position.x;
-		float tfposy = transformComponent->position.y;
-		float tfposz = transformComponent->position.z;
-		sprintf(tposx, "%f", tfposx);
-		sprintf(tposy, "%f", tfposy);
-		sprintf(tposz, "%f", tfposz);
+		//float tfposx = transformComponent->position.x;
+		//float tfposy = transformComponent->position.y;
+		//float tfposz = transformComponent->position.z;
+		//tposx = transformComponent->position.x;
+		//tposy = transformComponent->position.y;
+		//tposz = transformComponent->position.z;
+		//sprintf(tposy, "%f", tfposy);
+		//sprintf(tposz, "%f", tfposz);
 
 
 		float tfrotx = transformComponent->rotation.x;
 		float tfroty = transformComponent->rotation.y;
 		float tfrotz = transformComponent->rotation.z;
-		rotx = tfrotx;
-		roty = tfroty;
-		rotz = tfrotz;
+		//rotx = transformComponent->rotation.x;
+		//roty = transformComponent->rotation.y;
+		//rotz = transformComponent->rotation.z;
 
 		float tfscalex = transformComponent->scale.x;
 		float tfscaley = transformComponent->scale.y;
 		float tfscalez = transformComponent->scale.z;
-		sprintf(tscalex, "%f", tfscalex);
-		sprintf(tscaley, "%f", tfscaley);
-		sprintf(tscalez, "%f", tfscalez);
+		//sprintf(tscalex, "%f", tfscalex);
+		//sprintf(tscaley, "%f", tfscaley);
+		//sprintf(tscalez, "%f", tfscalez);
 		hasTransform = true;
 	}
 	else

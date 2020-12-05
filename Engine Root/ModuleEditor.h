@@ -29,7 +29,7 @@ public:
 	bool CleanUp();
 
 private:
-	void FillInspector();
+	void FillInspector(GameObject* selected);
 	void DrawInspector();
 	void PrintConsole();
 	void CleanConsole();
@@ -72,15 +72,12 @@ private:
 	bool showConsoleWindow;
 	bool showLoadWindow;
 
-	char tposx[64] = "";
-	char tposy[64] = "";
-	char tposz[64] = "";
-	char tscalex[64] = "";
-	char tscaley[64] = "";
-	char tscalez[64] = "";
 	float rotx = 0.0;
 	float roty = 0.0;
 	float rotz = 0.0;
+	float rotxInsp = 0.0;
+	float rotyInsp = 0.0;
+	float rotzInsp = 0.0;
 
 	std::string meshname = "";
 	std::string meshpath = "";

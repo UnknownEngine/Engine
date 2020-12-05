@@ -111,7 +111,10 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 	float3 scale(scaling.x, scaling.y, scaling.z);
 	Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
 
-	//CreateTransformComponent(scene->mRootNode, gameObject);
+	TransformComponent* transformComponent = new TransformComponent(pos, rot, scale);
+	transformComponent->UID = LCG().Int();
+	gameObject->AddComponent(transformComponent);
+
 	//Create child GameObjects for each mesh
 	for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 	{
@@ -140,12 +143,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 				dummyFound = true;
 			}
 		}
-
-		TransformComponent* transformComponent = new TransformComponent(pos,rot,scale);
-		transformComponent->UID = LCG().Int();
-		gameObject->AddComponent(transformComponent);
-
-
+		
 		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
 		newGameObject->ParentUID = gameObject->UID;
 		gameObject->childs.push_back(newGameObject);
@@ -253,9 +251,10 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 					gameObjectNode->AddComponent(materialComponent);
 			}	
+			CreateTransformComponent(node, gameObjectNode);
 		}	 
 	}
-	CreateTransformComponent(node, gameObjectNode);
+
 
 	if (node->mNumChildren > 0) {
 		GameObject* newGameObject = new GameObject(std::string(node->mChildren[0]->mName.C_Str()),gameObjectNode);
