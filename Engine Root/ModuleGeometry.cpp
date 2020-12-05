@@ -635,13 +635,16 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh, MaterialComponent* material)
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	//Textures
-	if (material->active) {
-		if (material != nullptr) {
-			if (!material->useChecker) {
-				glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
-			}
-			else {
-				glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+	if (material != NULL)
+	{
+		if (material->active) {
+			if (material != nullptr) {
+				if (!material->useChecker) {
+					glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+				}
+				else {
+					glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);
+				}
 			}
 		}
 	}

@@ -387,7 +387,12 @@ void ModuleEditor::DrawInspector()
 
 		ImGui::Text("");
 		ImGui::SameLine(72.f);
-		ImGui::Button("Reset Transforms", ImVec2(200, 20));
+		if (ImGui::Button("Reset Transforms", ImVec2(200, 20)))
+		{
+			App->scene_intro->selected->GetTransformComponent()->position = float3(0, 0, 0);
+			App->scene_intro->selected->GetTransformComponent()->scale = float3(1, 1, 1);
+			App->scene_intro->selected->GetTransformComponent()->rotation = Quat(0, 0, 0, 1);
+		}
 		ImGui::Text("");
 	}
 
@@ -428,7 +433,17 @@ void ModuleEditor::DrawInspector()
 
 		ImGui::Text("");
 		ImGui::SameLine(72.f);
-		ImGui::Button("Delete Component", ImVec2(200, 20));
+		if (ImGui::Button("Delete Component", ImVec2(200, 20)))
+		{
+			for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
+			{
+				if (App->scene_intro->selected->components.at(i)->type == ComponentType::Mesh)
+				{
+					delete App->scene_intro->selected->components.at(i);
+					App->scene_intro->selected->components.pop_back();
+				}
+			}
+		}
 		ImGui::Text("");
 	}
 	if (hasMaterial)
@@ -456,7 +471,17 @@ void ModuleEditor::DrawInspector()
 		ImGui::Text("");
 		ImGui::Text("");
 		ImGui::SameLine(72.f);
-		ImGui::Button("Delete Component", ImVec2(200, 20));
+		if (ImGui::Button("Delete Material", ImVec2(200, 20)))
+		{
+			for (int i = 0; i < App->scene_intro->selected->components.size(); i++)
+			{
+				if (App->scene_intro->selected->components.at(i)->type == ComponentType::Material)
+				{
+					delete App->scene_intro->selected->components.at(i);
+					App->scene_intro->selected->components.pop_back();
+				}
+			}
+		}
 
 		ImGui::Text("");
 		ImGui::Separator();
@@ -467,7 +492,7 @@ void ModuleEditor::DrawInspector()
 
 		ImGui::Text("Size: (%i,%i)", material_width, material_height);
 		ImGui::Text("Bpp: %i", material_bpp);
-		if (App->scene_intro->selected != NULL)
+		if (App->scene_intro->selected != NULL && App->scene_intro->selected->GetMaterialComponent()!=NULL)
 		{
 			if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
 			{
