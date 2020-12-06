@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "CameraComponent.h"
 #include "glmath.h"
-
 class Arcball;
 class ModuleCamera3D : public Module
 {
@@ -14,30 +14,28 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference = false);
+	void LookAt(const float3 &Spot);
+	void Move(const float3 &Movement);
+	float3x4 GetViewMatrix();
 
-private:
-
-	void CalculateViewMatrix();
+	void UpdateFrustrum();
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
-	Arcball* ball=nullptr;
+	float3 Position, Reference;
 
+	CameraComponent* camera;
 private:
 
-	mat4x4 world;
-	mat4x4 view;
-	mat4x4 ViewMatrix, ViewMatrixInverse;
+
 	double last_x = 0;
 	double last_y = 0;
 
 	float x_rot = 0;
 	float y_rot = 0;
+
+	GameObject* cameraObject;
 
 };
 

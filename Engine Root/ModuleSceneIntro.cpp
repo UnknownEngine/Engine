@@ -29,8 +29,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(-7.0f, 3.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	App->camera->Move(float3(-7.0f, 3.0f, 0.0f));
+	App->camera->LookAt(float3(0, 0, 0));
 
 	//App->geometry->LoadFbx(buffer, size, file, file);
 	//char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";

@@ -327,6 +327,9 @@
     <ClInclude Include="Json.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Sources\Components\Inherits</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -511,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="Json.cpp">
       <Filter>Sources\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Sources\Components\Inherits</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

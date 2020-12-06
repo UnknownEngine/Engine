@@ -11,6 +11,7 @@ class Component;
 class MaterialComponent;
 class TransformComponent;
 class MeshComponent;
+class CameraComponent;
 class GameObject {
 
 public:
@@ -26,6 +27,7 @@ public:
 	MaterialComponent* GetMaterialComponent();
 	TransformComponent* GetTransformComponent();
 	MeshComponent* GetMeshComponent();
+	CameraComponent* GetCameraComponent();
 	AABB& GetAABB();
 	OBB& GetOBB();
 

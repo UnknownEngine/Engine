@@ -48,14 +48,14 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <AdditionalLibraryDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,7 +67,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,11 +75,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>C:\Users\Usuario\Documents\GitHub\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Uni\Tercero\Game Engine\Engine\Engine Root\External Libraries</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="External Libraries\ImGui\imconfig.h" />
@@ -173,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="External Libraries\ImGui\imgui.cpp" />

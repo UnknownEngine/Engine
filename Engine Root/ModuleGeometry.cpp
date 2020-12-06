@@ -584,6 +584,7 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 {
 	if (gameObject == nullptr) return;
+
 	if (gameObject->components.size() > 0) {
 		for (uint i = 0; i < gameObject->components.size(); i++)
 		{
@@ -591,19 +592,29 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			MeshComponent* mesh = gameObject->GetMeshComponent();
 			MaterialComponent* material = gameObject->GetMaterialComponent();
 
-			glPushMatrix();
 			transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
-			float4x4 globalTransform = transformComponent->transform;
+			transformComponent->global_transform = transformComponent->transform;
 			if (gameObject->parent != nullptr) {
 				if (gameObject->parent->GetTransformComponent() != nullptr) {
 					float4x4 parentGlobal = gameObject->parent->GetTransformComponent()->transform;
-					globalTransform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;	
+					transformComponent->global_transform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;
 				}
 			}
 			
-			glMultMatrixf((float*)&globalTransform.Transposed());
-			DrawMesh(mesh, material);
-			glPopMatrix();
+			gameObject->UpdateAABB();
+
+			if (mesh) {
+				//IF inside frustrum
+				if (ContainsAaBox(gameObject->GetAABB(), &App->camera->camera->frustum) == 1) {
+
+					glPushMatrix();
+					glMultMatrixf((float*)&transformComponent->global_transform.Transposed());
+
+
+					DrawMesh(mesh, material);
+					glPopMatrix();
+				}
+			}
 		}
 	}
 	if (gameObject->childs.size() > 0) {
@@ -676,3 +687,37 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh, MaterialComponent* material)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
+
+int ModuleGeometry::ContainsAaBox(const AABB& refBox, Frustum* frustum)
+{
+	float3 vCorner[8];
+	int iTotalIn = 0;
+	refBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+	// test all 8 corners against the 6 sides
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	Plane planes[6];
+	frustum->GetPlanes(planes);
+	for (int p = 0; p < 6; ++p) {
+		int iInCount = 8;
+		int iPtIn = 1;
+		for (int i = 0; i < 8; ++i) {
+			// test this point against the planes
+			if (planes[p].IsOnPositiveSide(vCorner[i]) == true) { //<-- “IsOnPositiveSide” from MathGeoLib
+				iPtIn = 0;
+				--iInCount;
+			}
+		}
+		// were all the points outside of plane p?
+		if(iInCount == 0)
+			return(0);
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+	// so if iTotalIn is 6, then all are inside the view
+	if (iTotalIn == 6)
+		return(1);
+	// we must be partly in then otherwise
+	return(1);
+}
+

@@ -3,6 +3,7 @@
 #include "MaterialComponent.h"
 #include "TransformComponent.h"
 #include "MeshComponent.h"
+#include "CameraComponent.h"
 
 GameObject::GameObject(std::string name, GameObject* parent) : active(true), nameID(name), parent(parent)
 {
@@ -103,6 +104,19 @@ MeshComponent* GameObject::GetMeshComponent()
 	return nullptr;
 }
 
+CameraComponent* GameObject::GetCameraComponent()
+{
+	CameraComponent* cameraComponent = nullptr;
+	for (uint i = 0; i < components.size(); i++)
+	{
+		if (components[i]->type == ComponentType::Camera) {
+			cameraComponent = static_cast<CameraComponent*>(components[i]);
+			return cameraComponent;
+		}
+	}
+	return nullptr;
+}
+
 AABB& GameObject::GetAABB()
 {
 	return aabb;
@@ -118,9 +132,12 @@ void GameObject::UpdateAABB()
 	MeshComponent* mesh = GetMeshComponent();
 	if (mesh)
 	{
+		//Generate global OBB
 		obb = mesh->GetAABB();
-		//Get global transform 
+		TransformComponent* t = GetTransformComponent();
+		obb.Transform(t->global_transform);
 
+		//Generate global AABB
 		aabb.SetNegativeInfinity();
 		aabb.Enclose(obb);
 	}

@@ -58,6 +58,8 @@ public:
 	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
 	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 
+	int ContainsAaBox(const AABB& refBox, Frustum* frustum);
+
 	GLuint bufferCheckerTexture = 0;
 	std::string texturesPath;
 	std::string meshesPath;
