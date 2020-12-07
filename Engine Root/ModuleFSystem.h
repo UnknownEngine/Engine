@@ -30,7 +30,7 @@ struct PathNode;
 class JsonObj;
 class JsonArray;
 class GameObject;
-
+class MaterialComponent;
 
 //DELETE AFTER
 
@@ -73,9 +73,20 @@ public:
 	void DetectExtension(std::string path, std::string file, std::string extension ) const;
 	void CreatePrimitives(std::string path, std::string file);
 
+	void CreateMaterialMetas(char* buffer, std::string file);
+	void ReadMaterialMetas(JsonObj meta, std::string name);
+
+	void LoadFBXMeshes(std::string fileName, char* buffer);
+
+	void CreateMeshMetas(char* buffer, std::string file);
+	void ReadMeshMetas(JsonObj meta, std::string name);
+
 	void SaveScene(char** sceneBuffer);
 	JsonArray SaveGameObjects(JsonObj scene);
 	JsonArray SaveSceneMode(JsonObj scene);
+
+	void WriteModelFile(GameObject* gameObject);
+
 	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
 	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
 	void SaveMesh(JsonObj component, GameObject* gameObject);

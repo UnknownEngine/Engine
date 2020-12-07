@@ -14,6 +14,10 @@
 #include "TransformComponent.h"
 #include "Json.h"
 
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
 M_FileSystem::M_FileSystem(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -29,6 +33,7 @@ M_FileSystem::M_FileSystem(Application* app, bool start_enabled) : Module(app, s
 
 	AddPath("."); //Adding ProjectFolder (working directory)
 	AddPath("Assets");
+
 	CreateLibraryDirectories();
 }
 
@@ -66,6 +71,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(LIBRARY_PATH);
 	CreateDir(MESHES_PATH);
 	CreateDir(TEXTURES_PATH);
+	CreateDir(MODELS_PATH);
 }
 
 // Add a new zip file or folder
@@ -346,6 +352,123 @@ void M_FileSystem::CreatePrimitives(std::string path, std::string file)
 	}
 }
 
+void M_FileSystem::CreateMaterialMetas(char* buffer, std::string file)
+{
+	JsonObj fileData;
+
+	std::string dir = "Assets/Textures/";
+	dir += file;
+
+	fileData.AddString("Asset path", dir.c_str());
+	dir.erase(dir.size() - 4);
+
+	std::string meta = ".met";
+	dir += meta;
+
+	bool exists = PHYSFS_exists((dir).c_str());
+
+	if (!exists)
+	{
+		fileData.AddInt("UID", LCG().Int());
+		std::string library = "Library/Textures/";
+		library += std::to_string(fileData.GetInt("UID"));
+		fileData.AddString("Library path", library.c_str());
+		uint size = fileData.Save(&buffer);
+		WriteFile(dir.c_str(), buffer, size);
+
+		ReadMaterialMetas(fileData, file);
+	}
+}
+
+void M_FileSystem::ReadMaterialMetas(JsonObj meta, std::string name)
+{
+	bool exists = PHYSFS_exists((meta.GetString("Library path")));
+
+	if (!exists)
+	{
+		MaterialComponent* newMaterial = new MaterialComponent;
+		newMaterial->UID = meta.GetInt("UID");
+		newMaterial->name = name;
+
+		App->geometry->CreateTextureBuffer(newMaterial);
+		App->geometry->LoadTexture(meta.GetString("Asset path"), newMaterial);
+
+		newMaterial->size = App->geometry->GetMatSize();
+		newMaterial->materialBuffer = App->geometry->SaveOurMaterial(newMaterial, newMaterial->size);
+		App->fsystem->WriteFile((meta.GetString("Library path")), newMaterial->materialBuffer, newMaterial->size);
+	}
+
+}
+
+void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
+{
+	JsonObj fileData;
+	JsonArray meshArray;
+	bool createMeshesArray = true;
+
+	std::string fullDir = PHYSFS_getRealDir(fileName.c_str());
+	fullDir += fileName;
+	uint size = Load(fullDir.c_str(), &buffer);
+
+	std::string metaDir = fullDir;
+	metaDir.erase(metaDir.size() - 4);
+	
+	std::string meta = ".met";
+	metaDir += meta;
+
+	if (PHYSFS_exists((metaDir).c_str()))
+	{
+		
+		fileData.AddString("Asset Path", fullDir.c_str());
+		fileData.AddInt("UID", LCG().Int());
+
+		std::string libPath = "Library/Models/";
+		libPath += std::to_string(fileData.GetInt("UID"));
+		fileData.AddString("Library path:", libPath.c_str());
+
+		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+
+		if (scene == nullptr) {
+			App->editor->AddLog("Error loading scene");
+		}
+		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
+		{
+			aiNode* node = scene->mRootNode->mChildren[i];
+			std::string nodeName = node->mName.C_Str();
+
+			bool dummyFound = true;
+
+			while (dummyFound)
+			{
+				dummyFound = false;
+
+				if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
+					LOG("Has Assimp fbx child");
+
+					node = node->mChildren[0];
+					nodeName = node->mName.C_Str();
+					dummyFound = true;
+				}
+			}
+			if (node->mNumMeshes > 0) {
+				LOG("I HAVE MESHES!");
+				if (node->mNumMeshes > 0) {
+					bool ret = false;
+
+					if (createMeshesArray)
+					{
+						meshArray=fileData.AddArray("Meshes UID");				
+					}
+					meshArray.AddInt(LCG().Int());
+				}
+			}
+
+		}
+
+		aiReleaseImport(scene);
+	}
+}
+
 void M_FileSystem::SaveScene(char** sceneBuffer)
 {
 	JsonObj scene;
@@ -398,6 +521,12 @@ JsonArray M_FileSystem::SaveSceneMode(JsonObj scene)
 	mode.AddBool("Paused", App->gameModePaused);
 
 	return sceneModes;
+}
+
+void M_FileSystem::WriteModelFile(GameObject* model)
+{
+	//char* buffer;
+
 }
 
 void M_FileSystem::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)

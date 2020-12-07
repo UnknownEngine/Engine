@@ -51,6 +51,7 @@ bool ModuleGeometry::Start()
 
 	CreateCheckerTextureBuffer();
 
+	App->resourceManager->ImportTexturesAssets();
 	return true;
 }
 
@@ -146,6 +147,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 		
 		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
 		newGameObject->ParentUID = gameObject->UID;
+		newGameObject->UID = LCG().Int();
 		gameObject->childs.push_back(newGameObject);
 		CheckNodeChilds(node, newGameObject, scene, realDir);
 		

@@ -15,6 +15,7 @@ Application::Application()
 	editor = new ModuleEditor(this);
 	geometry = new ModuleGeometry(this);
 	fsystem = new M_FileSystem(this);
+	resourceManager = new ModuleResourceManager(this);
 
 
 	// The order of calls is very important!
@@ -23,6 +24,7 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
+	AddModule(resourceManager);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(fsystem);
@@ -30,7 +32,6 @@ Application::Application()
 	AddModule(editor);
 	AddModule(geometry);
 
-	
 	//scenes
 	AddModule(scene_intro);
 	// Renderer last!

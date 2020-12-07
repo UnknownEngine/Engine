@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleResources.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleSceneIntro.h"
@@ -26,6 +27,7 @@ public:
 	ModuleEditor* editor;
 	ModuleGeometry* geometry;
 	M_FileSystem* fsystem;
+	ModuleResourceManager* resourceManager;
 
 
 	Timer	startup_time;
@@ -43,7 +45,7 @@ public:
 	float	prev_last_sec_frame_count = 0;
 	float	avg_fps = 0;
 	float	seconds_since_startup = 0;
-	float maxcapTime;
+	float	maxcapTime;
 
 	bool editorMode;
 	bool gameMode;
