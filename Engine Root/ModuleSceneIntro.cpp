@@ -77,10 +77,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 {
-	//Collecting quadtree GameObjects
 	std::vector<GameObject*> candidates;
 
-	//Collecting non-static GameObjects
 	for (uint i = 0; i < gameObjectsList.size(); i++)
 	{
 		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)

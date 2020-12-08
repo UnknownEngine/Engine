@@ -215,7 +215,6 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 				aiString path;
 				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-				LOG("s", path.C_Str());
 
 				std::string stringPath = std::string(path.C_Str());
 				std::size_t pos = stringPath.find_last_of("\\");
