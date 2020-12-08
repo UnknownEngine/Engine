@@ -52,6 +52,7 @@ bool ModuleGeometry::Start()
 	CreateCheckerTextureBuffer();
 
 	App->resourceManager->ImportTexturesAssets();
+	App->resourceManager->ImportMeshAssets();
 	return true;
 }
 
@@ -194,8 +195,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
+			//App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			//App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);

@@ -402,13 +402,10 @@ void M_FileSystem::ReadMaterialMetas(JsonObj meta, std::string name)
 
 void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
 {
-	JsonObj fileData;
-	JsonArray meshArray;
 	bool createMeshesArray = true;
 
-	std::string fullDir = PHYSFS_getRealDir(fileName.c_str());
+	std::string fullDir = "Assets/FBXs/";
 	fullDir += fileName;
-	uint size = Load(fullDir.c_str(), &buffer);
 
 	std::string metaDir = fullDir;
 	metaDir.erase(metaDir.size() - 4);
@@ -416,9 +413,11 @@ void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
 	std::string meta = ".met";
 	metaDir += meta;
 
-	if (PHYSFS_exists((metaDir).c_str()))
+	if (!PHYSFS_exists((metaDir).c_str()))
 	{
-		
+		JsonObj fileData;
+		JsonArray meshArray;
+
 		fileData.AddString("Asset Path", fullDir.c_str());
 		fileData.AddInt("UID", LCG().Int());
 
@@ -426,46 +425,79 @@ void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
 		libPath += std::to_string(fileData.GetInt("UID"));
 		fileData.AddString("Library path:", libPath.c_str());
 
+		uint size = Load(fullDir.c_str(), &buffer);
 		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
 		if (scene == nullptr) {
 			App->editor->AddLog("Error loading scene");
 		}
-		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
+		else
 		{
-			aiNode* node = scene->mRootNode->mChildren[i];
-			std::string nodeName = node->mName.C_Str();
-
-			bool dummyFound = true;
-
-			while (dummyFound)
+			for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 			{
-				dummyFound = false;
+				aiNode* node = scene->mRootNode->mChildren[i];
+				std::string nodeName = node->mName.C_Str();
 
-				if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
-					LOG("Has Assimp fbx child");
+				bool dummyFound = true;
 
-					node = node->mChildren[0];
-					nodeName = node->mName.C_Str();
-					dummyFound = true;
-				}
-			}
-			if (node->mNumMeshes > 0) {
-				LOG("I HAVE MESHES!");
-				if (node->mNumMeshes > 0) {
-					bool ret = false;
+				while (dummyFound)
+				{
+					dummyFound = false;
 
-					if (createMeshesArray)
-					{
-						meshArray=fileData.AddArray("Meshes UID");				
+					if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
+						LOG("Has Assimp fbx child");
+
+						node = node->mChildren[0];
+						nodeName = node->mName.C_Str();
+						dummyFound = true;
 					}
-					meshArray.AddInt(LCG().Int());
 				}
+				if (node->mNumMeshes > 0) {
+					LOG("I HAVE MESHES!");
+					if (node->mNumMeshes > 0) {
+						bool ret = false;
+
+						if (createMeshesArray)
+						{
+							meshArray = fileData.AddArray("Meshes UID");
+							createMeshesArray = !createMeshesArray;
+						}
+						
+						std::string meshesPath = "Library/Meshes/";
+						MeshComponent* ourMesh = new MeshComponent();
+						aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+
+						ourMesh->name = node->mName.C_Str();
+						ourMesh->UID = LCG().Int();
+						meshArray.AddInt(ourMesh->UID);
+						ourMesh->path = fullDir;
+
+						App->geometry->LoadVertices(aimesh, ourMesh);
+
+						
+						App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
+
+						
+						App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
+
+						
+						App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
+
+						ourMesh->size = App->geometry->GetMeshSize(ourMesh);
+						ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
+
+						App->fsystem->WriteFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+
+						
+					}
+				}
+
 			}
-
+			char* JsonBuffer = nullptr;
+			uint sizeJson = fileData.Save(&JsonBuffer);
+			WriteFile(metaDir.c_str(), JsonBuffer, sizeJson);
+			aiReleaseImport(scene);
 		}
-
-		aiReleaseImport(scene);
 	}
 }
 
