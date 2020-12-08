@@ -56,6 +56,7 @@ public:
 	
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 	void DrawMeshFromGameObjectRoot(GameObject* gameObject);
+	void UpdateGlobalTransform(TransformComponent* transformComponent, GameObject* gameObject);
 	void DrawMesh(MeshComponent* mesh, MaterialComponent* material);
 
 	int ContainsAaBox(const AABB& refBox, Frustum* frustum);

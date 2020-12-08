@@ -66,7 +66,29 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	if (gameObjectsList.size() > 0) {
+		for (uint i = 0; i < gameObjectsList.size(); i++)
+		{
+			for (uint k = 0; k < gameObjectsList[i]->childs.size(); k++)
+			{
+				float3 corners[8];
+				gameObjectsList[i]->childs[k]->GetAABB().GetCornerPoints(corners);
 
+				glColor3f(0, 1, 0);
+				glBegin(GL_LINES);
+				for (uint j = 0; j < 8; j++)
+				{
+					glVertex3f(corners[j].x, corners[j].y, corners[j].z);
+				}
+
+
+				glEnd();
+				glColor3f(1, 1, 1);
+			}
+			
+
+		}
+	}
 	if (App->renderer3D->gl_wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -77,8 +99,16 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 {
+	selected = nullptr;
 	std::vector<GameObject*> candidates;
-
+	for (uint i = 0; i < gameObjectsList.size(); i++)
+	{
+		gameObjectsList[i]->UpdateAABB();
+		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
+		{
+			gameObjectsList[i]->childs[j]->UpdateAABB();
+		}
+	}
 	for (uint i = 0; i < gameObjectsList.size(); i++)
 	{
 		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
@@ -94,39 +124,40 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 
 
 
-	GameObject* toSelect = nullptr;
-	for (uint i = 0; i < candidates.size() && toSelect == nullptr; i++)
-	{
+	//GameObject* toSelect = nullptr;
+	//for (uint i = 0; i < candidates.size() && toSelect == nullptr; i++)
+	//{
 
-		//Testing triangle by triangle
-		const MeshComponent* mesh = candidates[i]->GetMeshComponent();
-		if (mesh)
-		{
-				LineSegment local = segment;
-				local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
-				for (uint v = 0; v < mesh->id_indices; v += 3)
-				{
-					uint indexA = mesh->indices[v] * 3;
-					float3 a(&mesh->vertices[indexA]);
+	//	//Testing triangle by triangle
+	//	const MeshComponent* mesh = candidates[i]->GetMeshComponent();
+	//	if (mesh)
+	//	{
+	//			LineSegment local = segment;
+	//			local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
+	//			for (uint v = 0; v < mesh->num_indices; v += 3)
+	//			{
+	//				uint indexA = mesh->indices[v] * 3;
+	//				float3 a(&mesh->vertices[indexA]);
 
-					uint indexB = mesh->indices[v + 1] * 3;
-					float3 b(&mesh->vertices[indexB]);
+	//				uint indexB = mesh->indices[v + 1] * 3;
+	//				float3 b(&mesh->vertices[indexB]);
 
-					uint indexC = mesh->indices[v + 2] * 3;
-					float3 c(&mesh->vertices[indexC]);
+	//				uint indexC = mesh->indices[v + 2] * 3;
+	//				float3 c(&mesh->vertices[indexC]);
 
-					Triangle triangle(a, b, c);
+	//				Triangle triangle(a, b, c);
 
-					if (local.Intersects(triangle, nullptr, nullptr))
-					{
-						toSelect = candidates[i];
-						break;
-					}
-				}
-			
-		}
-	}
-	selected = toSelect;
+	//				if (local.Intersects(triangle, nullptr, nullptr))
+	//				{
+	//					toSelect = candidates[i];
+	//					break;
+	//				}
+	//			}
+	//		
+	//	}
+	//}
+	if (candidates.size() > 0)
+		selected = candidates[0];
 
 }
 

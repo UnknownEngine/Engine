@@ -594,14 +594,7 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 			MeshComponent* mesh = gameObject->GetMeshComponent();
 			MaterialComponent* material = gameObject->GetMaterialComponent();
 
-			transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
-			transformComponent->global_transform = transformComponent->transform;
-			if (gameObject->parent != nullptr) {
-				if (gameObject->parent->GetTransformComponent() != nullptr) {
-					float4x4 parentGlobal = gameObject->parent->GetTransformComponent()->transform;
-					transformComponent->global_transform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;
-				}
-			}
+			UpdateGlobalTransform(transformComponent, gameObject);
 			
 			gameObject->UpdateAABB();
 
@@ -623,6 +616,18 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 		for (uint i = 0; i < gameObject->childs.size(); i++)
 		{
 			DrawMeshFromGameObjectRoot(gameObject->childs[i]);
+		}
+	}
+}
+
+void ModuleGeometry::UpdateGlobalTransform(TransformComponent* transformComponent, GameObject* gameObject)
+{
+	transformComponent->transform = float4x4::FromTRS(transformComponent->position, transformComponent->rotation, transformComponent->scale);
+	transformComponent->global_transform = transformComponent->transform;
+	if (gameObject->parent != nullptr) {
+		if (gameObject->parent->GetTransformComponent() != nullptr) {
+			float4x4 parentGlobal = gameObject->parent->GetTransformComponent()->transform;
+			transformComponent->global_transform = gameObject->parent->GetTransformComponent()->transform * transformComponent->transform;
 		}
 	}
 }

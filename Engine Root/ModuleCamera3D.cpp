@@ -257,7 +257,7 @@ float2 ModuleCamera3D::ScreenToWorld(float2 point)
 
 	normMouseX = (normMouseX - 0.5f) / 0.5f;
 	normMouseY = -((normMouseY - 0.5f) / 0.5f);
-	//LOG("Frustum: %f, %f", normMouseX, normMouseY);
+	LOG("Frustum: %f, %f", normMouseX, normMouseY);
 	return float2(normMouseX, normMouseY);
 }
 
