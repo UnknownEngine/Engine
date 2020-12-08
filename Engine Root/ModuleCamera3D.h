@@ -2,8 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include "CameraComponent.h"
-#include "glmath.h"
-class Arcball;
+#include "MathGeoLib/include/MathGeoLib.h"
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -12,22 +12,29 @@ public:
 
 	bool Start();
 	update_status Update(float dt);
+	void UpdateCameraPos(math::float3& newPos);
+	void Zoom(math::float3& newPos, float zoom_speed, float dt);
+	void PanCamera(math::float3& newPos, float speed, float dragSpeed, float dt);
+	void RotateCamera(float sensitivity);
+	void OrbitalCamera(float sensitivity, float dt, float orbital_speed);
+	void KeyboardMove(math::float3& newPos, float speed);
+	void ModifySpeed(float& speed);
+	void FocusCamera();
 	bool CleanUp();
 
 	void Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference = false);
 	void LookAt(const float3 &Spot);
-	void Move(const float3 &Movement);
 	float3x4 GetViewMatrix();
 
-	void UpdateFrustrum();
+	void OnMouseClick();
+	float2 ScreenToWorld(float2 point);
 
 public:
-	
+
 	float3 Position, Reference;
-
 	CameraComponent* camera;
-private:
 
+private:
 
 	double last_x = 0;
 	double last_y = 0;

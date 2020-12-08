@@ -25,10 +25,13 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	void OnClickSelection(const LineSegment& segment);
+
 public:
 	GameObject* selected=nullptr;
 	GameObject* CreateGameObject(std::string name);
 	std::vector<GameObject*> gameObjectsList;
 	JsonObj myScene;
 	char* sceneBuffer;
+
 };

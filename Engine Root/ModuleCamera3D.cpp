@@ -45,117 +45,166 @@ update_status ModuleCamera3D::Update(float dt)
 {
 		float3 target(0, 0, 0);
 		float3 newPos(0, 0, 0);
-		float speed = 1.0f;
-		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			  speed = 2.0f;
+		float speed = 0.2f;
+		float dragSpeed = 0.01f;
+		float zoom_speed = 0.1f;
+		float sensitivity = 0.25f;
+		float orbital_speed = 0.1f;
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += (camera->frustum.front * speed);
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= (camera->frustum.front * speed);
-																		
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= (camera->frustum.WorldRight() * speed);
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += (camera->frustum.WorldRight() * speed);
 
-		//ZOOM//
-		//newPos += App->input->GetMouseZ()*(-camera->frustum.front);
-		//Position += newPos/6;
-		//Reference += newPos/6;
+		//Camera Options
+		ModifySpeed(speed);
 
-		//FOCUS//
-		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+		KeyboardMove(newPos, speed);
+
+		FocusCamera();
+
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 		{
-			App->scene_intro->selected = nullptr;
-			target = float3(0, 0, 0);
+			OrbitalCamera(sensitivity, dt, orbital_speed);
 		}
-		if (App->scene_intro->selected != NULL)
-		{
-			TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
-			target.x=transformComponent->position.x;
-			target.y=transformComponent->position.y;
-			target.z=transformComponent->position.z;
-			if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-			{
-				Position = target - ((target - Position).Normalized() * 15);
-				LookAt(target);
-			}
+		else {
+			RotateCamera(sensitivity);
 		}
 
-		// Mouse motion ----------------
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			LookAt(float3(0, 0, 0));
+		PanCamera(newPos, speed, dragSpeed, dt);
+
+		Zoom(newPos, zoom_speed, dt);
+
+
+		UpdateCameraPos(newPos);
+
+
+		//ClickOptions
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			OnMouseClick();
 		}
 
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-		{
-			int dx = -App->input->GetMouseXMotion();
-			int dy = -App->input->GetMouseYMotion();
-			float Sensitivity = 0.25f;
 
-			Quat dir;
-			camera->frustum.WorldMatrix().Decompose(float3(), dir, float3());
-
-			Quat Y;
-			Y.SetFromAxisAngle(float3(1, 0, 0), dy * DEGTORAD);
-			dir = dir * Y;
-
-			Quat X;
-			X.SetFromAxisAngle(float3(0, 1, 0), dx * DEGTORAD);
-			dir = X * dir;
-
-			float4x4 changedMatrix = camera->frustum.WorldMatrix();
-			changedMatrix.SetRotatePart(dir.Normalized());
-			camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
-
-
-			//if (dx != 0)
-			//{
-			//	float DeltaX = (float)dx * Sensitivity;
-
-
-			//	Quat x;
-			//	x.SetFromAxisAngle(float3(0, 1, 0), DeltaX * DEGTORAD);
-			//	dir = x * dir;
-
-			//}
-
-			//if (dy != 0)
-			//{
-			//	float DeltaY = (float)dy * Sensitivity;
-			//
-			//	Quat y;
-			//	y.SetFromAxisAngle(float3(1, 0, 0), DeltaY * DEGTORAD);
-			//	dir = dir * y;
-			//}
-			//float4x4 changeMatrix = camera->frustum.WorldMatrix();
-			//changeMatrix.SetRotatePart(dir.Normalized());
-			//camera->frustum.SetWorldMatrix(changeMatrix.Float3x4Part());
-
-			//Position = Reference + Z * Length(Position);
-		}
-		camera->frustum.pos += newPos;
-		Reference += newPos;
-		//UpdateFrustrum();
 	return UPDATE_CONTINUE;
 }
 
-// -----------------------------------------------------------------
-//void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference)
-//{
-//	this->Position = Position;
-//	this->Reference = Reference;
-//
-//	Z = float3(Position - Reference).Normalized();
-//	X = Cross(float3(0.0f, 1.0f, 0.0f), Z).Normalized();
-//	Y = Cross(Z, X);
-//
-//	if(!RotateAroundReference)
-//	{
-//		this->Reference = this->Position;
-//		this->Position += Z * 0.05f;
-//	}
-//
-//	UpdateFrustrum();
-//}
+void ModuleCamera3D::UpdateCameraPos(math::float3& newPos)
+{
+	camera->frustum.pos += newPos;
+	Reference += newPos;
+}
+
+void ModuleCamera3D::Zoom(math::float3& newPos, float zoom_speed, float dt)
+{
+	if (App->input->GetMouseZ() > 0)
+		newPos += camera->frustum.front * zoom_speed * dt;
+	else if (App->input->GetMouseZ() < 0)
+		newPos -= camera->frustum.front * zoom_speed * dt;
+}
+
+void ModuleCamera3D::PanCamera(math::float3& newPos, float speed, float dragSpeed, float dt)
+{
+	if ((App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT))
+	{
+		newPos -= camera->frustum.WorldRight() * App->input->GetMouseXMotion() * speed * dragSpeed * dt;
+		newPos += camera->frustum.up * App->input->GetMouseYMotion() * speed * dragSpeed * dt;
+	}
+}
+
+void ModuleCamera3D::RotateCamera(float sensitivity)
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		Quat dir;
+		camera->frustum.WorldMatrix().Decompose(float3(), dir, float3());
+
+		Quat Y;
+		Y.SetFromAxisAngle(float3(1, 0, 0), dy * DEGTORAD * sensitivity);
+		dir = dir * Y;
+
+		Quat X;
+		X.SetFromAxisAngle(float3(0, 1, 0), dx * DEGTORAD * sensitivity);
+		dir = X * dir;
+
+		float4x4 changedMatrix = camera->frustum.WorldMatrix();
+		changedMatrix.SetRotatePart(dir.Normalized());
+		camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
+
+	}
+}
+
+void ModuleCamera3D::OrbitalCamera(float sensitivity, float dt, float orbital_speed)
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		float3 point = float3(0, 0, 0);
+		if (App->scene_intro->selected != nullptr) {
+			point = App->scene_intro->selected->GetTransformComponent()->position;
+		}
+
+		float dist = camera->frustum.pos.Distance(point);
+
+		Quat dir = Quat::identity;
+		camera->frustum.WorldMatrix().Decompose(float3(), dir, float3());
+
+		if (dy != 0)
+		{
+			float DeltaY = (float)dy * sensitivity * dt * orbital_speed;
+
+			Quat y;
+			y.SetFromAxisAngle(float3(1, 0, 0), DeltaY * DEGTORAD);
+			dir = dir * y;
+		}
+
+		if (dx != 0)
+		{
+			float DeltaX = (float)dx * sensitivity * dt * orbital_speed;
+
+			Quat x;
+			x.SetFromAxisAngle(float3(0, 1, 0), DeltaX * DEGTORAD);
+			dir = x * dir;
+		}
+
+		float4x4 changeMatrix = camera->frustum.WorldMatrix();
+		changeMatrix.SetRotatePart(dir.Normalized());
+		camera->frustum.SetWorldMatrix(changeMatrix.Float3x4Part());
+
+		camera->frustum.pos = point + (camera->frustum.front * -dist);
+		LookAt(point);
+	}
+}
+
+void ModuleCamera3D::KeyboardMove(math::float3& newPos, float speed)
+{
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos += (camera->frustum.front * speed);
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos -= (camera->frustum.front * speed);
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= (camera->frustum.WorldRight() * speed);
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += (camera->frustum.WorldRight() * speed);
+}
+
+void ModuleCamera3D::ModifySpeed(float& speed)
+{
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) speed = 1.0f;
+}
+
+void ModuleCamera3D::FocusCamera()
+{
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+	{
+		if (App->scene_intro->selected != nullptr)
+		{
+			TransformComponent* transformComponent = App->scene_intro->selected->GetTransformComponent();
+			if (transformComponent != nullptr) {
+				float3 position(transformComponent->position.x, transformComponent->position.y, transformComponent->position.z);
+				LookAt(position);
+			}
+		}
+	}
+}
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::LookAt( const float3 &Spot)
@@ -166,18 +215,50 @@ void ModuleCamera3D::LookAt( const float3 &Spot)
 	Reference = Spot;
 }
 
-
-// -----------------------------------------------------------------
-void ModuleCamera3D::Move(const float3 &Movement)
-{
-	camera->frustum.pos += Movement;
-	Reference += Movement;
-}
-
 // -----------------------------------------------------------------
 float3x4 ModuleCamera3D::GetViewMatrix()
 {
 	return camera->frustum.ViewMatrix();
+}
+
+void ModuleCamera3D::OnMouseClick()
+{
+	LOG("Click");
+	float x = App->input->GetMouseX();
+	float y = App->input->GetMouseY();
+	float2 mouseWorldPosition = ScreenToWorld(float2(x, y));
+
+	LineSegment picking = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
+
+	App->scene_intro->OnClickSelection(picking);
+
+	//LOG("Ray: %f,%f", picking.a, picking.b);
+	//for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+	//{
+	//
+	//	bool hit = picking.Intersects(App->scene_intro->gameObjectsList[i]->GetAABB());
+	//	if (hit) {
+	//		LOG("HIT");
+	//	}
+	//	else {
+	//		LOG("NO HIt");
+	//	}
+
+	//}
+
+	
+
+}
+
+float2 ModuleCamera3D::ScreenToWorld(float2 point)
+{
+	float normMouseX = point.x / App->window->width;
+	float normMouseY = point.y / App->window->height;
+
+	normMouseX = (normMouseX - 0.5f) / 0.5f;
+	normMouseY = -((normMouseY - 0.5f) / 0.5f);
+	//LOG("Frustum: %f, %f", normMouseX, normMouseY);
+	return float2(normMouseX, normMouseY);
 }
 
 

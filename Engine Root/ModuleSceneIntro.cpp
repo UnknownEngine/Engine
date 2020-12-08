@@ -8,8 +8,8 @@
 
 #include "Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
-
-
+#include "TransformComponent.h"
+#include "MeshComponent.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -29,7 +29,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(float3(-7.0f, 3.0f, 0.0f));
+	App->camera->UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
 	App->camera->LookAt(float3(0, 0, 0));
 
 	//App->geometry->LoadFbx(buffer, size, file, file);
@@ -75,7 +75,62 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
+{
+	//Collecting quadtree GameObjects
+	std::vector<GameObject*> candidates;
 
+	//Collecting non-static GameObjects
+	for (uint i = 0; i < gameObjectsList.size(); i++)
+	{
+		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
+		{
+			if (segment.Intersects(gameObjectsList[i]->childs[j]->GetAABB()))
+			{
+				float hit_near, hit_far;
+				if (segment.Intersects(gameObjectsList[i]->childs[j]->GetOBB(), hit_near, hit_far))
+					candidates.push_back(gameObjectsList[i]->childs[j]);
+			}
+		}
+	}
+
+
+
+	GameObject* toSelect = nullptr;
+	for (uint i = 0; i < candidates.size() && toSelect == nullptr; i++)
+	{
+
+		//Testing triangle by triangle
+		const MeshComponent* mesh = candidates[i]->GetMeshComponent();
+		if (mesh)
+		{
+				LineSegment local = segment;
+				local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
+				for (uint v = 0; v < mesh->id_indices; v += 3)
+				{
+					uint indexA = mesh->indices[v] * 3;
+					float3 a(&mesh->vertices[indexA]);
+
+					uint indexB = mesh->indices[v + 1] * 3;
+					float3 b(&mesh->vertices[indexB]);
+
+					uint indexC = mesh->indices[v + 2] * 3;
+					float3 c(&mesh->vertices[indexC]);
+
+					Triangle triangle(a, b, c);
+
+					if (local.Intersects(triangle, nullptr, nullptr))
+					{
+						toSelect = candidates[i];
+						break;
+					}
+				}
+			
+		}
+	}
+	selected = toSelect;
+
+}
 
 
 
