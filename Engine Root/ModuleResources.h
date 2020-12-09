@@ -11,9 +11,9 @@ public:
 	~ModuleResourceManager();
 
 	bool Start();
-	//update_status PreUpdate(float dt);
-	//update_status Update(float dt);
-	//update_status PostUpdate(float dt);
+	update_status PreUpdate(float dt);
+	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 
 	int Find(const char* assets_file) const;
 	int ImportFile(const char* new_assets_file);

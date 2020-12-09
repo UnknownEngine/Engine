@@ -12,6 +12,7 @@ ResourceTexture::~ResourceTexture()
 
 bool ResourceTexture::LoadToMemory()
 {
+	
 	return false;
 }
 

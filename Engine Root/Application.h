@@ -72,7 +72,6 @@ public:
 
 	void RequestBrowser(const char* path);
 
-
 private:
 
 	void AddModule(Module* mod);
@@ -82,3 +81,4 @@ private:
 	void FillMSLog();
 	void SetMaxFramesCap(int frames_to_cap);
 };
+

@@ -3,6 +3,9 @@
 #include "ModuleResources.h"
 #include "ModuleFSystem.h"
 #include "MaterialComponent.h"
+#include "Resource.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
 ModuleResourceManager::ModuleResourceManager(Application* app, bool start_enabled): Module(app, start_enabled)
 {
 }
@@ -16,20 +19,20 @@ bool ModuleResourceManager::Start()
 	return true;
 }
 
-//update_status ModuleResourceManager::PreUpdate(float dt)
-//{
-//	return UPDATE_CONTINUE;
-//}
-//
-//update_status ModuleResourceManager::Update(float dt)
-//{
-//	return UPDATE_CONTINUE;
-//}
-//
-//update_status ModuleResourceManager::PostUpdate(float dt)
-//{
-//	return UPDATE_CONTINUE;
-//}
+update_status ModuleResourceManager::PreUpdate(float dt)
+{
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleResourceManager::Update(float dt)
+{
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleResourceManager::PostUpdate(float dt)
+{
+	return UPDATE_CONTINUE;
+}
 
 int ModuleResourceManager::Find(const char* assets_file) const
 {
