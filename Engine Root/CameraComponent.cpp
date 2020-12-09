@@ -7,7 +7,7 @@
 #include <GL/glu.h>
 #include "TransformComponent.h"
 #include <math.h>
-
+#include "ModuleWindow.h"
 
 
 CameraComponent::CameraComponent() : Component()
@@ -19,13 +19,22 @@ CameraComponent::CameraComponent() : Component()
     frustum.up = float3::unitY;
 
     frustum.verticalFov = 60.0f * DEGTORAD;
-    frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * 1.7f);
+    
+    frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * 1.25f);
 
     frustum.pos = float3::zero;
 }
 
 CameraComponent::~CameraComponent()
 {}
+
+
+void CameraComponent::UpdateFrustum(float width, float height)
+{
+    frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * (width / height));
+    frustum.ProjectionMatrix();
+    frustum.ViewMatrix();
+}
 
 
 

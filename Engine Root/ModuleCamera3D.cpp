@@ -18,6 +18,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	cameraObject->AddComponent(camera);
 	Position = float3(0, 0, 0);
 	Reference = float3(0, 0, 0);
+
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -28,7 +29,7 @@ bool ModuleCamera3D::Start()
 {
 	LOG("Setting up the camera");
 	bool ret = true;
-
+	debugRay = false;
 	return ret;
 }
 
@@ -51,7 +52,8 @@ update_status ModuleCamera3D::Update(float dt)
 		float sensitivity = 0.25f;
 		float orbital_speed = 0.1f;
 
-		App->scene_intro->DrawRay(ray);
+		if (debugRay)
+			App->scene_intro->DrawRay(ray);
 
 		//Camera Options
 		ModifySpeed(speed);
@@ -89,6 +91,8 @@ void ModuleCamera3D::UpdateCameraPos(math::float3& newPos)
 {
 	camera->frustum.pos += newPos;
 	Reference += newPos;
+
+	camera->UpdateFrustum(ImGui::GetMainViewport()->Size.x, ImGui::GetMainViewport()->Size.y);
 }
 
 void ModuleCamera3D::Zoom(math::float3& newPos, float zoom_speed, float dt)
@@ -224,31 +228,14 @@ float3x4 ModuleCamera3D::GetViewMatrix()
 
 void ModuleCamera3D::OnMouseClick()
 {
-	LOG("Click");
-	float x = App->input->GetMouseX();
-	float y = App->input->GetMouseY();
-	float2 mouseWorldPosition = ScreenToWorld(float2(x, y));
+		float x = App->input->GetMouseX();
+		float y = App->input->GetMouseY();
+		float2 mouseWorldPosition = ScreenToWorld(float2(x, y));
 
-	ray = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
+		ray = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
 
-	App->scene_intro->OnClickSelection(ray);
-
-	//LOG("Ray: %f,%f", picking.a, picking.b);
-	//for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
-	//{
-	//
-	//	bool hit = picking.Intersects(App->scene_intro->gameObjectsList[i]->GetAABB());
-	//	if (hit) {
-	//		LOG("HIT");
-	//	}
-	//	else {
-	//		LOG("NO HIt");
-	//	}
-
-	//}
-
+		App->scene_intro->OnClickSelection(ray);
 	
-
 }
 
 float2 ModuleCamera3D::ScreenToWorld(float2 point)

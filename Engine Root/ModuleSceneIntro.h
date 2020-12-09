@@ -35,4 +35,6 @@ public:
 	JsonObj myScene;
 	char* sceneBuffer;
 
+	bool showDebugAABB;
+
 };

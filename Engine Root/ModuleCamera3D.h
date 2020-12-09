@@ -35,6 +35,7 @@ public:
 	CameraComponent* camera;
 	LineSegment ray;
 
+	bool debugRay;
 private:
 
 	double last_x = 0;

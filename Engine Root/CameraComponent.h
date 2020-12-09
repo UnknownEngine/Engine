@@ -9,6 +9,8 @@ public:
 	CameraComponent();
 	~CameraComponent();
 
+	void UpdateFrustum(float w, float h);
+
 public:
 
 	Frustum frustum;

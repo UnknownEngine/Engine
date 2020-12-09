@@ -32,6 +32,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
 	App->camera->LookAt(float3(0, 0, 0));
 
+	showDebugAABB = false;
+
 	//App->geometry->LoadFbx(buffer, size, file, file);
 	//char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
 	//std::string  path = "";
@@ -61,64 +63,66 @@ GameObject* ModuleSceneIntro::CreateGameObject(std::string name)
 // Update: draw background
 update_status ModuleSceneIntro::Update(float dt)
 {
-	
+
 	Planetest p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
 
-	if (gameObjectsList.size() > 0) {
-		for (uint i = 0; i < gameObjectsList.size(); i++)
-		{
-			for (uint k = 0; k < gameObjectsList[i]->childs.size(); k++)
+	if (showDebugAABB) {
+		if (gameObjectsList.size() > 0) {
+			for (uint i = 0; i < gameObjectsList.size(); i++)
 			{
-				float3 corners[8];
-				gameObjectsList[i]->childs[k]->GetAABB().GetCornerPoints(corners);
+				for (uint k = 0; k < gameObjectsList[i]->childs.size(); k++)
+				{
+					float3 corners[8];
+					gameObjectsList[i]->childs[k]->GetAABB().GetCornerPoints(corners);
 
-				glColor3f(0, 1, 0);
-				glBegin(GL_LINES);
-				
-				//Botton face
-				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+					glColor3f(0, 1, 0);
+					glBegin(GL_LINES);
 
-				//Top Face
-				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+					//Botton face
+					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
 
-				//Left Face
-				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+					//Top Face
+					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
 
-
-				//Right Face
-				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+					//Left Face
+					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
 
 
-				
+					//Right Face
+					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
 
 
-				glEnd();
-				glColor3f(1, 1, 1);
+
+
+
+					glEnd();
+					glColor3f(1, 1, 1);
+				}
+
+
 			}
-			
-
 		}
 	}
 	if (App->renderer3D->gl_wireframe)
@@ -132,14 +136,7 @@ update_status ModuleSceneIntro::Update(float dt)
 void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 {
 	std::vector<GameObject*> candidates;
-	for (uint i = 0; i < gameObjectsList.size(); i++)
-	{
-		gameObjectsList[i]->UpdateAABB();
-		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
-		{
-			gameObjectsList[i]->childs[j]->UpdateAABB();
-		}
-	}
+
 	for (uint i = 0; i < gameObjectsList.size(); i++)
 	{
 		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
@@ -153,42 +150,38 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 		}
 	}
 
+	for (uint i = 0; i < candidates.size(); i++)
+	{
 
+		//Testing triangle by triangle
+		const MeshComponent* mesh = candidates[i]->GetMeshComponent();
+		if (mesh)
+		{
+				LineSegment local = segment;
+				local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
+				for (uint v = 0; v < mesh->num_indices; v += 3)
+				{
+					uint indexA = mesh->indices[v] * 3;
+					float3 a(&mesh->vertices[indexA]);
 
-	//GameObject* toSelect = nullptr;
-	//for (uint i = 0; i < candidates.size() && toSelect == nullptr; i++)
-	//{
+					uint indexB = mesh->indices[v + 1] * 3;
+					float3 b(&mesh->vertices[indexB]);
 
-	//	//Testing triangle by triangle
-	//	const MeshComponent* mesh = candidates[i]->GetMeshComponent();
-	//	if (mesh)
-	//	{
-	//			LineSegment local = segment;
-	//			local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
-	//			for (uint v = 0; v < mesh->num_indices; v += 3)
-	//			{
-	//				uint indexA = mesh->indices[v] * 3;
-	//				float3 a(&mesh->vertices[indexA]);
+					uint indexC = mesh->indices[v + 2] * 3;
+					float3 c(&mesh->vertices[indexC]);
 
-	//				uint indexB = mesh->indices[v + 1] * 3;
-	//				float3 b(&mesh->vertices[indexB]);
+					Triangle triangle(a, b, c);
 
-	//				uint indexC = mesh->indices[v + 2] * 3;
-	//				float3 c(&mesh->vertices[indexC]);
-
-	//				Triangle triangle(a, b, c);
-
-	//				if (local.Intersects(triangle, nullptr, nullptr))
-	//				{
-	//					toSelect = candidates[i];
-	//					break;
-	//				}
-	//			}
-	//		
-	//	}
-	//}
-	if (candidates.size() > 0)
-		selected = candidates[0];
+					if (local.Intersects(triangle, nullptr, nullptr))
+					{
+						toSelect = candidates[i];
+						break;
+					}
+				}
+			
+		}
+	}
+	selected = toSelect;
 
 }
 
