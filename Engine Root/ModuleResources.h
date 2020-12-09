@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Json.h"
+#include "Resource.h"
 #include <vector>
 #include <string>
 
@@ -19,11 +20,18 @@ public:
 	int ImportFile(const char* new_assets_file);
 	int GenerateNewUID();
 
+	const Resource* RequestResource(int uid) const;
+	Resource* RequestResource(int uid);
+	void ReleaseResource(int uid);
+
+
 	bool CleanUp();
 
 	void ImportTexturesAssets();
 	void ImportMeshAssets();
 
+private:
+	Resource* CreateNewResource(const char* assetsFile, ResourceType type);
 
 public:
 	std::vector<std::string> texturesPathlist;

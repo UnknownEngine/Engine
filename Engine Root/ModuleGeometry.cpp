@@ -386,6 +386,7 @@ bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
 	ilGenImages(1, &ImgId);
 	ilBindImage(ImgId);
 
+	//ilLoadL TODO eudald: Change vvvv
 	if (!ilLoadImage(filename))
 	{
 		ILenum err = ilGetError();

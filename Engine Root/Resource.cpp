@@ -34,6 +34,7 @@ bool Resource::IsLoadedToMemory() const
 
 bool Resource::LoadToMemory()
 {
+	
 	return false;
 }
 

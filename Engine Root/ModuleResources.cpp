@@ -46,7 +46,22 @@ int ModuleResourceManager::ImportFile(const char* new_assets_file)
 
 int ModuleResourceManager::GenerateNewUID()
 {
+
 	return 0;
+}
+
+const Resource* ModuleResourceManager::RequestResource(int uid) const
+{
+	return nullptr;
+}
+
+Resource* ModuleResourceManager::RequestResource(int uid)
+{
+	return nullptr;
+}
+
+void ModuleResourceManager::ReleaseResource(int uid)
+{
 }
 
 bool ModuleResourceManager::CleanUp()
@@ -78,5 +93,11 @@ void ModuleResourceManager::ImportMeshAssets()
 		char* buffer = "";
 		App->fsystem->LoadFBXMeshes(FBXsPathlist.at(i),buffer);
 	}
+}
+
+Resource* ModuleResourceManager::CreateNewResource(const char* assetsFile, ResourceType type)
+{
+
+	return nullptr;
 }
 
