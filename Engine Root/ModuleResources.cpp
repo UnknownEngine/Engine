@@ -16,19 +16,34 @@ bool ModuleResourceManager::Start()
 	return true;
 }
 
-update_status ModuleResourceManager::PreUpdate(float dt)
+//update_status ModuleResourceManager::PreUpdate(float dt)
+//{
+//	return UPDATE_CONTINUE;
+//}
+//
+//update_status ModuleResourceManager::Update(float dt)
+//{
+//	return UPDATE_CONTINUE;
+//}
+//
+//update_status ModuleResourceManager::PostUpdate(float dt)
+//{
+//	return UPDATE_CONTINUE;
+//}
+
+int ModuleResourceManager::Find(const char* assets_file) const
 {
-	return UPDATE_CONTINUE;
+	return 0;
 }
 
-update_status ModuleResourceManager::Update(float dt)
+int ModuleResourceManager::ImportFile(const char* new_assets_file)
 {
-	return UPDATE_CONTINUE;
+	return 0;
 }
 
-update_status ModuleResourceManager::PostUpdate(float dt)
+int ModuleResourceManager::GenerateNewUID()
 {
-	return UPDATE_CONTINUE;
+	return 0;
 }
 
 bool ModuleResourceManager::CleanUp()
@@ -61,3 +76,4 @@ void ModuleResourceManager::ImportMeshAssets()
 		App->fsystem->LoadFBXMeshes(FBXsPathlist.at(i),buffer);
 	}
 }
+

@@ -44,6 +44,8 @@ private:
 
 	void CreateHierarchy(GameObject* gameobject);
 
+	void CreateFileInspector();
+
 	void HyperLink(const char* tooltip, const char* url);
 
 public:
@@ -72,6 +74,8 @@ private:
 	bool showConsoleWindow;
 	bool showLoadWindow;
 
+	bool showAssets;
+
 	float rotx = 0.0;
 	float roty = 0.0;
 	float rotz = 0.0;
@@ -97,6 +101,16 @@ private:
 	bool hasTransform = false;
 	bool hasMaterial = false;
 	bool hasMesh = false;
+
+	std::vector<std::string> uselessFiles;
+	std::vector<std::string> rootFolders;
+	std::vector<std::string> libFolders;
+	std::vector<std::string> assetFolders;
+	std::vector<std::string> libMeshFolders;
+	std::vector<std::string> libTextureFolders;
+	std::vector<std::string> assetFBXsFolders;
+	std::vector<std::string> assetTextureFolders;
+
 
 	std::vector<char*> items;
 };

@@ -11,9 +11,14 @@ public:
 	~ModuleResourceManager();
 
 	bool Start();
-	update_status PreUpdate(float dt) override;
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	//update_status PreUpdate(float dt);
+	//update_status Update(float dt);
+	//update_status PostUpdate(float dt);
+
+	int Find(const char* assets_file) const;
+	int ImportFile(const char* new_assets_file);
+	int GenerateNewUID();
+
 	bool CleanUp();
 
 	void ImportTexturesAssets();
@@ -25,3 +30,5 @@ public:
 	std::vector<std::string> FBXsPathlist;
 	std::vector<JsonObj> textureMetas;
 };
+
+

@@ -32,7 +32,8 @@ M_FileSystem::M_FileSystem(Application* app, bool start_enabled) : Module(app, s
 		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	AddPath("."); //Adding ProjectFolder (working directory)
-	AddPath("Assets");
+	//AddPath("Assets");
+
 
 	CreateLibraryDirectories();
 }
@@ -175,6 +176,7 @@ bool M_FileSystem::CreateDir(const char* dir)
 // Check if a file is a directory
 bool M_FileSystem::IsDirectory(const char* file) const
 {
+
 	return PHYSFS_isDirectory(file) != 0;
 }
 
@@ -186,6 +188,7 @@ const char * M_FileSystem::GetWriteDir() const
 
 void M_FileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & file_list, std::vector<std::string> & dir_list) const
 {
+
 	char **rc = PHYSFS_enumerateFiles(directory);
 	char **i;
 
@@ -316,10 +319,10 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 	if (extension == "fbx" || extension == "FBX")
 	{
 		std::string fileWithExtension = file + "." + extension;
-		std::string realName = "/FBXs/" + fileWithExtension;
+		std::string realName =  "/FBXs/" + fileWithExtension;
 
 		char* buffer = nullptr;
-		std::string realDir = PHYSFS_getRealDir(realName.c_str());
+		std::string realDir = "Assets";
 		realDir += realName;
 
 		uint size =Load(realDir.c_str(), &buffer);
@@ -370,7 +373,7 @@ void M_FileSystem::CreateMaterialMetas(char* buffer, std::string file)
 	if (!exists)
 	{
 		fileData.AddInt("UID", LCG().Int());
-		std::string library = "Library/Textures/";
+		std::string library = "Library/Materials/";
 		library += std::to_string(fileData.GetInt("UID"));
 		fileData.AddString("Library path", library.c_str());
 		uint size = fileData.Save(&buffer);

@@ -10,7 +10,7 @@
 #define FOLDERS_PATH "Library/Folders/"
 #define MESHES_PATH "Library/Meshes/"
 #define MATERIALS_PATH "Library/Materials/"
-#define TEXTURES_PATH "Library/Textures/"
+#define TEXTURES_PATH "Library/Materials/"
 #define MODELS_PATH "Library/Models/"
 #define ANIMATIONS_PATH "Library/Animations/"
 #define BONES_PATH "Library/Bones/"

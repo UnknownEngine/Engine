@@ -27,6 +27,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
 	showConsoleWindow = false;
 	showOpenGLWindow = false;
 	showLoadWindow = false;
+	showAssets = false;
 }
 
 ModuleEditor::~ModuleEditor()
@@ -79,6 +80,8 @@ bool ModuleEditor::Start()
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	App->fsystem->DiscoverFiles("", uselessFiles, rootFolders);
+
 	return true;
 }
 
@@ -99,6 +102,8 @@ update_status ModuleEditor::PostUpdate(float dt)
 	//ImGui::Begin("Viewport");
 	//ImGui::Image(ImTextureID(tex), ImVec2(512, 512));
 	//ImGui::End();
+	CreateFileInspector();
+
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 
@@ -891,6 +896,45 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 
 		}
 	}
+}
+
+void ModuleEditor::CreateFileInspector()
+{
+	std::string assets = "Assets";
+	ImGui::Begin("Files");
+
+	for (int i = 0; i < rootFolders.size(); i++)
+	{
+		if (ImGui::TreeNode(rootFolders.at(i).c_str()))
+		{
+			if (ImGui::IsItemClicked(0)) {
+				showAssets = !showAssets;
+			}
+			if (showAssets)
+			{
+				App->fsystem->DiscoverFiles("Assets", uselessFiles, assetFolders);
+				for (int j=0;j<assetFolders.size(); j++)
+				{
+					if (ImGui::TreeNode(assetFolders.at(j).c_str()))
+					{
+						if (j == 0)
+						{
+							ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+						}
+						ImGui::TreePop();
+					}
+				}
+			}
+			if (i == 0)
+			{
+				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+			}
+			ImGui::TreePop();
+		}
+		
+		
+	}
+	ImGui::End();
 }
 
 void ModuleEditor::HyperLink(const char* tooltip, const char* url)
