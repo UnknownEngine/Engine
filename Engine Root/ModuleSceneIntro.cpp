@@ -76,10 +76,42 @@ update_status ModuleSceneIntro::Update(float dt)
 
 				glColor3f(0, 1, 0);
 				glBegin(GL_LINES);
-				for (uint j = 0; j < 8; j++)
-				{
-					glVertex3f(corners[j].x, corners[j].y, corners[j].z);
-				}
+				
+				//Botton face
+				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+
+				//Top Face
+				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+				//Left Face
+				glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+				glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+				glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+				glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+
+				//Right Face
+				glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+				glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+				glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+				glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+
+
+				
 
 
 				glEnd();
@@ -99,7 +131,6 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 {
-	selected = nullptr;
 	std::vector<GameObject*> candidates;
 	for (uint i = 0; i < gameObjectsList.size(); i++)
 	{
@@ -159,6 +190,19 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 	if (candidates.size() > 0)
 		selected = candidates[0];
 
+}
+
+void ModuleSceneIntro::DrawRay(LineSegment& segment)
+{
+		glColor3f(1, 0, 0);
+		glBegin(GL_LINES);
+
+		glVertex3f(segment.a.x, segment.a.y, segment.a.z);
+		glVertex3f(segment.b.x, segment.b.y, segment.b.z);
+
+		glEnd();
+		glColor3f(1, 1, 1);
+	
 }
 
 

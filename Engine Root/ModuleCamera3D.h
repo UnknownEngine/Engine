@@ -33,6 +33,7 @@ public:
 
 	float3 Position, Reference;
 	CameraComponent* camera;
+	LineSegment ray;
 
 private:
 

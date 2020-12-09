@@ -51,6 +51,7 @@ update_status ModuleCamera3D::Update(float dt)
 		float sensitivity = 0.25f;
 		float orbital_speed = 0.1f;
 
+		App->scene_intro->DrawRay(ray);
 
 		//Camera Options
 		ModifySpeed(speed);
@@ -228,9 +229,9 @@ void ModuleCamera3D::OnMouseClick()
 	float y = App->input->GetMouseY();
 	float2 mouseWorldPosition = ScreenToWorld(float2(x, y));
 
-	LineSegment picking = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
+	ray = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
 
-	App->scene_intro->OnClickSelection(picking);
+	App->scene_intro->OnClickSelection(ray);
 
 	//LOG("Ray: %f,%f", picking.a, picking.b);
 	//for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
@@ -252,9 +253,8 @@ void ModuleCamera3D::OnMouseClick()
 
 float2 ModuleCamera3D::ScreenToWorld(float2 point)
 {
-	float normMouseX = point.x / App->window->width;
-	float normMouseY = point.y / App->window->height;
-
+	float normMouseX = point.x / ImGui::GetMainViewport()->Size.x;
+	float normMouseY = point.y / ImGui::GetMainViewport()->Size.y;
 	normMouseX = (normMouseX - 0.5f) / 0.5f;
 	normMouseY = -((normMouseY - 0.5f) / 0.5f);
 	LOG("Frustum: %f, %f", normMouseX, normMouseY);

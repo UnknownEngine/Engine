@@ -26,7 +26,7 @@ public:
 	bool CleanUp();
 
 	void OnClickSelection(const LineSegment& segment);
-
+	void DrawRay(LineSegment& segment);
 public:
 	GameObject* selected=nullptr;
 	GameObject* toSelect = nullptr;
