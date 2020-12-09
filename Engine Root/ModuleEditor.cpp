@@ -15,6 +15,7 @@
 #include "MeshComponent.h"
 #include "TransformComponent.h"
 #include "MaterialComponent.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -98,6 +99,29 @@ update_status ModuleEditor::PreUpdate(float dt) {
 
 update_status ModuleEditor::PostUpdate(float dt)
 {
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::SetNextWindowPos(ImVec2(1024, 100));
+	ImGui::SetNextWindowSize(ImVec2(256, 256));
+
+	// create a window and insert the inspector
+	ImGui::SetNextWindowPos(ImVec2(10, 10));
+	ImGui::SetNextWindowSize(ImVec2(320, 340));
+	ImGui::Begin("Editor");
+	ImGui::Text("Camera");
+
+	ImGui::Text("X: %f Y: %f", io.MousePos.x, io.MousePos.y);
+	if (App->scene_intro->selected != nullptr) {
+		float4x4 viewMatrix = App->camera->camera->frustum.ViewMatrix();
+		viewMatrix.Transpose();
+		float modelPtr[16];
+		float4x4 modelProjection = App->scene_intro->selected->GetTransformComponent()->global_transform.Transposed();
+		memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+		float4x4 projectionMatrix = App->camera->camera->frustum.ProjectionMatrix().Transposed();
+
+	}
+	ImGui::End();
 	//uint tex = App->renderer3D->fb;
 	//ImGui::Begin("Viewport");
 	//ImGui::Image(ImTextureID(tex), ImVec2(512, 512));
@@ -297,7 +321,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	ImGuiIO& io = ImGui::GetIO();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();

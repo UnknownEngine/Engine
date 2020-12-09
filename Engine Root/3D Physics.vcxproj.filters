@@ -52,6 +52,9 @@
     <Filter Include="Sources\Components\Inherits">
       <UniqueIdentifier>{4911714c-e957-44a8-9c1e-624a3c2bd008}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External Libraries\ImGuizmo">
+      <UniqueIdentifier>{be262ab0-5f3f-472b-b883-b71f88b4ccd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -342,6 +345,9 @@
     <ClInclude Include="Resource.h">
       <Filter>Sources\Components\Inherits</Filter>
     </ClInclude>
+    <ClInclude Include="External Libraries\ImGuizmo\ImGuizmo.h">
+      <Filter>External Libraries\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -541,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Sources\Components\Inherits</Filter>
+    </ClCompile>
+    <ClCompile Include="External Libraries\ImGuizmo\ImGuizmo.cpp">
+      <Filter>External Libraries\ImGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
