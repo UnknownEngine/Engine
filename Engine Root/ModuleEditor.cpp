@@ -903,7 +903,7 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 		if (ImGui::TreeNode(gameobject->nameID.c_str()))
 		{
 			if (ImGui::IsItemClicked(0)) {
-				App->scene_intro->selected = gameobject;
+				App->scene_intro->toSelect = gameobject;
 			}
 			
 			for (int i = 0; i < gameobject->childs.size(); i++)
