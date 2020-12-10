@@ -194,8 +194,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
 			
 			//Write and read on/from library
-			//App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			//App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
+			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
+			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
 
 			//Loads mesh attributes from meshBuffer
 			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
@@ -208,50 +208,57 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			}
 
 			if (scene->HasMaterials()) {
-				//Gets AI data
-				aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
-				uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 
-				aiString path;
-				material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+				ResourceTexture* r_texture = App->resourceManager->LoadResource();
+				MaterialComponent* materialComponent = new MaterialComponent();
+				materialComponent->r_texture = r_texture;
+				gameObjectNode->AddComponent(materialComponent);
+			}
+			//if (scene->HasMaterials()) {
+			//	//Gets AI data
+			//	aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
+			//	uint numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
 
-				std::string stringPath = std::string(path.C_Str());
-				std::size_t pos = stringPath.find_last_of("\\");
+			//	aiString path;
+			//	material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 
-				std::string fileRoute = stringPath.substr(pos + 1);
-				std::string rootPath = std::string("Assets/Textures/");
-				rootPath = rootPath + fileRoute;
+			//	std::string stringPath = std::string(path.C_Str());
+			//	std::size_t pos = stringPath.find_last_of("\\");
 
-				MaterialComponent* materialComponent = new MaterialComponent;
+			//	std::string fileRoute = stringPath.substr(pos + 1);
+			//	std::string rootPath = std::string("Assets/Textures/");
+			//	rootPath = rootPath + fileRoute;
 
-				if (fileRoute != "")
-				{
-					materialComponent->name = fileRoute;
-					materialComponent->name.erase(materialComponent->name.size() - 4);
-				}
-				else
-				{
-					materialComponent->name = "";
-				}
-					materialComponent->UID = LCG().Int();
+			//	MaterialComponent* materialComponent = new MaterialComponent;
 
-					//Creates buffer for the texture and loads attributes 
-					//CreateTextureBuffer(materialComponent);
-					//LoadTexture(rootPath.c_str(), materialComponent);
+			//	if (fileRoute != "")
+			//	{
+			//		materialComponent->r_texture->name = fileRoute;
+			//		materialComponent->r_texture->name.erase(materialComponent->name.size() - 4);
+			//	}
+			//	else
+			//	{
+			//		materialComponent->r_texture->name = "";
+			//	}
+			//		materialComponent->r_texture->UID = LCG().Int();
 
-					//Gets size of material and loads attributes into materialBuffer
-					materialComponent->size = GetMatSize();
-					//materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
+			//		//Creates buffer for the texture and loads attributes 
+			//		//CreateTextureBuffer(materialComponent);
+			//		//LoadTexture(rootPath.c_str(), materialComponent);
 
-					//Writes and reads from/in materials library
-					App->fsystem->WriteFile((texturesPath+materialComponent->name).c_str(), materialComponent->materialBuffer, materialComponent->size);
-					App->fsystem->ReadFile((texturesPath + materialComponent->name).c_str(), &materialComponent->materialBuffer);
+			//		//Gets size of material and loads attributes into materialBuffer
+			//		materialComponent->size = GetMatSize();
+			//		//materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
-					//Loads material attributes from materialBuffer
-					LoadOurMaterial(materialComponent->materialBuffer, materialComponent, materialComponent->size);
+			//		//Writes and reads from/in materials library
+			//		App->fsystem->WriteFile((texturesPath+materialComponent->r_texture->name).c_str(), materialComponent->r_texture->materialBuffer, materialComponent->size);
+			//		App->fsystem->ReadFile((texturesPath + materialComponent->r_texture->name).c_str(), &materialComponent->r_texture->materialBuffer);
 
-					gameObjectNode->AddComponent(materialComponent);
-			}	
+			//		//Loads material attributes from materialBuffer
+			//		LoadOurMaterial(materialComponent->materialBuffer, materialComponent->r_texture, materialComponent->size);
+
+			//		gameObjectNode->AddComponent(materialComponent);
+			//}	
 			CreateTransformComponent(node, gameObjectNode);
 		}	 
 	}
@@ -571,14 +578,14 @@ char* ModuleGeometry::SaveOurMaterial(ResourceTexture* resource, uint size)
 	return buffer;
 }
 
-void ModuleGeometry::LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size)
+void ModuleGeometry::LoadOurMaterial(char* filebuffer, ResourceTexture* ourTexture, uint size)
 {
 	ILuint ImageName;
 	ilGenImages(1, &ImageName);
 	ilBindImage(ImageName);
 
 	ilLoadL(IL_TYPE_UNKNOWN, (const void*)filebuffer, size);
-	ourMaterial->bufferTexture = ilutGLBindTexImage()-1;
+	ourTexture->bufferTexture = ilutGLBindTexImage()-1;
 
 	ilDeleteImages(1, &ImageName);
 }
@@ -675,9 +682,9 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh, MaterialComponent* material)
 	if (material != NULL)
 	{
 		if (material->active) {
-			if (material != nullptr) {
-				if (!material->useChecker) {
-					glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+			if (material->r_texture != nullptr) {
+				if (!material->r_texture->useChecker) {
+					glBindTexture(GL_TEXTURE_2D, material->r_texture->bufferTexture);
 				}
 				else {
 					glBindTexture(GL_TEXTURE_2D, bufferCheckerTexture);

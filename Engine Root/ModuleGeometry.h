@@ -54,7 +54,7 @@ public:
 
 	uint GetMatSize();
 	char* SaveOurMaterial(ResourceTexture* resource, uint size);
-	void LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size);
+	void LoadOurMaterial(char* filebuffer, ResourceTexture* ourTexture, uint size);
 	
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);
 	void DrawMeshFromGameObjectRoot(GameObject* gameObject);

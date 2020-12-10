@@ -762,22 +762,22 @@ void M_FileSystem::SaveMesh(JsonObj component, GameObject* gameObject)
 
 void M_FileSystem::SaveMaterial(JsonObj component, GameObject* gameObject)
 {
-	MaterialComponent* material = gameObject->GetMaterialComponent();
+	//MaterialComponent* material = gameObject->GetMaterialComponent();
 
-	component.AddInt("UID", material->UID);
-	component.AddString("TYPE", "Material");
-	component.AddString("Name", material->name.c_str());
-	component.AddString("Path", material->path.c_str());
-	component.AddInt("Width", material->width);
-	component.AddInt("Height", material->height);
-	component.AddInt("BPP", material->bpp);
+	//component.AddInt("UID", material->UID);
+	//component.AddString("TYPE", "Material");
+	//component.AddString("Name", material->name.c_str());
+	//component.AddString("Path", material->path.c_str());
+	//component.AddInt("Width", material->width);
+	//component.AddInt("Height", material->height);
+	//component.AddInt("BPP", material->bpp);
 
-	component.AddInt("dataTexture", int(material->dataTexture));
+	//component.AddInt("dataTexture", int(material->dataTexture));
 
-	component.AddInt("buffer Data", material->bufferTexture);
+	//component.AddInt("buffer Data", material->bufferTexture);
 
-	component.AddInt("Size", material->size);
-	component.AddBool("Using Checker", material->useChecker);
+	//component.AddInt("Size", material->size);
+	//component.AddBool("Using Checker", material->useChecker);
 }
 
 void M_FileSystem::SaveTransform(JsonObj component, GameObject* gameObject)
@@ -832,24 +832,24 @@ void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
 
 void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObject)
 {
-	MaterialComponent* loadedMaterial = new MaterialComponent();
-	//App->geometry->CreateTextureBuffer(loadedMaterial);
-	loadedMaterial->type = ComponentType::Material;
-	loadedMaterial->size = components_iterator.GetInt("Size");
-	loadedMaterial->UID = components_iterator.GetInt("UID");
-	loadedMaterial->name = components_iterator.GetString("Name");
-	loadedMaterial->path = components_iterator.GetString("Path");
-	loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
+	//MaterialComponent* loadedMaterial = new MaterialComponent();
+	////App->geometry->CreateTextureBuffer(loadedMaterial);
+	//loadedMaterial->type = ComponentType::Material;
+	//loadedMaterial->size = components_iterator.GetInt("Size");
+	//loadedMaterial->UID = components_iterator.GetInt("UID");
+	//loadedMaterial->name = components_iterator.GetString("Name");
+	//loadedMaterial->path = components_iterator.GetString("Path");
+	//loadedMaterial->useChecker = components_iterator.GetBool("Using Checker");
 
-	std::string bufferPath = App->geometry->texturesPath + loadedMaterial->name;
+	//std::string bufferPath = App->geometry->texturesPath + loadedMaterial->name;
 
-	ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
-	App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
-	loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
+	//ReadFile(bufferPath.c_str(), &loadedMaterial->materialBuffer);
+	//App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial->r_texture, loadedMaterial->size);
+	//loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
 
-	//App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
+	////App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
 
-	gameObject->AddComponent(loadedMaterial);
+	//gameObject->AddComponent(loadedMaterial);
 }
 
 void M_FileSystem::LoadTransform(JsonObj components_iterator, GameObject* gameObject)

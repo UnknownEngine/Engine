@@ -35,7 +35,7 @@ public:
 	JsonObj CreateMeshMetas(std::string file);
 	void ImportMeshAssets();
 
-	void LoadResource();
+	ResourceTexture* LoadResource();
 
 public:
 	std::string fbxsPath;

@@ -193,7 +193,7 @@ JsonObj ModuleResourceManager::CreateMeshMetas(std::string file)
 }
 
 
-void ModuleResourceManager::LoadResource()
+ResourceTexture* ModuleResourceManager::LoadResource()
 {
 	char* buffer;
 	App->fsystem->ReadFile("Assets/Textures/Baker_house.mta", &buffer);
@@ -208,7 +208,8 @@ void ModuleResourceManager::LoadResource()
 
 	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
 
+	App->geometry->LoadOurMaterial(materialBuffer, r_texture, size);
 
-
+	return r_texture;
 
 }

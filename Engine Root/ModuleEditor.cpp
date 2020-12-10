@@ -564,7 +564,7 @@ void ModuleEditor::DrawInspector()
 			ImGui::Text("");
 
 			if (ImGui::Button("Use Checkers", ImVec2(200, 20))) {
-				App->scene_intro->selected->GetMaterialComponent()->useChecker = !App->scene_intro->selected->GetMaterialComponent()->useChecker;
+				App->scene_intro->selected->GetMaterialComponent()->r_texture->useChecker = !App->scene_intro->selected->GetMaterialComponent()->r_texture->useChecker;
 			}
 
 			ImGui::Text("");
@@ -591,7 +591,7 @@ void ModuleEditor::DrawInspector()
 			ImGui::Text("Bpp: %i", material_bpp);
 			if (App->scene_intro->selected != NULL && App->scene_intro->selected->GetMaterialComponent() != NULL)
 			{
-				if (!App->scene_intro->selected->GetMaterialComponent()->useChecker)
+				if (!App->scene_intro->selected->GetMaterialComponent()->r_texture->useChecker)
 				{
 					ImGui::Image((void*)(intptr_t)material_buffer, ImVec2(256, 256));
 				}
@@ -642,13 +642,13 @@ void ModuleEditor::FillInspector(GameObject* selected)
 	}
 	if (materialComponent != nullptr)
 	{
-		material_name = materialComponent->name;
-		material_path = materialComponent->path;
-		material_width = materialComponent->width;
-		material_height = materialComponent->height;
-		material_bpp = materialComponent->bpp;
-		material_buffer = materialComponent->bufferTexture;
-		hasMaterial = true;
+		//material_name = materialComponent->name;
+		//material_path = materialComponent->path;
+		//material_width = materialComponent->width;
+		//material_height = materialComponent->height;
+		//material_bpp = materialComponent->bpp;
+		//material_buffer = materialComponent->bufferTexture;
+		//hasMaterial = true;
 	}
 	else
 	{

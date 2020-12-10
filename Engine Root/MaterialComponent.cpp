@@ -10,7 +10,3 @@ MaterialComponent::~MaterialComponent()
 {
 }
 
-void MaterialComponent::LoadResource()
-{
-	
-}
