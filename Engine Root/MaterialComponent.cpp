@@ -1,4 +1,5 @@
 #include "MaterialComponent.h"
+#include "ModuleFSystem.h"
 
 MaterialComponent::MaterialComponent() : Component()
 {
@@ -7,4 +8,9 @@ MaterialComponent::MaterialComponent() : Component()
 
 MaterialComponent::~MaterialComponent()
 {
+}
+
+void MaterialComponent::LoadResource()
+{
+	
 }

@@ -27,13 +27,15 @@ public:
 	Resource* RequestResource(int uid);
 	void ReleaseResource(int uid);
 
-
 	bool CleanUp();
 
 	void ImportTexturesAssets();
+	void ImportMaterialsList();
 	JsonObj CreateMaterialMetas(std::string realDir, std::string metaDir);
 	JsonObj CreateMeshMetas(std::string file);
 	void ImportMeshAssets();
+
+	void LoadResource();
 
 public:
 	std::string fbxsPath;
@@ -43,11 +45,11 @@ public:
 
 	std::string realDir;
 	std::string metaDir;
-	
 
 	std::vector<std::string> texturesPathlist;
 	std::vector<std::string> FBXsPathlist;
-	std::vector<JsonObj> textureMetas;
+	std::vector<std::string> materialsList;
+
 };
 
 

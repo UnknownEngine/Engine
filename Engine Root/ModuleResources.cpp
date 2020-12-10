@@ -23,7 +23,10 @@ bool ModuleResourceManager::Start()
 	meshesLibPath= "Library/Meshes/";
 
 	ImportTexturesAssets();
+	ImportMaterialsList();
 	
+	LoadResource();
+
 	return true;
 }
 
@@ -100,6 +103,7 @@ const Resource* ModuleResourceManager::RequestResource(int uid) const
 
 Resource* ModuleResourceManager::RequestResource(int uid)
 {
+
 	return nullptr;
 }
 
@@ -129,6 +133,13 @@ void ModuleResourceManager::ImportTexturesAssets()
 	}
 }
 
+void ModuleResourceManager::ImportMaterialsList()
+{
+	std::vector<std::string> filesDirs;
+	App->fsystem->DiscoverFiles("Library/Materials", materialsList, filesDirs);
+
+}
+
 
 void ModuleResourceManager::ImportMeshAssets()
 {
@@ -140,6 +151,7 @@ void ModuleResourceManager::ImportMeshAssets()
 		//ImportFile(FBXsPathlist.at(i), CreateMaterialMetas(FBXsPathlist.at(i)));
 	}
 }
+
 
 JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::string metaDir)
 {
@@ -180,3 +192,23 @@ JsonObj ModuleResourceManager::CreateMeshMetas(std::string file)
 	return JsonObj();
 }
 
+
+void ModuleResourceManager::LoadResource()
+{
+	char* buffer;
+	App->fsystem->ReadFile("Assets/Textures/Baker_house.mta", &buffer);
+
+	JsonObj meta(buffer);
+
+	int uid = meta.GetInt("UID");
+	LOG("%i", uid);
+
+	char* materialBuffer;
+	App->fsystem->ReadFile(meta.GetString("Library path"), &materialBuffer);
+
+	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
+
+
+
+
+}
