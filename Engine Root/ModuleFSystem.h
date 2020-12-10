@@ -70,10 +70,14 @@ public:
 
 	std::string NormalizePath(const char* path) const;
 	void SplitFilePath(const char* full_path, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;
+	void GetPathFileName(const char* full_path, std::string* path, std::string* file);
+	void GetPathExtension(const char* path, std::string* extension);
+	bool CheckIfExists(std::string file);
+	
 	void DetectExtension(std::string path, std::string file, std::string extension ) const;
-	void CreatePrimitives(std::string path, std::string file);
 
-	void CreateMaterialMetas(char* buffer, std::string file);
+	void CreatePrimitives(std::string path, std::string file);
+	std::string GetMetaPath(std::string realDir);
 	void ReadMaterialMetas(JsonObj meta, std::string name);
 
 	void LoadFBXMeshes(std::string fileName, char* buffer);

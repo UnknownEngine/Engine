@@ -17,7 +17,10 @@ public:
 	update_status PostUpdate(float dt);
 
 	int Find(const char* assets_file) const;
-	int ImportFile(const char* new_assets_file);
+	int ImportFile(std::string file);
+
+
+	ResourceType SetResourceType(std::string extension);
 	int GenerateNewUID();
 
 	const Resource* RequestResource(int uid) const;
@@ -28,12 +31,17 @@ public:
 	bool CleanUp();
 
 	void ImportTexturesAssets();
+	JsonObj CreateMaterialMetas(std::string file);
 	void ImportMeshAssets();
 
 private:
 	Resource* CreateNewResource(const char* assetsFile, ResourceType type);
 
 public:
+	std::string fbxsPath;
+	std::string texturesPath;
+	std::string texturesLibPath;
+
 	std::vector<std::string> texturesPathlist;
 	std::vector<std::string> FBXsPathlist;
 	std::vector<JsonObj> textureMetas;

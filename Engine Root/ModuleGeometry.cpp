@@ -5,7 +5,7 @@
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
-
+#include "ResourceTexture.h"
 
 #include "MeshComponent.h"
 #include "TransformComponent.h"
@@ -52,7 +52,7 @@ bool ModuleGeometry::Start()
 	CreateCheckerTextureBuffer();
 
 	App->resourceManager->ImportTexturesAssets();
-	App->resourceManager->ImportMeshAssets();
+	//App->resourceManager->ImportMeshAssets();
 	return true;
 }
 
@@ -448,6 +448,17 @@ void ModuleGeometry::CreateCheckerTextureBuffer()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKER_WIDTH, CHECKER_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void ModuleGeometry::ImportTexture(JsonObj meta, ResourceTexture* resourceTexture)
+{
+	std::string path;
+	std::string filename;
+	App->fsystem->GetPathFileName(meta.GetString("Asset path"), &path, &filename);
+	resourceTexture->name = filename;
+
+	//App->geometry->CreateTextureBuffer(resourceTexture);
+	//App->geometry->LoadTexture(meta.GetString("Asset path"), resourceTexture);
 }
 
 //  ----------------------------------------------------------------------------------------------

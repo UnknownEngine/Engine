@@ -1,6 +1,8 @@
 #include "Resource.h"
+#include "ResourceTexture.h"
 Resource::Resource(int UID, ResourceType type)
 {
+
 }
 
 Resource::~Resource()

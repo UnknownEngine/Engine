@@ -14,7 +14,7 @@
 #define CHECKER_HEIGHT 128
 #define CHECKER_WIDTH 128
 
-
+class ResourceTexture;
 class MeshComponent;
 class MaterialComponent;
 class aiMesh;
@@ -45,6 +45,8 @@ public:
 	bool LoadTexture(const char* path, MaterialComponent* gameObject);
 	void CreateTextureBuffer(MaterialComponent* material);
 	void CreateCheckerTextureBuffer();
+
+	void ImportTexture(JsonObj meta, ResourceTexture* resourceTexture);
 
 	uint  GetMeshSize(MeshComponent* ourMesh);
 	char* SaveOurMesh(MeshComponent* ourMesh, uint size);

@@ -10,11 +10,12 @@
 class ResourceTexture :public Resource {
 
 public:
-	ResourceTexture(int UID);
+	ResourceTexture(int UID, ResourceType type);
 	~ResourceTexture();
 	bool LoadToMemory() override;
 	void Save(JsonObj& config) const override;
 	void Load(JsonObj& config) override;
+	ResourceType GetType() const override;
 
 public:
 	int width = 0;

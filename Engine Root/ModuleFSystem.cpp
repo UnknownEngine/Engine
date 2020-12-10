@@ -313,6 +313,27 @@ void M_FileSystem::SplitFilePath(const char * full_path, std::string * path, std
 	}
 }
 
+void M_FileSystem::GetPathExtension(const char* path, std::string* extension)
+{
+	std::string full(path);
+	size_t pos_dot = full.find_last_of(".");
+
+	if (extension != nullptr)
+	{
+		if (pos_dot < full.length())
+			*extension = full.substr(pos_dot + 1);
+		else
+			extension->clear();
+	}
+}
+
+bool M_FileSystem::CheckIfExists(std::string file)
+{
+	bool ret = false;
+	ret = PHYSFS_exists((file).c_str());
+	return ret;
+}
+
 void M_FileSystem::DetectExtension(std::string path, std::string file, std::string extension) const
 {
 	
@@ -355,32 +376,14 @@ void M_FileSystem::CreatePrimitives(std::string path, std::string file)
 	}
 }
 
-void M_FileSystem::CreateMaterialMetas(char* buffer, std::string file)
+std::string M_FileSystem::GetMetaPath(std::string realDir)
 {
-	JsonObj fileData;
-
-	std::string dir = "Assets/Textures/";
-	dir += file;
-
-	fileData.AddString("Asset path", dir.c_str());
-	dir.erase(dir.size() - 4);
+	realDir.erase(realDir.size() - 4);
 
 	std::string meta = ".met";
-	dir += meta;
+	realDir += meta;
 
-	bool exists = PHYSFS_exists((dir).c_str());
-
-	if (!exists)
-	{
-		fileData.AddInt("UID", LCG().Int());
-		std::string library = "Library/Materials/";
-		library += std::to_string(fileData.GetInt("UID"));
-		fileData.AddString("Library path", library.c_str());
-		uint size = fileData.Save(&buffer);
-		WriteFile(dir.c_str(), buffer, size);
-
-		ReadMaterialMetas(fileData, file);
-	}
+	return realDir;
 }
 
 void M_FileSystem::ReadMaterialMetas(JsonObj meta, std::string name)

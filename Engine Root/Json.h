@@ -22,6 +22,7 @@ public:
 	~JsonObj();
 
 	JSON_Object* GetObj();
+	char** GetObjNames();
 	JSON_Value* GetVal();
 
 	JSON_Array* GetArray(const char* name);

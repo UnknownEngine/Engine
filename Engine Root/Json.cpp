@@ -40,6 +40,12 @@ JSON_Object* JsonObj::GetObj()
 	return obj;
 }
 
+char** JsonObj::GetObjNames()
+{
+	return obj->names;
+}
+
+
 JSON_Value* JsonObj::GetVal()
 {
 	return val;

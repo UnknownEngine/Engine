@@ -5,18 +5,20 @@
 #include <vector>
 #include <string>
 
+
+
 enum ResourceType {
 	texture,
 	mesh,
 	unknown,
 };
-
+class ResourceTexture;
 class Resource {
 public:
 	Resource(int UID, ResourceType type);
 	~Resource();
 
-	ResourceType GetType() const;
+	virtual ResourceType GetType() const;
 	int GetUID() const;
 
 	const char* GetAssetFile() const;
