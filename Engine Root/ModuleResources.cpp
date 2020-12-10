@@ -204,7 +204,7 @@ void ModuleResourceManager::LoadResource()
 	LOG("%i", uid);
 
 	char* materialBuffer;
-	App->fsystem->ReadFile(meta.GetString("Library path"), &materialBuffer);
+	uint size = App->fsystem->ReadFile(meta.GetString("Library path"), &materialBuffer);
 
 	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
 
