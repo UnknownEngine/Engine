@@ -78,12 +78,9 @@ public:
 
 	void CreatePrimitives(std::string path, std::string file);
 	std::string GetMetaPath(std::string realDir);
-	void ReadMaterialMetas(JsonObj meta, std::string name);
 
 	void LoadFBXMeshes(std::string fileName, char* buffer);
 
-	void CreateMeshMetas(char* buffer, std::string file);
-	void ReadMeshMetas(JsonObj meta, std::string name);
 
 	void SaveScene(char** sceneBuffer);
 	JsonArray SaveGameObjects(JsonObj scene);

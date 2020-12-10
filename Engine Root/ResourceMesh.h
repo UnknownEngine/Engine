@@ -4,7 +4,7 @@
 
 class ResourceMesh : public Resource {
 public:
-	ResourceMesh(int UID);
+	ResourceMesh(int UID, ResourceType type);
 	~ResourceMesh();
 	bool LoadToMemory() override;
 	void Save(JsonObj& config) const override;
@@ -18,7 +18,7 @@ public:
 	uint num_vertices = 0;
 	float* vertices = nullptr;
 
-	uint id_indices = 0; // index in VRAM
+	uint id_indices = 0; 
 	uint num_indices = 0;
 	uint* indices = nullptr;
 
@@ -37,6 +37,8 @@ public:
 
 	std::string name;
 	std::string path;
+
+	ResourceType TYPE;
 	uint UID;
 
 	AABB aabb;

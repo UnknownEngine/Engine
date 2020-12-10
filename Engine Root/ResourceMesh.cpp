@@ -1,7 +1,9 @@
 #include "ResourceMesh.h"
 
-ResourceMesh::ResourceMesh(int UID):Resource(UID, type)
+ResourceMesh::ResourceMesh(int uid, ResourceType type):Resource(UID, type)
 {
+	UID = uid;
+	TYPE = type;
 }
 
 ResourceMesh::~ResourceMesh()

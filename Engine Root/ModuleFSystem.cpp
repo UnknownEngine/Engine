@@ -313,6 +313,32 @@ void M_FileSystem::SplitFilePath(const char * full_path, std::string * path, std
 	}
 }
 
+void M_FileSystem::GetPathFileName(const char* full_path, std::string* path, std::string* file)
+{
+	if (full_path != nullptr)
+	{
+		std::string full(full_path);
+		size_t pos_separator = full.find_last_of("\\/");
+		size_t pos_dot = full.find_last_of(".");
+
+		if (path != nullptr)
+		{
+			if (pos_separator < full.length())
+				*path = full.substr(0, pos_separator + 1);
+			else
+				path->clear();
+		}
+
+		if (file != nullptr)
+		{
+			if (pos_separator < full.length())
+				*file = full.substr(pos_separator + 1, pos_dot - pos_separator - 1);
+			else
+				*file = full.substr(0, pos_dot);
+		}
+	}
+}
+
 void M_FileSystem::GetPathExtension(const char* path, std::string* extension)
 {
 	std::string full(path);
@@ -360,7 +386,7 @@ void M_FileSystem::DetectExtension(std::string path, std::string file, std::stri
 		uint size = Load(realName.c_str(), &buffer);
 		GameObject* gameObject = App->scene_intro->selected;
 		if (gameObject == nullptr) return;
-		App->geometry->LoadTexture(realName.c_str(), gameObject->GetMaterialComponent());
+		//App->geometry->LoadTexture(realName.c_str(), gameObject->GetMaterialComponent());
 
 	}
 }
@@ -380,31 +406,32 @@ std::string M_FileSystem::GetMetaPath(std::string realDir)
 {
 	realDir.erase(realDir.size() - 4);
 
-	std::string meta = ".met";
+	std::string meta = ".mta";
 	realDir += meta;
 
 	return realDir;
 }
 
-void M_FileSystem::ReadMaterialMetas(JsonObj meta, std::string name)
-{
-	bool exists = PHYSFS_exists((meta.GetString("Library path")));
-
-	if (!exists)
-	{
-		MaterialComponent* newMaterial = new MaterialComponent;
-		newMaterial->UID = meta.GetInt("UID");
-		newMaterial->name = name;
-
-		App->geometry->CreateTextureBuffer(newMaterial);
-		App->geometry->LoadTexture(meta.GetString("Asset path"), newMaterial);
-
-		newMaterial->size = App->geometry->GetMatSize();
-		newMaterial->materialBuffer = App->geometry->SaveOurMaterial(newMaterial, newMaterial->size);
-		App->fsystem->WriteFile((meta.GetString("Library path")), newMaterial->materialBuffer, newMaterial->size);
-	}
-
-}
+//EUDALD D
+//void M_FileSystem::ReadMaterialMetas(JsonObj meta, std::string name)
+//{
+//	bool exists = PHYSFS_exists((meta.GetString("Library path")));
+//
+//	if (!exists)
+//	{
+//		MaterialComponent* newMaterial = new MaterialComponent;
+//		newMaterial->UID = meta.GetInt("UID");
+//		newMaterial->name = name;
+//
+//		//App->geometry->CreateTextureBuffer(newMaterial);
+//		//App->geometry->LoadTexture(meta.GetString("Asset path"), newMaterial);
+//
+//		newMaterial->size = App->geometry->GetMatSize();
+//		//newMaterial->materialBuffer = App->geometry->SaveOurMaterial(newMaterial, newMaterial->size);
+//		App->fsystem->WriteFile((meta.GetString("Library path")), newMaterial->materialBuffer, newMaterial->size);
+//	}
+//
+//}
 
 void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
 {
@@ -806,7 +833,7 @@ void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
 void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObject)
 {
 	MaterialComponent* loadedMaterial = new MaterialComponent();
-	App->geometry->CreateTextureBuffer(loadedMaterial);
+	//App->geometry->CreateTextureBuffer(loadedMaterial);
 	loadedMaterial->type = ComponentType::Material;
 	loadedMaterial->size = components_iterator.GetInt("Size");
 	loadedMaterial->UID = components_iterator.GetInt("UID");
@@ -820,7 +847,7 @@ void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObj
 	App->geometry->LoadOurMaterial(loadedMaterial->materialBuffer, loadedMaterial, loadedMaterial->size);
 	loadedMaterial->bufferTexture = components_iterator.GetInt("buffer Data");
 
-	App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
+	//App->geometry->LoadTexture(loadedMaterial->path.c_str(), loadedMaterial);
 
 	gameObject->AddComponent(loadedMaterial);
 }

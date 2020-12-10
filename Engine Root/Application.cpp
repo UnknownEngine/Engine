@@ -24,13 +24,13 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
-	AddModule(resourceManager);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(fsystem);
 	AddModule(physics);
 	AddModule(editor);
 	AddModule(geometry);
+	AddModule(resourceManager);
 
 	//scenes
 	AddModule(scene_intro);

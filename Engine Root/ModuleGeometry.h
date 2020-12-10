@@ -42,8 +42,8 @@ public:
 	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
 	void CreateBuffer(MeshComponent* mesh);
 
-	bool LoadTexture(const char* path, MaterialComponent* gameObject);
-	void CreateTextureBuffer(MaterialComponent* material);
+	bool LoadTexture(const char* path, ResourceTexture* resource);
+	void CreateTextureBuffer(ResourceTexture* resource);
 	void CreateCheckerTextureBuffer();
 
 	void ImportTexture(JsonObj meta, ResourceTexture* resourceTexture);
@@ -53,7 +53,7 @@ public:
 	uint LoadOurMesh(char* filebuffer, MeshComponent* ourMesh);
 
 	uint GetMatSize();
-	char* SaveOurMaterial(MaterialComponent* ourMaterial, uint size);
+	char* SaveOurMaterial(ResourceTexture* resource, uint size);
 	void LoadOurMaterial(char* filebuffer, MaterialComponent* ourMaterial, uint size);
 	
 	void CreateTransformComponent(aiNode* node, GameObject* gameObjectNode);

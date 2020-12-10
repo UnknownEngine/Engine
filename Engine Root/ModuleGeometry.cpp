@@ -51,7 +51,6 @@ bool ModuleGeometry::Start()
 
 	CreateCheckerTextureBuffer();
 
-	App->resourceManager->ImportTexturesAssets();
 	//App->resourceManager->ImportMeshAssets();
 	return true;
 }
@@ -237,12 +236,12 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 					materialComponent->UID = LCG().Int();
 
 					//Creates buffer for the texture and loads attributes 
-					CreateTextureBuffer(materialComponent);
-					LoadTexture(rootPath.c_str(), materialComponent);
+					//CreateTextureBuffer(materialComponent);
+					//LoadTexture(rootPath.c_str(), materialComponent);
 
 					//Gets size of material and loads attributes into materialBuffer
 					materialComponent->size = GetMatSize();
-					materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
+					//materialComponent->materialBuffer = SaveOurMaterial(materialComponent, materialComponent->size);
 
 					//Writes and reads from/in materials library
 					App->fsystem->WriteFile((texturesPath+materialComponent->name).c_str(), materialComponent->materialBuffer, materialComponent->size);
@@ -374,7 +373,7 @@ void ModuleGeometry::CreateBuffer(MeshComponent* mesh)
 
 //  ------------------------------------------TEXTURE LOAD-----------------------------------
 
-bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
+bool ModuleGeometry::LoadTexture(const char* path, ResourceTexture* resource)
 {
 	bool ret = true;
 	ilEnable(IL_ORIGIN_SET);
@@ -395,14 +394,14 @@ bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
 	}
 
 	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-	material->width	 = (int)ilGetInteger(IL_IMAGE_WIDTH);
-	material->height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
-	material->bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-	material->dataTexture = ilGetData();
-	material->path = path;
+	resource->width	 = (int)ilGetInteger(IL_IMAGE_WIDTH);
+	resource->height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
+	resource->bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+	resource->dataTexture = ilGetData();
+	resource->path = path;
 
-	glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, material->width, material->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, material->dataTexture);
+	glBindTexture(GL_TEXTURE_2D, resource->bufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resource->width, resource->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, resource->dataTexture);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	ilDeleteImages(1, &ImgId);
@@ -410,12 +409,12 @@ bool ModuleGeometry::LoadTexture(const char* path, MaterialComponent* material)
 }
 
 //  ---------------------------------TEXTURE BUFFER CREATE--------------------------------------------
-void ModuleGeometry::CreateTextureBuffer(MaterialComponent* material)
+void ModuleGeometry::CreateTextureBuffer(ResourceTexture* resource)
 {
 	//Texture buffer
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glGenTextures(1, &material->bufferTexture);
-	glBindTexture(GL_TEXTURE_2D, material->bufferTexture);
+	glGenTextures(1, &resource->bufferTexture);
+	glBindTexture(GL_TEXTURE_2D, resource->bufferTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -452,13 +451,21 @@ void ModuleGeometry::CreateCheckerTextureBuffer()
 
 void ModuleGeometry::ImportTexture(JsonObj meta, ResourceTexture* resourceTexture)
 {
-	std::string path;
-	std::string filename;
-	App->fsystem->GetPathFileName(meta.GetString("Asset path"), &path, &filename);
-	resourceTexture->name = filename;
+	if (!App->fsystem->Exists(meta.GetString("Library path")))
+	{
+		std::string path;
+		std::string filename;
+		App->fsystem->GetPathFileName(meta.GetString("Asset path"), &path, &filename);
+		resourceTexture->name = filename;
 
-	//App->geometry->CreateTextureBuffer(resourceTexture);
-	//App->geometry->LoadTexture(meta.GetString("Asset path"), resourceTexture);
+		App->geometry->CreateTextureBuffer(resourceTexture);
+		App->geometry->LoadTexture(meta.GetString("Asset path"), resourceTexture);
+
+		resourceTexture->size = GetMatSize();
+		resourceTexture->materialBuffer = App->geometry->SaveOurMaterial(resourceTexture, resourceTexture->size);
+
+		App->fsystem->WriteFile((meta.GetString("Library path")), resourceTexture->materialBuffer, resourceTexture->size);
+	}
 }
 
 //  ----------------------------------------------------------------------------------------------
@@ -546,7 +553,7 @@ uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
 }
 
 //  -----------------------------------MATERIAL SAVE & LOAD-------------------------------------
-char* ModuleGeometry::SaveOurMaterial(MaterialComponent* ourMaterial, uint size)
+char* ModuleGeometry::SaveOurMaterial(ResourceTexture* resource, uint size)
 {
 	char* buffer;
 	ilEnable(IL_FILE_OVERWRITE);

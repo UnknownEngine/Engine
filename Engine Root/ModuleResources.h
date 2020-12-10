@@ -17,7 +17,7 @@ public:
 	update_status PostUpdate(float dt);
 
 	int Find(const char* assets_file) const;
-	int ImportFile(std::string file);
+	int ImportFile(std::string file, JsonObj meta);
 
 
 	ResourceType SetResourceType(std::string extension);
@@ -31,16 +31,19 @@ public:
 	bool CleanUp();
 
 	void ImportTexturesAssets();
-	JsonObj CreateMaterialMetas(std::string file);
+	JsonObj CreateMaterialMetas(std::string realDir, std::string metaDir);
+	JsonObj CreateMeshMetas(std::string file);
 	void ImportMeshAssets();
-
-private:
-	Resource* CreateNewResource(const char* assetsFile, ResourceType type);
 
 public:
 	std::string fbxsPath;
+	std::string meshesLibPath;
 	std::string texturesPath;
 	std::string texturesLibPath;
+
+	std::string realDir;
+	std::string metaDir;
+	
 
 	std::vector<std::string> texturesPathlist;
 	std::vector<std::string> FBXsPathlist;
