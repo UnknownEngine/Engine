@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
 	App->camera->LookAt(float3(0, 0, 0));
 
-	showDebugAABB = false;
+	showDebugAABB = true;
 
 	//App->geometry->LoadFbx(buffer, size, file, file);
 	//char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
@@ -72,10 +72,10 @@ update_status ModuleSceneIntro::Update(float dt)
 		if (gameObjectsList.size() > 0) {
 			for (uint i = 0; i < gameObjectsList.size(); i++)
 			{
-				for (uint k = 0; k < gameObjectsList[i]->childs.size(); k++)
+				for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
 				{
 					float3 corners[8];
-					gameObjectsList[i]->childs[k]->GetAABB().GetCornerPoints(corners);
+					gameObjectsList[i]->childs[j]->GetAABB().GetCornerPoints(corners);
 
 					glColor3f(0, 1, 0);
 					glBegin(GL_LINES);
@@ -113,12 +113,55 @@ update_status ModuleSceneIntro::Update(float dt)
 					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
 					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
 
-
-
-
-
 					glEnd();
 					glColor3f(1, 1, 1);
+
+					if (gameObjectsList[i]->childs[j]->childs.size() > 0) {
+						for (uint k = 0; k < gameObjectsList[i]->childs[j]->childs.size(); k++) {
+							float3 corners[8];
+							gameObjectsList[i]->childs[j]->childs[k]->GetAABB().GetCornerPoints(corners);
+
+							glColor3f(0, 1, 0);
+							glBegin(GL_LINES);
+
+							//Botton face
+							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+
+							//Top Face
+							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+							//Left Face
+							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+
+							//Right Face
+							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+
+							glEnd();
+							glColor3f(1, 1, 1);
+						}
+					}
+
 				}
 
 
@@ -135,6 +178,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 {
+	GameObject* _toSelect = nullptr;
 	std::vector<GameObject*> candidates;
 
 	for (uint i = 0; i < gameObjectsList.size(); i++)
@@ -146,6 +190,15 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 				float hit_near, hit_far;
 				if (segment.Intersects(gameObjectsList[i]->childs[j]->GetOBB(), hit_near, hit_far))
 					candidates.push_back(gameObjectsList[i]->childs[j]);
+			}
+			for (uint k = 0; k < gameObjectsList[j]->childs.size(); k++)
+			{
+				if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetAABB()))
+				{
+					float hit_near, hit_far;
+					if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetOBB(), hit_near, hit_far))
+						candidates.push_back(gameObjectsList[i]->childs[j]->childs[k]);
+				}
 			}
 		}
 	}
@@ -174,14 +227,14 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 
 					if (local.Intersects(triangle, nullptr, nullptr))
 					{
-						toSelect = candidates[i];
+						_toSelect = candidates[i];
 						break;
 					}
 				}
 			
 		}
 	}
-	selected = toSelect;
+	selected = _toSelect;
 
 }
 

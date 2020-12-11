@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "ImGui/imgui.h"
 #include <vector>
-
+#include "ImGuizmo/ImGuizmo.h"
 class WindowFrame;
 struct ImGuiWindowClass;
 
@@ -56,6 +56,7 @@ public:
 	ImGuiTextBuffer input_log;
 	bool scroll = false;
 
+	ImGuizmo::OPERATION finalOperation = ImGuizmo::OPERATION::TRANSLATE;
 private:
 	std::vector<WindowFrame*> windowFrames;
 
@@ -113,4 +114,6 @@ private:
 
 
 	std::vector<char*> items;
+
+
 };

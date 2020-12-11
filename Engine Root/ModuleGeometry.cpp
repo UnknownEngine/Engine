@@ -622,9 +622,10 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 
 			UpdateGlobalTransform(transformComponent, gameObject);
 			
-			gameObject->UpdateAABB();
+
 
 			if (mesh) {
+				gameObject->UpdateAABB();
 				//IF inside frustrum
 				if (ContainsAaBox(gameObject->GetAABB(), &App->camera->camera->frustum) == 1) {
 

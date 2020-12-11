@@ -228,6 +228,7 @@ float3x4 ModuleCamera3D::GetViewMatrix()
 
 void ModuleCamera3D::OnMouseClick()
 {
+	if (!ImGui::IsAnyWindowHovered()) {
 		float x = App->input->GetMouseX();
 		float y = App->input->GetMouseY();
 		float2 mouseWorldPosition = ScreenToWorld(float2(x, y));
@@ -235,7 +236,7 @@ void ModuleCamera3D::OnMouseClick()
 		ray = camera->frustum.UnProjectLineSegment(mouseWorldPosition.x, mouseWorldPosition.y);
 
 		App->scene_intro->OnClickSelection(ray);
-	
+	}
 }
 
 float2 ModuleCamera3D::ScreenToWorld(float2 point)

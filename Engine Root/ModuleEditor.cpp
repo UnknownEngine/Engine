@@ -102,6 +102,47 @@ update_status ModuleEditor::PostUpdate(float dt)
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	ImGuizmo::BeginFrame();
+	if (App->scene_intro->selected != nullptr) {
+
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+			finalOperation = ImGuizmo::OPERATION::TRANSLATE;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
+			finalOperation = ImGuizmo::OPERATION::ROTATE;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+			finalOperation = ImGuizmo::OPERATION::SCALE;
+		}
+
+		GameObject* gameObject = App->scene_intro->selected;
+		float4x4 viewMatrix = App->camera->camera->frustum.ViewMatrix();
+		viewMatrix.Transpose();
+		float4x4 projectionMatrix = App->camera->camera->frustum.ProjectionMatrix().Transposed();
+		float4x4 modelProjection = gameObject->GetTransformComponent()->global_transform.Transposed();
+
+		//cornerPos = Vec2(img_corner.x, Engine->window->windowSize.y - img_corner.y - img_size.y);
+		ImGuizmo::SetRect(ImGui::GetMainViewport()->Pos.x, ImGui::GetMainViewport()->Pos.y, ImGui::GetMainViewport()->Size.x, ImGui::GetMainViewport()->Size.y);
+
+		float modelPtr[16];
+		memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+		ImGuizmo::MODE finalMode = ImGuizmo::MODE::WORLD;
+		ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), finalOperation, finalMode, modelPtr);
+
+		if (ImGuizmo::IsUsing())
+		{
+			float4x4 newMatrix;
+			newMatrix.Set(modelPtr);
+			modelProjection = newMatrix.Transposed();
+
+			float4x4 localTransform = gameObject->parent->GetTransformComponent()->transform.Inverted() * modelProjection;
+			gameObject->GetTransformComponent()->transform = localTransform;
+			gameObject->GetTransformComponent()->global_transform = modelProjection;
+
+			localTransform.Decompose(gameObject->GetTransformComponent()->position, gameObject->GetTransformComponent()->rotation, gameObject->GetTransformComponent()->scale);
+		}
+	}
+
 	ImGui::SetNextWindowPos(ImVec2(1024, 100));
 	ImGui::SetNextWindowSize(ImVec2(256, 256));
 
@@ -903,7 +944,7 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 		if (ImGui::TreeNode(gameobject->nameID.c_str()))
 		{
 			if (ImGui::IsItemClicked(0)) {
-				App->scene_intro->toSelect = gameobject;
+				App->scene_intro->selected = gameobject;
 			}
 			
 			for (int i = 0; i < gameobject->childs.size(); i++)
