@@ -209,9 +209,9 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 			if (scene->HasMaterials()) {
 
-				ResourceTexture* r_texture = App->resourceManager->LoadResource();
+				//ResourceTexture* r_texture = App->resourceManager->Reque();
 				MaterialComponent* materialComponent = new MaterialComponent();
-				materialComponent->r_texture = r_texture;
+				//materialComponent->r_texture = r_texture;
 				gameObjectNode->AddComponent(materialComponent);
 			}
 			//if (scene->HasMaterials()) {

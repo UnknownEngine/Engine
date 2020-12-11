@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include <vector>
 #include <string>
+#include <map>
 
 class ModuleResourceManager :public Module {
 public:
@@ -24,7 +25,7 @@ public:
 	int GenerateNewUID();
 
 	const Resource* RequestResource(int uid) const;
-	Resource* RequestResource(int uid);
+	Resource* RequestResource(const char* path);
 	void ReleaseResource(int uid);
 
 	bool CleanUp();
@@ -35,7 +36,9 @@ public:
 	JsonObj CreateMeshMetas(std::string file);
 	void ImportMeshAssets();
 
-	ResourceTexture* LoadResource();
+	void SetFbxList();
+	void SetTexturesList();
+	ResourceTexture* LoadTexture(JsonObj json);
 
 public:
 	std::string fbxsPath;
@@ -49,7 +52,10 @@ public:
 	std::vector<std::string> texturesPathlist;
 	std::vector<std::string> FBXsPathlist;
 	std::vector<std::string> materialsList;
+	std::vector<std::string> fbxList;
+	std::vector<std::string> textureList;
 
+	std::map<int, Resource*> resourceMap;
 };
 
 

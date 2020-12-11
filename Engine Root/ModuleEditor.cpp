@@ -82,6 +82,7 @@ bool ModuleEditor::Start()
 	ImGuiIO& io = ImGui::GetIO();
 
 	App->fsystem->DiscoverFiles("", uselessFiles, rootFolders);
+	App->fsystem->DiscoverFiles("Assets", uselessFiles, assetFolders);
 
 	return true;
 }
@@ -929,7 +930,7 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 	if (gameobject != NULL)
 	{
 
-		if (ImGui::TreeNode(gameobject->nameID.c_str()))
+		if (ImGui::TreeNodeEx(gameobject->nameID.c_str(),ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_None))
 		{
 			if (ImGui::IsItemClicked(0)) {
 				App->scene_intro->selected = gameobject;
@@ -952,41 +953,138 @@ void ModuleEditor::CreateHierarchy(GameObject* gameobject)
 
 void ModuleEditor::CreateFileInspector()
 {
+	//ImGui::ShowDemoWindow();
 	std::string assets = "Assets";
 	ImGui::Begin("Files");
 
-	for (int i = 0; i < rootFolders.size(); i++)
+	if (ImGui::TreeNode(rootFolders[0].c_str())) {
+
+		for (uint i = 0; i < assetFolders.size(); i++)
+		{
+			if (ImGui::TreeNode(assetFolders[i].c_str()))
+			{
+				// FBX //
+				if (i == 0) {
+					ShowFbxList(i);
+				}
+				// TEXTURES //
+				if (i == 1) {
+					ShowTexturesList(i);
+				}
+				ImGui::TreePop();
+
+			}
+		}
+
+		ImGui::TreePop();
+	}
+	
+
+	//for (uint i = 0; i < rootFolders.size(); i++)
+	//{
+
+	//	bool open1 = ImGui::TreeNode(((void*)(intptr_t)i,rootFolders[i].c_str()));
+	//	if (ImGui::IsItemClicked(0)) {
+	//		LOG("%s, %d",rootFolders[i].c_str(),i);
+	//		node_clicked = i;
+	//	}
+	//	if (open1 && node_clicked == 1) 
+	//	{
+	//		
+	//		if (node_clicked == 1) {
+	//			for (uint j = 0; j < assetFolders.size(); j++)
+	//			{
+	//				bool open2 = ImGui::TreeNode(((void*)(intptr_t)j, assetFolders[j].c_str()));
+	//				if (open2) {
+
+	//					ImGui::TreePop();
+	//				}
+	//			}
+	//		}
+
+	//		ImGui::TreePop();
+	//	}
+	//			
+	//}
+	//for (int i = 0; i < rootFolders.size(); i++)
+	//{
+	//	if (ImGui::TreeNode(rootFolders.at(i).c_str()))
+	//	{
+	//		if (ImGui::IsItemClicked(0)) {
+	//			showAssets = !showAssets;
+	//		}
+	//		if (showAssets)
+	//		{
+	//			if (assetFolders.size() <= 0) return;
+	//			for (int j=0;j<assetFolders.size(); j++)
+	//			{
+	//				if (ImGui::TreeNode(assetFolders.at(j).c_str()))
+	//				{
+	//					if (j == 0)
+	//					{
+	//						ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	//					}
+	//					ImGui::TreePop();
+	//				}
+	//			}
+	//		}
+	//		if (i == 0)
+	//		{
+	//			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	//		}
+	//		ImGui::TreePop();
+	//	}
+	//	
+	//	
+	//}
+	ImGui::End();
+}
+
+void ModuleEditor::ShowTexturesList(const uint& i)
+{
+	for (uint j = 0; j < App->resourceManager->textureList.size(); j++)
 	{
-		if (ImGui::TreeNode(rootFolders.at(i).c_str()))
+		std::string name = App->resourceManager->textureList.at(j);
+		std::string finalName = name.erase(name.size() - 4);
+		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
 		{
 			if (ImGui::IsItemClicked(0)) {
-				showAssets = !showAssets;
-			}
-			if (showAssets)
-			{
-				App->fsystem->DiscoverFiles("Assets", uselessFiles, assetFolders);
-				for (int j=0;j<assetFolders.size(); j++)
-				{
-					if (ImGui::TreeNode(assetFolders.at(j).c_str()))
-					{
-						if (j == 0)
-						{
-							ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+				if (App->scene_intro->selected != nullptr) {
+					ResourceTexture* r_texture = App->scene_intro->selected->GetMaterialComponent()->r_texture;
+					if (r_texture != nullptr) {
+						r_texture->instances--;
+						if (r_texture->instances <= 0) {
+							App->resourceManager->resourceMap.erase(r_texture->UID);
 						}
-						ImGui::TreePop();
 					}
+					App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str()));
 				}
-			}
-			if (i == 0)
-			{
-				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
 			}
 			ImGui::TreePop();
 		}
-		
-		
 	}
-	ImGui::End();
+}
+
+void ModuleEditor::ShowFbxList(const uint& i)
+{
+	for (uint j = 0; j < App->resourceManager->fbxList.size(); j++)
+	{
+		std::string name = App->resourceManager->fbxList.at(j);
+		std::string finalName = name.erase(name.size() - 4);
+		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
+		{
+			if (ImGui::IsItemClicked(0)) {
+				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+				if (App->scene_intro->selected != nullptr) {
+					//App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str()));
+				}
+
+			}
+			ImGui::TreePop();
+		}
+	}
 }
 
 void ModuleEditor::HyperLink(const char* tooltip, const char* url)

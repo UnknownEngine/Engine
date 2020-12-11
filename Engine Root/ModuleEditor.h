@@ -46,6 +46,10 @@ private:
 
 	void CreateFileInspector();
 
+	void ShowTexturesList(const uint& i);
+
+	void ShowFbxList(const uint& i);
+
 	void HyperLink(const char* tooltip, const char* url);
 
 public:
@@ -115,5 +119,5 @@ private:
 
 	std::vector<char*> items;
 
-
+	int node_clicked = -1;
 };

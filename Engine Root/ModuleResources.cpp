@@ -24,7 +24,8 @@ bool ModuleResourceManager::Start()
 
 	ImportTexturesAssets();
 	ImportMaterialsList();
-	
+	SetFbxList();
+	SetTexturesList();
 	//LoadResource();
 
 	return true;
@@ -101,10 +102,28 @@ const Resource* ModuleResourceManager::RequestResource(int uid) const
 	return nullptr;
 }
 
-Resource* ModuleResourceManager::RequestResource(int uid)
+Resource* ModuleResourceManager::RequestResource(const char* path)
 {
+	char* buffer;
+	App->fsystem->ReadFile(path, &buffer);
+	JsonObj meta(buffer);
 
-	return nullptr;
+	int uid = meta.GetInt("UID");
+
+	std::map<int, Resource*>::iterator resourceIt = resourceMap.find(uid);
+	if (resourceIt != resourceMap.end())
+	{
+		resourceIt->second->instances++;
+		return resourceIt->second;
+	}
+
+	
+	//Cargar FBX ("Doble click) cargas .meta
+	//encontrar UID en el .meta
+	//Compruebo si está en el map sino lo está se crea de nuevo y se añade en el map
+	//Si lo está se devuelve el resource
+
+	return LoadTexture(meta);
 }
 
 void ModuleResourceManager::ReleaseResource(int uid)
@@ -143,13 +162,13 @@ void ModuleResourceManager::ImportMaterialsList()
 
 void ModuleResourceManager::ImportMeshAssets()
 {
-	std::vector<std::string> filesDirs;
-	App->fsystem->DiscoverFiles("Assets/FBXs", FBXsPathlist, filesDirs);
+	//std::vector<std::string> filesDirs;
+	//App->fsystem->DiscoverFiles("Assets/FBXs", FBXsPathlist, filesDirs);
 
-	for (int i = 0; i < FBXsPathlist.size(); i++)
-	{
-		//ImportFile(FBXsPathlist.at(i), CreateMaterialMetas(FBXsPathlist.at(i)));
-	}
+	//for (int i = 0; i < FBXsPathlist.size(); i++)
+	//{
+	//	//ImportFile(FBXsPathlist.at(i), CreateMaterialMetas(FBXsPathlist.at(i)));
+	//}
 }
 
 
@@ -193,23 +212,45 @@ JsonObj ModuleResourceManager::CreateMeshMetas(std::string file)
 }
 
 
-ResourceTexture* ModuleResourceManager::LoadResource()
+void ModuleResourceManager::SetFbxList()
 {
-	char* buffer;
-	App->fsystem->ReadFile("Assets/Textures/Baker_house.mta", &buffer);
+	//std::vector<std::string> filesDirs;
+	//App->fsystem->DiscoverFiles("Assets/FBXs", fbxList, filesDirs);
+	App->fsystem->GetAllFilesWithExtension("Assets/FBXs", "fbx", fbxList);
+	App->fsystem->GetAllFilesWithExtension("Assets/FBXs", "FBX", fbxList);
+}
 
-	JsonObj meta(buffer);
+void ModuleResourceManager::SetTexturesList()
+{
+	//std::vector<std::string> filesDirs;
+	//App->fsystem->DiscoverFiles("Assets/FBXs", fbxList, filesDirs);
+	App->fsystem->GetAllFilesWithExtension("Assets/Textures", "tga", textureList);
+	App->fsystem->GetAllFilesWithExtension("Assets/Textures", "png", textureList);
+	App->fsystem->GetAllFilesWithExtension("Assets/Textures", "DAE", textureList);
+	App->fsystem->GetAllFilesWithExtension("Assets/Textures", "mtl", textureList);
+}
 
-	int uid = meta.GetInt("UID");
-	LOG("%i", uid);
+ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
+{
+	//char* buffer;
+	//App->fsystem->ReadFile("Assets/Textures/Baker_house.mta", &buffer);
+	//JsonObj meta(buffer);
 
+	int uid = json.GetInt("UID");
+
+	//Request Resource UID
+
+
+	//IF NO RESOURCE
 	char* materialBuffer;
-	uint size = App->fsystem->ReadFile(meta.GetString("Library path"), &materialBuffer);
+	uint size = App->fsystem->ReadFile(json.GetString("Library path"), &materialBuffer);
 
 	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
 
 	App->geometry->CreateTextureBuffer(r_texture);
 	App->geometry->LoadOurMaterial(materialBuffer, r_texture, size);
-	App->geometry->LoadTexture(meta.GetString("Asset path"), r_texture);
+	App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
+	r_texture->instances++;
+	resourceMap[uid] = r_texture;
 	return r_texture;
 }

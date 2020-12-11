@@ -30,10 +30,10 @@ public:
 	virtual void Save(JsonObj& config) const;
 	virtual void Load(JsonObj& config);
 
+	uint instances = 0;
 protected:
 	int UID = 0;
 	std::string fileOnAssets;
 	std::string fileOnLibrary;
-
 	ResourceType type = unknown;
 };
