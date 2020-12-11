@@ -25,7 +25,7 @@ bool ModuleResourceManager::Start()
 	ImportTexturesAssets();
 	ImportMaterialsList();
 	
-	LoadResource();
+	//LoadResource();
 
 	return true;
 }
@@ -208,8 +208,8 @@ ResourceTexture* ModuleResourceManager::LoadResource()
 
 	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
 
+	App->geometry->CreateTextureBuffer(r_texture);
 	App->geometry->LoadOurMaterial(materialBuffer, r_texture, size);
-
+	App->geometry->LoadTexture(meta.GetString("Asset path"), r_texture);
 	return r_texture;
-
 }
