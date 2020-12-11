@@ -195,6 +195,11 @@ double JsonArray::GetDouble(int index)
 	return json_array_get_number(array, index);
 }
 
+int JsonArray::GetInt(int index)
+{
+	return json_array_get_number(array, index);
+}
+
 float3 JsonArray::GetFloat3(int index)
 {
 	float3 ret;
@@ -217,6 +222,16 @@ Quat JsonArray::GetQuaternion(int index)
 
 	return ret;
 
+}
+
+std::vector<int> JsonArray::GetUIDs(int index)
+{
+	std::vector<int> UIDs;
+	for (index; index < elements; index++)
+	{
+		UIDs.push_back(GetInt(index));
+	}
+	return UIDs;
 }
 
 void JsonArray::AddObject(JsonObj& object)

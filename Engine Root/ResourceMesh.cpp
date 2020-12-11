@@ -25,10 +25,11 @@ void ResourceMesh::Load(JsonObj& config)
 
 void ResourceMesh::CreateAABB()
 {
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((float3*)vertices, num_vertices);
 }
 
 AABB& ResourceMesh::GetAABB()
 {
-	// TODO: insertar una instrucción return aquí
-	return AABB();
+	return aabb;
 }

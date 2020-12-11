@@ -6,6 +6,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "ResourceTexture.h"
+#include "ResourceMesh.h"
 
 #include "MeshComponent.h"
 #include "TransformComponent.h"
@@ -164,56 +165,56 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 	if (node->mNumMeshes > 0) {
 		LOG("I HAVE MESHES!");
-		if (node->mNumMeshes > 0) {
-			bool ret = false;
+		//if (node->mNumMeshes > 0) {
+		//	bool ret = false;
 
-			//Get AI data
-			MeshComponent* ourMesh = new MeshComponent();
-			aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
-			ourMesh->name = node->mName.C_Str();
-			ourMesh->UID = LCG().Int();
-			ourMesh->path = realDir;
+		//	//Get AI data
+		//	MeshComponent* ourMesh = new MeshComponent();
+		//	aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+		//	ourMesh->name = node->mName.C_Str();
+		//	ourMesh->UID = LCG().Int();
+		//	ourMesh->path = realDir;
 
-			//Copy Vertices
-			LoadVertices(aimesh, ourMesh);
+		//	//Copy Vertices
+		//	LoadVertices(aimesh, ourMesh);
 
-			//Copy Faces
-			ret = CheckAndLoadFaces(aimesh, ourMesh);
+		//	//Copy Faces
+		//	ret = CheckAndLoadFaces(aimesh, ourMesh);
 
-			//Copy Textures
-			ret = CheckAndLoadTexCoords(aimesh, ourMesh);
+		//	//Copy Textures
+		//	ret = CheckAndLoadTexCoords(aimesh, ourMesh);
 
-			//Copy Normals
-			ret = CheckAndLoadNormals(aimesh, ourMesh);
+		//	//Copy Normals
+		//	ret = CheckAndLoadNormals(aimesh, ourMesh);
 
-			//Create AABB
-			ourMesh->CreateAABB();
+		//	//Create AABB
+		//	ourMesh->CreateAABB();
 
-			//Gets size of mesh and stores attributes on the meshBuffer
-			ourMesh->size = GetMeshSize(ourMesh);
-			ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
-			
-			//Write and read on/from library
-			App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
-			App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
+		//	//Gets size of mesh and stores attributes on the meshBuffer
+		//	ourMesh->size = GetMeshSize(ourMesh);
+		//	ourMesh->meshBuffer = SaveOurMesh(ourMesh, ourMesh->size);
+		//	
+		//	//Write and read on/from library
+		//	App->fsystem->WriteFile((meshesPath+ourMesh->name).c_str(), ourMesh->meshBuffer, ourMesh->size);
+		//	App->fsystem->ReadFile((meshesPath + ourMesh->name).c_str(), &ourMesh->meshBuffer);
 
-			//Loads mesh attributes from meshBuffer
-			LoadOurMesh(ourMesh->meshBuffer, ourMesh);
+		//	//Loads mesh attributes from meshBuffer
+		//	LoadOurMesh(ourMesh->meshBuffer, ourMesh);
 
-			//Post Loading
-			if (ret)
-			{
-				gameObjectNode->AddComponent(ourMesh);
-				CreateBuffer(ourMesh);
-			}
+		//	//Post Loading
+		//	if (ret)
+		//	{
+		//		gameObjectNode->AddComponent(ourMesh);
+		//		CreateBuffer(ourMesh);
+		//	}
 
-			if (scene->HasMaterials()) {
+		//	if (scene->HasMaterials()) {
 
-				//ResourceTexture* r_texture = App->resourceManager->Reque();
-				MaterialComponent* materialComponent = new MaterialComponent();
-				//materialComponent->r_texture = r_texture;
-				gameObjectNode->AddComponent(materialComponent);
-			}
+		//		//ResourceTexture* r_texture = App->resourceManager->Reque();
+		//		MaterialComponent* materialComponent = new MaterialComponent();
+		//		//materialComponent->r_texture = r_texture;
+		//		gameObjectNode->AddComponent(materialComponent);
+		//	}
 			//if (scene->HasMaterials()) {
 			//	//Gets AI data
 			//	aiMaterial* material = scene->mMaterials[aimesh->mMaterialIndex];
@@ -259,12 +260,13 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 			//		gameObjectNode->AddComponent(materialComponent);
 			//}	
-			CreateTransformComponent(node, gameObjectNode);
+			//CreateTransformComponent(node, gameObjectNode);
 		}	 
-	}
+}
+	
 
 
-	if (node->mNumChildren > 0) {
+	/*if (node->mNumChildren > 0) {
 		GameObject* newGameObject = new GameObject(std::string(node->mChildren[0]->mName.C_Str()),gameObjectNode);
 		gameObjectNode->childs.push_back(newGameObject);
 		LOG("GOT %d children", node->mNumChildren)
@@ -272,8 +274,8 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 			{
 				CheckNodeChilds(node->mChildren[i], newGameObject, scene, realDir);
 			}
-	}
-}
+	}*/
+
 
 
 //  ----------------------------------------------------------------------------------------------
@@ -282,7 +284,7 @@ void ModuleGeometry::CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, c
 
 
 //  ------------------------------------------VERTEX LOAD-----------------------------------
-void ModuleGeometry::LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh)
+void ModuleGeometry::LoadVertices(aiMesh* aimesh, ResourceMesh* ourMesh)
 {
 	ourMesh->num_vertices = aimesh->mNumVertices;
 	ourMesh->vertices = new float[ourMesh->num_vertices * 3];
@@ -291,7 +293,7 @@ void ModuleGeometry::LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh)
 }
 
 //  -------------------------------------INDICES LOAD-----------------------------------
-bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh)
+bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, ResourceMesh* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasFaces())
@@ -313,7 +315,7 @@ bool ModuleGeometry::CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh)
 }
 
 //  ------------------------------------NORMALS LOAD-------------------------------------
-bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh)
+bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, ResourceMesh* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasNormals())
@@ -328,7 +330,7 @@ bool ModuleGeometry::CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh)
 }
 
 //  ------------------------------------TEXTURE COORDS LOAD------------------------------
-bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh)
+bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, ResourceMesh* ourMesh)
 {
 	bool ret = false;
 	if (aimesh->HasTextureCoords(0))
@@ -346,7 +348,7 @@ bool ModuleGeometry::CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMes
 }
 
 //  ---------------------------------MESH BUFFER CREATE-----------------------------------
-void ModuleGeometry::CreateBuffer(MeshComponent* mesh)
+void ModuleGeometry::CreateBuffer(ResourceMesh* mesh)
 {
 	//Vertices buffer
 	mesh->id_vertices = 0;
@@ -456,6 +458,97 @@ void ModuleGeometry::CreateCheckerTextureBuffer()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::string metaDir)
+{
+	JsonArray meshArray;
+	JsonArray childsArray;
+
+	bool createMeshesarray = true;
+	bool createChildsarray = true;
+
+	char* buffer;
+	uint size = App->fsystem->Load(realDir.c_str(), &buffer);
+	const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+
+	if (scene == nullptr) {
+		App->editor->AddLog("Error loading scene");
+	}
+	else
+	{
+		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
+		{
+			aiNode* node = scene->mRootNode->mChildren[i];
+			std::string nodeName = node->mName.C_Str();
+
+			bool dummyFound = true;
+			while (dummyFound)
+			{
+				dummyFound = false;
+				if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
+					node = node->mChildren[0];
+					nodeName = node->mName.C_Str();
+					dummyFound = true;
+				}
+				if (createChildsarray)
+				{
+					childsArray = meta.AddArray("Childs UID");
+					createChildsarray = !createChildsarray;
+				}
+				childsArray.AddInt(App->resourceManager->GenerateNewUID());
+			}
+			if (node->mNumMeshes > 0) {
+
+				if (createMeshesarray) {
+					meshArray = meta.AddArray("Meshes UID");
+					createMeshesarray = !createMeshesarray;
+				}
+				ResourceMesh* ourMesh = new ResourceMesh(App->resourceManager->GenerateNewUID(), ResourceType::mesh);
+				aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+
+				ourMesh->name = node->mName.C_Str();
+				meshArray.AddInt(ourMesh->UID);
+
+				if (!CheckuidOnLib(ourMesh->UID)) {
+					ourMesh->path = realDir;
+
+					App->geometry->LoadVertices(aimesh, ourMesh);
+
+
+					App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
+
+
+					App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
+
+
+					App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
+
+					ourMesh->size = App->geometry->GetMeshSize(ourMesh);
+					ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
+
+					App->fsystem->WriteFile((App->resourceManager->meshesLibPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+				}
+				delete ourMesh;
+			}
+
+		}
+		char* metaBuffer = nullptr;
+		uint sizeJson = meta.Save(&metaBuffer);
+		App->fsystem->WriteFile(metaDir.c_str(), metaBuffer, sizeJson);
+		aiReleaseImport(scene);
+	}
+
+}
+
+bool ModuleGeometry::CheckuidOnLib(uint UID)
+{
+	bool ret = false;
+	std::string libDir = "";
+	libDir = App->resourceManager->meshesLibPath + std::to_string(UID);
+
+	ret = App->fsystem->CheckIfExists(libDir);
+	return ret;
+}
+
 void ModuleGeometry::ImportTexture(JsonObj meta, ResourceTexture* resourceTexture)
 {
 	if (!App->fsystem->Exists(meta.GetString("Library path")))
@@ -481,7 +574,7 @@ void ModuleGeometry::ImportTexture(JsonObj meta, ResourceTexture* resourceTextur
 
 
 //  ---------------------------------------------SIZE GETTERS-------------------------------------
-uint ModuleGeometry::GetMeshSize(MeshComponent* ourMesh)
+uint ModuleGeometry::GetMeshSize(ResourceMesh* ourMesh)
 {
 	uint ranges[4];
 	return (sizeof(ranges) + (sizeof(uint) * ourMesh->num_indices) + (sizeof(float) * ourMesh->num_vertices * 3) + (sizeof(float) * ourMesh->num_normals * 3) + (sizeof(float) * ourMesh->num_tex_coords * 2));
@@ -494,7 +587,7 @@ uint ModuleGeometry::GetMatSize()
 }
 
 //  -----------------------------------------MESH SAVE & LOAD------------------------------------
-char* ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, uint size)
+char* ModuleGeometry::SaveOurMesh(ResourceMesh* ourMesh, uint size)
 {
 	uint ranges[4] ;
 
@@ -527,7 +620,7 @@ char* ModuleGeometry::SaveOurMesh(MeshComponent* ourMesh, uint size)
 	return buffer;
 }
 
-uint ModuleGeometry::LoadOurMesh(char* filebuffer, MeshComponent* ourMesh)
+uint ModuleGeometry::LoadOurMesh(char* filebuffer, ResourceMesh* ourMesh)
 {
 	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
 	char* cursor = filebuffer;
@@ -668,15 +761,15 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh, MaterialComponent* material)
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	//Vertices
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->r_mesh->id_vertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//normals
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->r_mesh->id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
 
 	//UVs
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_coords);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->r_mesh->id_coords);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	//Textures
@@ -695,19 +788,19 @@ void ModuleGeometry::DrawMesh(MeshComponent* mesh, MaterialComponent* material)
 	}
 
 	//Indices
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_indices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->r_mesh->id_indices);
 
 	//Drawing
-	glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, mesh->r_mesh->num_indices, GL_UNSIGNED_INT, NULL);
 
-	if (mesh->showNormalsVertices) {
+	if (mesh->r_mesh->showNormalsVertices) {
 		glColor3f(0, 1, 0);
 		glBegin(GL_LINES);
 		float normalLenght = 0.1f;
-		for (int i = 0; i < mesh->num_normals * 3; i += 3)
+		for (int i = 0; i < mesh->r_mesh->num_normals * 3; i += 3)
 		{
-			glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-			glVertex3f(mesh->vertices[i] + mesh->normals[i] * normalLenght, mesh->vertices[i + 1] + mesh->normals[i + 1] * normalLenght, mesh->vertices[i + 2] + mesh->normals[i + 2] * normalLenght);
+			glVertex3f(mesh->r_mesh->vertices[i], mesh->r_mesh->vertices[i + 1], mesh->r_mesh->vertices[i + 2]);
+			glVertex3f(mesh->r_mesh->vertices[i] + mesh->r_mesh->normals[i] * normalLenght, mesh->r_mesh->vertices[i + 1] + mesh->r_mesh->normals[i + 1] * normalLenght, mesh->r_mesh->vertices[i + 2] + mesh->r_mesh->normals[i + 2] * normalLenght);
 		}
 
 		glEnd();

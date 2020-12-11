@@ -216,16 +216,16 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 		{
 				LineSegment local = segment;
 				local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
-				for (uint v = 0; v < mesh->num_indices; v += 3)
+				for (uint v = 0; v < mesh->r_mesh->num_indices; v += 3)
 				{
-					uint indexA = mesh->indices[v] * 3;
-					float3 a(&mesh->vertices[indexA]);
+					uint indexA = mesh->r_mesh->indices[v] * 3;
+					float3 a(&mesh->r_mesh->vertices[indexA]);
 
-					uint indexB = mesh->indices[v + 1] * 3;
-					float3 b(&mesh->vertices[indexB]);
+					uint indexB = mesh->r_mesh->indices[v + 1] * 3;
+					float3 b(&mesh->r_mesh->vertices[indexB]);
 
-					uint indexC = mesh->indices[v + 2] * 3;
-					float3 c(&mesh->vertices[indexC]);
+					uint indexC = mesh->r_mesh->indices[v + 2] * 3;
+					float3 c(&mesh->r_mesh->vertices[indexC]);
 
 					Triangle triangle(a, b, c);
 

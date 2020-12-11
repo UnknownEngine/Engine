@@ -133,7 +133,7 @@ void GameObject::UpdateAABB()
 	if (mesh)
 	{
 		//Generate global OBB
-		obb = mesh->GetAABB();
+		obb = mesh->r_mesh->GetAABB();
 		TransformComponent* t = GetTransformComponent();
 		obb.Transform(t->global_transform);
 

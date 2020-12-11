@@ -64,15 +64,20 @@ int ModuleResourceManager::ImportFile(std::string file, JsonObj meta)
 		switch (SetResourceType(ext.c_str()))
 		{
 		case ResourceType::texture:
+		{
 			ResourceTexture* newResource = new ResourceTexture(meta.GetInt("UID"), ResourceType::texture);
 			App->geometry->ImportTexture(meta, newResource);
 			ret = newResource->UID;
 			delete newResource;
 			break;
-		//case ResourceType::mesh:
-		//	//ResourceMesh* newmeshResource = new ResourceMesh(meta.GetInt("UID"), ResourceType::mesh);
-		//	break;
-
+		}
+		case ResourceType::mesh:
+		{
+			App->geometry->ImportFBXMeshes(meta, realDir, metaDir);
+			break;
+		}
+		default:
+			break;
 		}
 		
 	}
@@ -162,13 +167,18 @@ void ModuleResourceManager::ImportMaterialsList()
 
 void ModuleResourceManager::ImportMeshAssets()
 {
-	//std::vector<std::string> filesDirs;
-	//App->fsystem->DiscoverFiles("Assets/FBXs", FBXsPathlist, filesDirs);
+	std::vector<std::string> filesDirs;
+	App->fsystem->DiscoverFiles("Assets/FBXs", FBXsPathlist, filesDirs);
 
-	//for (int i = 0; i < FBXsPathlist.size(); i++)
-	//{
-	//	//ImportFile(FBXsPathlist.at(i), CreateMaterialMetas(FBXsPathlist.at(i)));
-	//}
+	for (int i = 0; i < FBXsPathlist.size(); i++)
+	{
+		realDir = fbxsPath + FBXsPathlist.at(i);
+		metaDir = App->fsystem->GetMetaPath(realDir);
+		if (!App->fsystem->CheckIfExists(metaDir))
+		{
+			ImportFile(FBXsPathlist.at(i), CreateMeshMetas(realDir, metaDir));
+		}
+	}
 }
 
 
@@ -187,28 +197,16 @@ JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::str
 		return fileData;
 }
 
-JsonObj ModuleResourceManager::CreateMeshMetas(std::string file)
+JsonObj ModuleResourceManager::CreateMeshMetas(std::string realDir, std::string metaDir)
 {
-	bool createMeshesArray = true;
-
-	std::string realDir = fbxsPath + file;
-	std::string metaDir = App->fsystem->GetMetaPath(realDir);
-
-
-	if (!App->fsystem->CheckIfExists(metaDir))
-	{
 		JsonObj fileData;
 		JsonArray meshArray;
 
 		fileData.AddString("Asset Path", realDir.c_str());
 		fileData.AddInt("UID", LCG().Int());
+		fileData.AddString("Library path", ((App->resourceManager->meshesLibPath + std::to_string(fileData.GetInt("UID"))).c_str()));
 
-		//std::string libPath = "Library/Models/";
-		//libPath += std::to_string(fileData.GetInt("UID"));
-		////fileData.AddString("Library path:", libPath.c_str());
-
-}
-	return JsonObj();
+	return fileData;
 }
 
 

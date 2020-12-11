@@ -33,7 +33,7 @@ public:
 	void ImportTexturesAssets();
 	void ImportMaterialsList();
 	JsonObj CreateMaterialMetas(std::string realDir, std::string metaDir);
-	JsonObj CreateMeshMetas(std::string file);
+	JsonObj CreateMeshMetas(std::string realDir, std::string metaDir);
 	void ImportMeshAssets();
 
 	void SetFbxList();

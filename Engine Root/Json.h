@@ -59,8 +59,10 @@ public:
 	JsonObj GetObjectInArray(const char* name);
 	JsonObj GetObjectAt(int index);
 	double GetDouble(int index);
+	int GetInt(int index);
 	float3 GetFloat3(int index);
 	Quat GetQuaternion(int index);
+	std::vector<int>GetUIDs(int index);
 
 	void AddObject(JsonObj& object);
 	void AddInt(int num);

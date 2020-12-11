@@ -14,6 +14,7 @@
 #define CHECKER_HEIGHT 128
 #define CHECKER_WIDTH 128
 
+class ResourceMesh;
 class ResourceTexture;
 class MeshComponent;
 class MaterialComponent;
@@ -36,21 +37,23 @@ public:
 
 	void CheckNodeChilds(aiNode* node, GameObject* gameObjectNode, const aiScene* scene, std::string realDir);
 
-	void LoadVertices(aiMesh* aimesh, MeshComponent* ourMesh);
-	bool CheckAndLoadFaces(aiMesh* aimesh, MeshComponent* ourMesh);
-	bool CheckAndLoadNormals(aiMesh* aimesh, MeshComponent* ourMesh);
-	bool CheckAndLoadTexCoords(aiMesh* aimesh, MeshComponent* ourMesh);
-	void CreateBuffer(MeshComponent* mesh);
+	void LoadVertices(aiMesh* aimesh, ResourceMesh* ourMesh);
+	bool CheckAndLoadFaces(aiMesh* aimesh, ResourceMesh* ourMesh);
+	bool CheckAndLoadNormals(aiMesh* aimesh, ResourceMesh* ourMesh);
+	bool CheckAndLoadTexCoords(aiMesh* aimesh, ResourceMesh* ourMesh);
+	void CreateBuffer(ResourceMesh* mesh);
 
 	bool LoadTexture(const char* path, ResourceTexture* resource);
 	void CreateTextureBuffer(ResourceTexture* resource);
 	void CreateCheckerTextureBuffer();
 
 	void ImportTexture(JsonObj meta, ResourceTexture* resourceTexture);
+	void ImportFBXMeshes(JsonObj meta, std::string realDir, std::string metaDir);
+	bool CheckuidOnLib(uint UID);
 
-	uint  GetMeshSize(MeshComponent* ourMesh);
-	char* SaveOurMesh(MeshComponent* ourMesh, uint size);
-	uint LoadOurMesh(char* filebuffer, MeshComponent* ourMesh);
+	uint  GetMeshSize(ResourceMesh* ourMesh);
+	char* SaveOurMesh(ResourceMesh* ourMesh, uint size);
+	uint LoadOurMesh(char* filebuffer, ResourceMesh* ourMesh);
 
 	uint GetMatSize();
 	char* SaveOurMaterial(ResourceTexture* resource, uint size);

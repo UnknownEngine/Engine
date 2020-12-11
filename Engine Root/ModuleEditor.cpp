@@ -542,7 +542,7 @@ void ModuleEditor::DrawInspector()
 
 			ImGui::Button("Change Source", ImVec2(200, 20));
 			if (ImGui::Button("Show normals vertices", ImVec2(200, 20))) {
-				App->scene_intro->selected->GetMeshComponent()->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->showNormalsVertices;
+				App->scene_intro->selected->GetMeshComponent()->r_mesh->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->r_mesh->showNormalsVertices;
 			}
 			ImGui::Text("");
 
@@ -686,10 +686,10 @@ void ModuleEditor::FillInspector(GameObject* selected)
 	}
 	if (meshComponent != nullptr)
 	{
-		numvertices = meshComponent->num_vertices;
-		numnormals = meshComponent->num_normals;
-		meshname = meshComponent->name;
-		meshpath = meshComponent->path;
+		numvertices = meshComponent->r_mesh->num_vertices;
+		numnormals = meshComponent->r_mesh->num_normals;
+		meshname = meshComponent->r_mesh->name;
+		meshpath = meshComponent->r_mesh->path;
 		hasMesh = true;
 	}
 	else

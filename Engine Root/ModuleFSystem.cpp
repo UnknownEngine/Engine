@@ -433,106 +433,106 @@ std::string M_FileSystem::GetMetaPath(std::string realDir)
 //
 //}
 
-void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
-{
-	bool createMeshesArray = true;
-
-	std::string fullDir = "Assets/FBXs/";
-	fullDir += fileName;
-
-	std::string metaDir = fullDir;
-	metaDir.erase(metaDir.size() - 4);
-	
-	std::string meta = ".met";
-	metaDir += meta;
-
-	if (!PHYSFS_exists((metaDir).c_str()))
-	{
-		JsonObj fileData;
-		JsonArray meshArray;
-
-		fileData.AddString("Asset Path", fullDir.c_str());
-		fileData.AddInt("UID", LCG().Int());
-
-		std::string libPath = "Library/Models/";
-		libPath += std::to_string(fileData.GetInt("UID"));
-		fileData.AddString("Library path:", libPath.c_str());
-
-		uint size = Load(fullDir.c_str(), &buffer);
-		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
-
-		if (scene == nullptr) {
-			App->editor->AddLog("Error loading scene");
-		}
-		else
-		{
-			for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
-			{
-				aiNode* node = scene->mRootNode->mChildren[i];
-				std::string nodeName = node->mName.C_Str();
-
-				bool dummyFound = true;
-
-				while (dummyFound)
-				{
-					dummyFound = false;
-
-					if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
-						LOG("Has Assimp fbx child");
-
-						node = node->mChildren[0];
-						nodeName = node->mName.C_Str();
-						dummyFound = true;
-					}
-				}
-				if (node->mNumMeshes > 0) {
-					LOG("I HAVE MESHES!");
-					if (node->mNumMeshes > 0) {
-						bool ret = false;
-
-						if (createMeshesArray)
-						{
-							meshArray = fileData.AddArray("Meshes UID");
-							createMeshesArray = !createMeshesArray;
-						}
-						
-						std::string meshesPath = "Library/Meshes/";
-						MeshComponent* ourMesh = new MeshComponent();
-						aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
-
-						ourMesh->name = node->mName.C_Str();
-						ourMesh->UID = LCG().Int();
-						meshArray.AddInt(ourMesh->UID);
-						ourMesh->path = fullDir;
-
-						App->geometry->LoadVertices(aimesh, ourMesh);
-
-						
-						App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
-
-						
-						App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
-
-						
-						App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
-
-						ourMesh->size = App->geometry->GetMeshSize(ourMesh);
-						ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
-
-						App->fsystem->WriteFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
-
-						
-					}
-				}
-
-			}
-			char* JsonBuffer = nullptr;
-			uint sizeJson = fileData.Save(&JsonBuffer);
-			WriteFile(metaDir.c_str(), JsonBuffer, sizeJson);
-			aiReleaseImport(scene);
-		}
-	}
-}
+//void M_FileSystem::LoadFBXMeshes(std::string fileName, char* buffer)
+//{
+//	bool createMeshesArray = true;
+//
+//	std::string fullDir = "Assets/FBXs/";
+//	fullDir += fileName;
+//
+//	std::string metaDir = fullDir;
+//	metaDir.erase(metaDir.size() - 4);
+//	
+//	std::string meta = ".met";
+//	metaDir += meta;
+//
+//	if (!PHYSFS_exists((metaDir).c_str()))
+//	{
+//		JsonObj fileData;
+//		JsonArray meshArray;
+//
+//		fileData.AddString("Asset Path", fullDir.c_str());
+//		fileData.AddInt("UID", LCG().Int());
+//
+//		std::string libPath = "Library/Models/";
+//		libPath += std::to_string(fileData.GetInt("UID"));
+//		fileData.AddString("Library path:", libPath.c_str());
+//
+//		uint size = Load(fullDir.c_str(), &buffer);
+//		const aiScene* scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+//
+//		if (scene == nullptr) {
+//			App->editor->AddLog("Error loading scene");
+//		}
+//		else
+//		{
+//			for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
+//			{
+//				aiNode* node = scene->mRootNode->mChildren[i];
+//				std::string nodeName = node->mName.C_Str();
+//
+//				bool dummyFound = true;
+//
+//				while (dummyFound)
+//				{
+//					dummyFound = false;
+//
+//					if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
+//						LOG("Has Assimp fbx child");
+//
+//						node = node->mChildren[0];
+//						nodeName = node->mName.C_Str();
+//						dummyFound = true;
+//					}
+//				}
+//				if (node->mNumMeshes > 0) {
+//					LOG("I HAVE MESHES!");
+//					if (node->mNumMeshes > 0) {
+//						bool ret = false;
+//
+//						if (createMeshesArray)
+//						{
+//							meshArray = fileData.AddArray("Meshes UID");
+//							createMeshesArray = !createMeshesArray;
+//						}
+//						
+//						std::string meshesPath = "Library/Meshes/";
+//						MeshComponent* ourMesh = new MeshComponent();
+//						aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+//
+//						ourMesh->name = node->mName.C_Str();
+//						ourMesh->UID = LCG().Int();
+//						meshArray.AddInt(ourMesh->UID);
+//						ourMesh->path = fullDir;
+//
+//						App->geometry->LoadVertices(aimesh, ourMesh);
+//
+//						
+//						App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
+//
+//						
+//						App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
+//
+//						
+//						App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
+//
+//						ourMesh->size = App->geometry->GetMeshSize(ourMesh);
+//						ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
+//
+//						App->fsystem->WriteFile((meshesPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+//
+//						
+//					}
+//				}
+//
+//			}
+//			char* JsonBuffer = nullptr;
+//			uint sizeJson = fileData.Save(&JsonBuffer);
+//			WriteFile(metaDir.c_str(), JsonBuffer, sizeJson);
+//			aiReleaseImport(scene);
+//		}
+//	}
+//}
 
 void M_FileSystem::SaveScene(char** sceneBuffer)
 {
@@ -742,21 +742,21 @@ void M_FileSystem::SaveMesh(JsonObj component, GameObject* gameObject)
 {
 	MeshComponent* mesh = gameObject->GetMeshComponent();
 
-	component.AddInt("UID", mesh->UID);
-	component.AddString("TYPE", "Mesh");
-	component.AddString("Name", mesh->name.c_str());
-	component.AddString("Path", mesh->path.c_str());
+	//component.AddInt("UID", mesh->UID);
+	//component.AddString("TYPE", "Mesh");
+	//component.AddString("Name", mesh->name.c_str());
+	//component.AddString("Path", mesh->path.c_str());
 
-	component.AddInt("Num vertices", mesh->num_vertices);
-	//component.AddInt("ID Vertices", mesh->id_vertices);
+	//component.AddInt("Num vertices", mesh->num_vertices);
+	////component.AddInt("ID Vertices", mesh->id_vertices);
 
-	component.AddInt("Num indices", mesh->num_indices);
-	//component.AddInt("ID Indices", mesh->id_indices);
+	//component.AddInt("Num indices", mesh->num_indices);
+	////component.AddInt("ID Indices", mesh->id_indices);
 
-	component.AddInt("Num normals", mesh->num_normals);
-	//component.AddInt("ID Normals", mesh->id_normals);
+	//component.AddInt("Num normals", mesh->num_normals);
+	////component.AddInt("ID Normals", mesh->id_normals);
 
-	component.AddInt("Num Texture Coords", mesh->num_tex_coords);
+	//component.AddInt("Num Texture Coords", mesh->num_tex_coords);
 	//component.AddInt("ID Coords", mesh->id_coords);
 }
 
@@ -800,34 +800,34 @@ void M_FileSystem::SaveTransform(JsonObj component, GameObject* gameObject)
 
 void M_FileSystem::LoadMesh(JsonObj components_iterator, GameObject* gameObject)
 {
-	MeshComponent* loadedMesh = new MeshComponent();
-	loadedMesh->type = ComponentType::Mesh;
-	loadedMesh->UID = components_iterator.GetInt("UID");
-	loadedMesh->name = components_iterator.GetString("Name");
-	loadedMesh->path = components_iterator.GetString("Path");
+	//MeshComponent* loadedMesh = new MeshComponent();
+	//loadedMesh->type = ComponentType::Mesh;
+	//loadedMesh->UID = components_iterator.GetInt("UID");
+	//loadedMesh->name = components_iterator.GetString("Name");
+	//loadedMesh->path = components_iterator.GetString("Path");
 
 
-	loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
-	//loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
+	//loadedMesh->num_vertices = components_iterator.GetInt("Num vertices");
+	////loadedMesh->id_vertices = components_iterator.GetInt("ID Vertices");
 
-	loadedMesh->num_indices = components_iterator.GetInt("Num indices");
-	//loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
+	//loadedMesh->num_indices = components_iterator.GetInt("Num indices");
+	////loadedMesh->id_indices = components_iterator.GetInt("ID Indices");
 
-	loadedMesh->num_normals = components_iterator.GetInt("Num normals");
-	//loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
+	//loadedMesh->num_normals = components_iterator.GetInt("Num normals");
+	////loadedMesh->id_normals = components_iterator.GetInt("ID Normals");
 
-	loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
-	//loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
+	//loadedMesh->num_tex_coords = components_iterator.GetInt("Num Texture Coords");
+	////loadedMesh->id_coords = components_iterator.GetInt("ID Coords");
 
-	loadedMesh->CreateAABB();
+	//loadedMesh->CreateAABB();
 
 	//Load vertices,indices... from mesh File
-	std::string bufferPath = App->geometry->meshesPath + loadedMesh->name;
-	ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
-	App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
+	//std::string bufferPath = App->geometry->meshesPath + loadedMesh->name;
+	//ReadFile(bufferPath.c_str(), &loadedMesh->meshBuffer);
+	//App->geometry->LoadOurMesh(loadedMesh->meshBuffer, loadedMesh);
 
-	gameObject->AddComponent(loadedMesh);
-	App->geometry->CreateBuffer(loadedMesh);
+	//gameObject->AddComponent(loadedMesh);
+	//App->geometry->CreateBuffer(loadedMesh);
 }
 
 void M_FileSystem::LoadMaterial(JsonObj components_iterator, GameObject* gameObject)
