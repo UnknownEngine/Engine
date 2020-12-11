@@ -68,6 +68,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
+	//TODO: Set this recursive
 	if (showDebugAABB) {
 		if (gameObjectsList.size() > 0) {
 			for (uint i = 0; i < gameObjectsList.size(); i++)
@@ -181,6 +182,7 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 	GameObject* _toSelect = nullptr;
 	std::vector<GameObject*> candidates;
 
+	//TODO: Set this recursive
 	for (uint i = 0; i < gameObjectsList.size(); i++)
 	{
 		for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
