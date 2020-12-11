@@ -228,7 +228,7 @@ float3x4 ModuleCamera3D::GetViewMatrix()
 
 void ModuleCamera3D::OnMouseClick()
 {
-	if (!ImGui::IsAnyWindowHovered()) {
+	if (!ImGui::IsAnyWindowHovered() && !ImGuizmo::IsOver()) {
 		float x = App->input->GetMouseX();
 		float y = App->input->GetMouseY();
 		float2 mouseWorldPosition = ScreenToWorld(float2(x, y));

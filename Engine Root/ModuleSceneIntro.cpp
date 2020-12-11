@@ -191,13 +191,15 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 				if (segment.Intersects(gameObjectsList[i]->childs[j]->GetOBB(), hit_near, hit_far))
 					candidates.push_back(gameObjectsList[i]->childs[j]);
 			}
-			for (uint k = 0; k < gameObjectsList[j]->childs.size(); k++)
-			{
-				if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetAABB()))
+			if (gameObjectsList[i]->childs[j]->childs.size() > 0) {
+				for (uint k = 0; k < gameObjectsList[i]->childs[j]->childs.size(); k++)
 				{
-					float hit_near, hit_far;
-					if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetOBB(), hit_near, hit_far))
-						candidates.push_back(gameObjectsList[i]->childs[j]->childs[k]);
+					if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetAABB()))
+					{
+						float hit_near, hit_far;
+						if (segment.Intersects(gameObjectsList[i]->childs[j]->childs[k]->GetOBB(), hit_near, hit_far))
+							candidates.push_back(gameObjectsList[i]->childs[j]->childs[k]);
+					}
 				}
 			}
 		}
