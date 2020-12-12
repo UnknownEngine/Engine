@@ -245,7 +245,7 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 	int uid = json.GetInt("UID");
 
 	char* materialBuffer;
-	uint size = App->fsystem->ReadFile(json.GetString("Library path"), &materialBuffer);
+	uint size = App->fsystem->ReadFile((texturesLibPath + std::to_string(uid)).c_str(), &materialBuffer);
 
 	ResourceTexture* r_texture = new ResourceTexture(uid, ResourceType::texture);
 
