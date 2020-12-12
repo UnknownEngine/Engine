@@ -289,11 +289,14 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject
 
 		App->fsystem->ReadFile((meshesLibPath + std::to_string(mesh_uid)).c_str(), &r_mesh->meshBuffer);
 		App->geometry->LoadOurMesh(r_mesh->meshBuffer, r_mesh);
+
 		c_mesh->r_mesh = r_mesh;
 		c_mesh->r_mesh->CreateAABB();
-		App->geometry->CreateBuffer(c_mesh->r_mesh);
-		newGameObject->AddComponent(c_mesh);
+		c_mesh->UID = mesh_uid;
 
+		App->geometry->CreateBuffer(c_mesh->r_mesh);
+
+		newGameObject->AddComponent(c_mesh);
 	}
 	App->scene_intro->gameObjectsList.push_back(newGameObject);
 	JsonArray childs = modelMeta.GetArray("Childs UID");

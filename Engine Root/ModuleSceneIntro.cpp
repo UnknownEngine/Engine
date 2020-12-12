@@ -323,8 +323,6 @@ void ModuleSceneIntro::SaveGobjsChilds(GameObject* gameObject, JsonArray GobsArr
 		JsonObj child;
 		GobsArray.AddObject(child);
 		child.AddInt("UID", gameObject->childs.at(i)->UID);
-		child.AddInt("Parent UID", gameObject->childs.at(i)->ParentUID);
-		child.AddString("Parent", gameObject->childs.at(i)->parent->nameID.c_str());
 		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
 		child.AddBool("Active", gameObject->childs.at(i)->active);
 		if (!gameObject->childs.at(i)->components.empty())
@@ -376,7 +374,6 @@ void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
 {
 	TransformComponent* transform = gameObject->GetTransformComponent();
 	component.AddString("TYPE", "Transform");
-	component.AddInt("UID", transform->UID);
 	JsonArray position = component.AddArray("Position");
 	JsonArray scale = component.AddArray("Scale");
 	JsonArray rotation = component.AddArray("Rotation");
