@@ -12,7 +12,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	cameraObject = new GameObject("Camera GameObject", LCG().Int());
 	camera = new CameraComponent();
 
-	c_transform = new TransformComponent(float3(0,0,0),Quat(0,0,0,1),float3(1,1,1));
+	TransformComponent* c_transform = new TransformComponent(float3(0,0,0),Quat(0,0,0,1),float3(1,1,1));
+
 	cameraObject->AddComponent(c_transform);
 	cameraObject->AddComponent(camera);
 	Position = float3(0, 0, 0);
@@ -30,6 +31,7 @@ bool ModuleCamera3D::Start()
 	bool ret = true;
 	debugRay = false;
 	UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
+
 	//c_transform->position = camera->frustum.pos;
 	return ret;
 }
@@ -59,7 +61,7 @@ update_status ModuleCamera3D::Update(float dt)
 		//Camera Options
 		ModifySpeed(speed);
 
-		KeyboardMove(c_transform->position, speed);
+		KeyboardMove(cameraObject->GetTransformComponent()->position, speed);
 
 
 		FocusCamera();
@@ -72,12 +74,12 @@ update_status ModuleCamera3D::Update(float dt)
 			RotateCamera(sensitivity);
 		}
 
-		PanCamera(c_transform->position, speed, dragSpeed, dt);
+		PanCamera(cameraObject->GetTransformComponent()->position, speed, dragSpeed, dt);
 
-		Zoom(c_transform->position, zoom_speed, dt);
+		Zoom(cameraObject->GetTransformComponent()->position, zoom_speed, dt);
 
 
-		UpdateCameraPos(c_transform->position);
+		UpdateCameraPos(cameraObject->GetTransformComponent()->position);
 
 
 		//ClickOptions
@@ -94,12 +96,12 @@ void ModuleCamera3D::UpdateCameraPos(math::float3& newPos)
 	camera->frustum.pos = newPos;
 	//Reference += newPos;
 	Quat dir;
-	dir = c_transform->rotation;
+	dir = cameraObject->GetTransformComponent()->rotation;
 	float4x4 changedMatrix = camera->frustum.WorldMatrix();
 	changedMatrix.SetRotatePart(dir.Normalized());
 	camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
-	c_transform->rotation = dir;
-	c_transform->position = camera->frustum.pos;
+	cameraObject->GetTransformComponent()->rotation = dir;
+	cameraObject->GetTransformComponent()->position = camera->frustum.pos;
 	camera->UpdateFrustum(ImGui::GetMainViewport()->Size.x, ImGui::GetMainViewport()->Size.y);
 }
 
@@ -129,7 +131,7 @@ void ModuleCamera3D::RotateCamera(float sensitivity)
 		int dy = -App->input->GetMouseYMotion();
 
 		Quat dir;
-		dir = c_transform->rotation;
+		dir = cameraObject->GetTransformComponent()->rotation;
 		camera->frustum.WorldMatrix().Decompose(float3(), dir, float3());
 
 		Quat Y;
@@ -143,7 +145,7 @@ void ModuleCamera3D::RotateCamera(float sensitivity)
 		float4x4 changedMatrix = camera->frustum.WorldMatrix();
 		changedMatrix.SetRotatePart(dir.Normalized());
 		camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
-		c_transform->rotation = dir;
+		cameraObject->GetTransformComponent()->rotation = dir;
 	}
 }
 

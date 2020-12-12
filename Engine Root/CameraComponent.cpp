@@ -12,6 +12,7 @@
 
 CameraComponent::CameraComponent() : Component()
 {
+    type = ComponentType::Camera;
     frustum.type = FrustumType::PerspectiveFrustum;
     frustum.nearPlaneDistance = 0.1f;
     frustum.farPlaneDistance = 500.f;

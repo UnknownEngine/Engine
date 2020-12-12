@@ -38,8 +38,6 @@ public:
 
 	bool debugRay;
 	GameObject* cameraObject;
-
-	TransformComponent* c_transform = nullptr;
 private:
 
 	double last_x = 0;

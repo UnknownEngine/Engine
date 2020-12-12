@@ -936,7 +936,7 @@ void ModuleEditor::LoadWindow()
 
 		if (ImGui::Button("Yeah, sure", ImVec2(100, 20)))
 		{
-			App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
+			App->scene_intro->LoadScene(App->scene_intro->sceneBuffer);
 			showLoadWindow = !showLoadWindow;
 		}
 		ImGui::SameLine(150.f);

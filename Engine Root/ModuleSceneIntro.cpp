@@ -388,22 +388,22 @@ void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
 
 void ModuleSceneIntro::SaveCameraComponent(JsonObj component, GameObject* gameObject)
 {
-	//CameraComponent* camera = gameObject->GetCameraComponent();
-	//component.AddInt("Frustum Type", camera->frustum.type);
-	//component.AddFloat("Frustum Near Distance", camera->frustum.nearPlaneDistance);
-	//component.AddFloat("Frustum Far Distance", camera->frustum.farPlaneDistance);
-	//component.AddFloat("Frustum Vertical FOV", camera->frustum.verticalFov);
+	CameraComponent* camera = gameObject->GetCameraComponent();
+	component.AddString("TYPE", "Camera");
+	component.AddInt("Frustum Type", camera->frustum.type);
+	component.AddFloat("Frustum Near Distance", camera->frustum.nearPlaneDistance);
+	component.AddFloat("Frustum Far Distance", camera->frustum.farPlaneDistance);
+	component.AddFloat("Frustum Vertical FOV", camera->frustum.verticalFov);
 
-	//JsonArray frustumFront = component.AddArray("Frustum Front");
-	//frustumFront.AddFloat3(camera->frustum.front.x, camera->frustum.front.y, camera->frustum.front.z);
+	JsonArray frustumFront = component.AddArray("Frustum Front");
+	frustumFront.AddFloat3(camera->frustum.front.x, camera->frustum.front.y, camera->frustum.front.z);
 
-	//JsonArray frustumUp = component.AddArray("Frustum Up");
-	//frustumUp.AddFloat3(camera->frustum.up.x, camera->frustum.up.y, camera->frustum.up.z);
+	JsonArray frustumUp = component.AddArray("Frustum Up");
+	frustumUp.AddFloat3(camera->frustum.up.x, camera->frustum.up.y, camera->frustum.up.z);
 
-	//JsonArray frustumPos = component.AddArray("Frustum Pos");
-	//frustumPos.AddFloat3(camera->frustum.pos.x, camera->frustum.pos.y, camera->frustum.pos.z);
+	JsonArray frustumPos = component.AddArray("Frustum Pos");
+	frustumPos.AddFloat3(camera->frustum.pos.x, camera->frustum.pos.y, camera->frustum.pos.z);
 
-	//delete camera;
 }
 
 void ModuleSceneIntro::LoadScene(char* sceneBuffer)
@@ -480,6 +480,11 @@ void ModuleSceneIntro::LoadGobjsComponents(GameObject* gameObject, JsonObj curre
 		else if (type == "Transform")
 		{
 			LoadTransform(components_iterator, gameObject);
+		}
+		else if (type == "Camera") {
+			CameraComponent* c_camera = new CameraComponent();
+			gameObject->AddComponent(c_camera);
+			App->camera->cameraObject = gameObject;
 		}
 	}
 }
