@@ -271,6 +271,7 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 
 	if (parent != nullptr) {
 		newGameObject->ParentUID = parent->UID;
+		newGameObject->parent = parent;
 		parent->childs.push_back(newGameObject);
 	}
 	else
