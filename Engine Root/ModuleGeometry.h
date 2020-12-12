@@ -44,6 +44,7 @@ public:
 	void CreateBuffer(ResourceMesh* mesh);
 
 	bool LoadTexture(const char* path, ResourceTexture* resource);
+	bool LoadTexturefromBuffer(uint UID);
 	void CreateTextureBuffer(ResourceTexture* resource);
 	void CreateCheckerTextureBuffer();
 

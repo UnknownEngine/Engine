@@ -29,6 +29,9 @@ bool ModuleResourceManager::Start()
 	ImportMaterialsList();
 	SetFbxList();
 	SetTexturesList();
+
+	char* buffer=nullptr;
+	App->geometry->LoadTexturefromBuffer(buffer);
 	//LoadResource();
 
 	return true;
@@ -200,6 +203,13 @@ JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::str
 		JsonObj fileData;
 
 		fileData.AddString("Asset path", realDir.c_str());
+
+		std::string  path = "";
+		std::string  file = "";
+		std::string  extension = "";
+		App->fsystem->SplitFilePath(realDir.c_str(), &path, &file, &extension);
+
+		fileData.AddString("Name", (file + "." + extension).c_str());
 		fileData.AddInt("UID", GenerateNewUID());
 		fileData.AddString("Library path", (texturesLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
 

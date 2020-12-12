@@ -520,7 +520,7 @@ void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
 void ModuleSceneIntro::LoadMaterial(JsonObj component, GameObject* gameObject)
 {
 	uint materialUID = component.GetInt("UID");
-	//Request del Material según UID
+	//App->geometry->LoadTexturefromBuffer(materialUID);
 }
 
 void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* gameObject)

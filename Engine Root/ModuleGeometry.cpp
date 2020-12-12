@@ -415,6 +415,26 @@ bool ModuleGeometry::LoadTexture(const char* path, ResourceTexture* resource)
 	return ret;
 }
 
+bool ModuleGeometry::LoadTexturefromBuffer(uint UID)
+{
+	bool ret = true;
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+
+	ILuint ImgId = 0;
+	ilGenImages(1, &ImgId);
+	ilBindImage(ImgId);
+	char* buffer=nullptr;
+	uint size = App->fsystem->ReadFile((App->resourceManager->texturesLibPath+std::to_string(UID)).c_str(), &buffer);
+
+	if (!ilLoadL(IL_TYPE_UNKNOWN,buffer,size))
+	{
+		ILenum err = ilGetError();
+		return false;
+	}
+	return ret;
+}
+
 //  ---------------------------------TEXTURE BUFFER CREATE--------------------------------------------
 void ModuleGeometry::CreateTextureBuffer(ResourceTexture* resource)
 {
