@@ -30,8 +30,8 @@ bool ModuleResourceManager::Start()
 	SetFbxList();
 	SetTexturesList();
 
-	char* buffer=nullptr;
-	App->geometry->LoadTexturefromBuffer(buffer);
+	//char* buffer=nullptr;
+	//App->geometry->LoadTexturefromBuffer(buffer);
 	//LoadResource();
 
 	return true;
@@ -261,7 +261,8 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 
 	App->geometry->CreateTextureBuffer(r_texture);
 	App->geometry->LoadOurMaterial(materialBuffer, r_texture, size);
-	App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
+	App->geometry->LoadTexturefromBuffer(uid,r_texture);
+	//App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
 	r_texture->instances++;
 	resourceMap[uid] = r_texture;
 	return r_texture;

@@ -415,7 +415,7 @@ bool ModuleGeometry::LoadTexture(const char* path, ResourceTexture* resource)
 	return ret;
 }
 
-bool ModuleGeometry::LoadTexturefromBuffer(uint UID)
+bool ModuleGeometry::LoadTexturefromBuffer(uint UID,ResourceTexture* resource)
 {
 	bool ret = true;
 	ilEnable(IL_ORIGIN_SET);
@@ -432,6 +432,17 @@ bool ModuleGeometry::LoadTexturefromBuffer(uint UID)
 		ILenum err = ilGetError();
 		return false;
 	}
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	resource->width = (int)ilGetInteger(IL_IMAGE_WIDTH);
+	resource->height = (int)ilGetInteger(IL_IMAGE_HEIGHT);
+	resource->bpp = (int)ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+	resource->dataTexture = ilGetData();
+
+	glBindTexture(GL_TEXTURE_2D, resource->bufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, resource->width, resource->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, resource->dataTexture);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	ilDeleteImages(1, &ImgId);
 	return ret;
 }
 
