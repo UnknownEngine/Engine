@@ -363,15 +363,19 @@ void ModuleSceneIntro::SaveGobjsComponentes(GameObject* gameObject, JsonObj Json
 void ModuleSceneIntro::SaveMesh(JsonObj component, GameObject* gameObject)
 {
 	MeshComponent* mesh = gameObject->GetMeshComponent();
-	component.AddInt("Mesh UID", mesh->UID);
+	component.AddInt("UID", mesh->UID);
 	component.AddString("TYPE", "Mesh");
 }
 
 void ModuleSceneIntro::SaveMaterial(JsonObj component, GameObject* gameObject)
 {
 	MaterialComponent* material = gameObject->GetMaterialComponent();
-	component.AddInt("Material UID", material->UID);
-	component.AddString("TYPE", "Material");
+	if (material->r_texture != NULL)
+	{
+		component.AddInt("UID", material->UID);
+		component.AddString("TYPE", "Material");
+		component.AddString("Asset path", material->r_texture->path.c_str());
+	}
 }
 
 void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
@@ -501,7 +505,7 @@ void ModuleSceneIntro::LoadGobjsComponents(GameObject* gameObject, JsonObj curre
 
 void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
 {
-	uint meshUID = component.GetInt("Mesh UID");
+	uint meshUID = component.GetInt("UID");
 	MeshComponent* c_mesh = new MeshComponent;
 	ResourceMesh* r_mesh = new ResourceMesh(meshUID, ResourceType::mesh);
 
@@ -520,7 +524,19 @@ void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
 void ModuleSceneIntro::LoadMaterial(JsonObj component, GameObject* gameObject)
 {
 	uint materialUID = component.GetInt("UID");
-	//App->geometry->LoadTexturefromBuffer(materialUID);
+	std::string path = component.GetString("Asset path");
+
+	if (gameObject->GetMaterialComponent() == nullptr)
+	{
+		MaterialComponent* c_mat = new MaterialComponent;
+		c_mat->r_texture= App->resourceManager->LoadTexture(component);
+		gameObject->AddComponent(c_mat);
+	}
+	else
+	{
+		gameObject->GetMaterialComponent()->r_texture = App->resourceManager->LoadTexture(component);
+	}
+	
 }
 
 void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* gameObject)

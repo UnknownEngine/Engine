@@ -204,12 +204,6 @@ JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::str
 
 		fileData.AddString("Asset path", realDir.c_str());
 
-		std::string  path = "";
-		std::string  file = "";
-		std::string  extension = "";
-		App->fsystem->SplitFilePath(realDir.c_str(), &path, &file, &extension);
-
-		fileData.AddString("Name", (file + "." + extension).c_str());
 		fileData.AddInt("UID", GenerateNewUID());
 		fileData.AddString("Library path", (texturesLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
 
@@ -261,8 +255,8 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 
 	App->geometry->CreateTextureBuffer(r_texture);
 	App->geometry->LoadOurMaterial(materialBuffer, r_texture, size);
-	App->geometry->LoadTexturefromBuffer(uid,r_texture);
-	//App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
+	//App->geometry->LoadTexturefromBuffer(uid,r_texture);
+	App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
 	r_texture->instances++;
 	resourceMap[uid] = r_texture;
 	return r_texture;
