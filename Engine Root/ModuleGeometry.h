@@ -49,6 +49,7 @@ public:
 
 	void ImportTexture(JsonObj meta, ResourceTexture* resourceTexture);
 	void ImportFBXMeshes(JsonObj meta, std::string realDir, std::string metaDir);
+	void ImportChildMeshes(aiNode* node, const aiScene* scene, JsonObj child, std::string realDir);
 	bool CheckuidOnLib(uint UID);
 
 	uint  GetMeshSize(ResourceMesh* ourMesh);

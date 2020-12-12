@@ -462,6 +462,8 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 {
 	JsonArray meshArray;
 	JsonArray childsArray;
+	JsonObj newChild;
+	JsonObj root;
 
 	bool createMeshesarray = true;
 	bool createChildsarray = true;
@@ -475,7 +477,25 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 	}
 	else
 	{
+		root.AddInt("UID", meta.GetInt("UID"));
 		App->editor->AddLog("Loading scene...");
+
+		aiVector3D translation, scaling;
+		aiQuaternion rotation;
+
+		scene->mRootNode->mTransformation.Decompose(scaling, rotation, translation);
+
+		float3 pos(translation.x, translation.y, translation.z);
+		float3 scale(scaling.x, scaling.y, scaling.z);
+		Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+		JsonArray posArray = root.AddArray("Position");
+		posArray.AddFloat3(pos.x, pos.y, pos.z);
+		JsonArray scalArray = root.AddArray("Scale");
+		scalArray.AddFloat3(scale.x, scale.y, scale.z);
+		JsonArray rotArray = root.AddArray("Rotation");
+		rotArray.AddQuaternion(rot.w, rot.x, rot.y, rot.z);
+
 		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 		{
 			aiNode* node = scene->mRootNode->mChildren[i];
@@ -487,57 +507,89 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 				dummyFound = false;
 				if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
 					node = node->mChildren[0];
+
+					pos += float3(translation.x, translation.y, translation.z);
+					rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+					scale = float3(scaling.x, scaling.y, scaling.z);
+
 					nodeName = node->mName.C_Str();
 					dummyFound = true;
 				}
 				if (createChildsarray)
 				{
-					childsArray = meta.AddArray("Childs UID");
+					childsArray = root.AddArray("Childs UID");
 					createChildsarray = !createChildsarray;
 				}
-				childsArray.AddInt(App->resourceManager->GenerateNewUID());
-			}
-			if (node->mNumMeshes > 0) {
+				uint UID = App->resourceManager->GenerateNewUID();
+				if (!App->fsystem->CheckIfExists(App->resourceManager->modelsLibPath + std::to_string(UID)))
+				{
+					childsArray.AddInt(UID);
 
-				if (createMeshesarray) {
-					meshArray = meta.AddArray("Meshes UID");
-					createMeshesarray = !createMeshesarray;
+					newChild.AddInt("UID", UID);
+					newChild.AddInt("Parent UID", root.GetInt("UID"));
+
+					if (node->mNumMeshes > 0) {
+
+						ImportChildMeshes(node, scene, newChild, realDir);
+					}
+
+					JsonArray posArray = newChild.AddArray("Position");
+					posArray.AddFloat3(pos.x, pos.y, pos.z);
+					JsonArray scalArray = newChild.AddArray("Scale");
+					scalArray.AddFloat3(scale.x, scale.y, scale.z);
+					JsonArray rotArray = newChild.AddArray("Rotation");
+					rotArray.AddQuaternion(rot.w, rot.x, rot.y, rot.z);
+
+					char* childBuffer = nullptr;
+					uint sizeChild = newChild.Save(&childBuffer);
+
+					App->fsystem->WriteFile(((App->resourceManager->modelsLibPath + std::to_string(newChild.GetInt("UID"))).c_str()), childBuffer, sizeChild);
 				}
-				ResourceMesh* ourMesh = new ResourceMesh(App->resourceManager->GenerateNewUID(), ResourceType::mesh);
-				aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
 
-				ourMesh->name = node->mName.C_Str();
-				meshArray.AddInt(ourMesh->UID);
-
-				if (!CheckuidOnLib(ourMesh->UID)) {
-					ourMesh->path = realDir;
-
-					App->geometry->LoadVertices(aimesh, ourMesh);
-
-
-					App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
-
-
-					App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
-
-
-					App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
-
-					ourMesh->size = App->geometry->GetMeshSize(ourMesh);
-					ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
-
-					App->fsystem->WriteFile((App->resourceManager->meshesLibPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
-				}
-				delete ourMesh;
 			}
-
 		}
+		char* rootBuffer = nullptr;
 		char* metaBuffer = nullptr;
-		uint sizeJson = meta.Save(&metaBuffer);
-		App->fsystem->WriteFile(metaDir.c_str(), metaBuffer, sizeJson);
+
+		uint sizeMeta = meta.Save(&metaBuffer);
+		uint sizeRoot = root.Save(&rootBuffer);
+
+		App->fsystem->WriteFile(metaDir.c_str(), metaBuffer, sizeMeta);
+		App->fsystem->WriteFile(((App->resourceManager->modelsLibPath + std::to_string(root.GetInt("UID"))).c_str()), rootBuffer, sizeRoot);
+
 		aiReleaseImport(scene);
 	}
 
+}
+
+void ModuleGeometry::ImportChildMeshes(aiNode* node,const aiScene* scene, JsonObj child, std::string realDir)
+{
+	ResourceMesh* ourMesh = new ResourceMesh(App->resourceManager->GenerateNewUID(), ResourceType::mesh);
+	aiMesh* aimesh = scene->mMeshes[*node->mMeshes];
+
+	child.AddInt("Mesh UID", ourMesh->UID);
+	ourMesh->name = node->mName.C_Str();
+
+	if (!CheckuidOnLib(ourMesh->UID)) {
+		ourMesh->path = realDir;
+
+		App->geometry->LoadVertices(aimesh, ourMesh);
+
+
+		App->geometry->CheckAndLoadFaces(aimesh, ourMesh);
+
+
+		App->geometry->CheckAndLoadTexCoords(aimesh, ourMesh);
+
+
+		App->geometry->CheckAndLoadNormals(aimesh, ourMesh);
+
+		ourMesh->size = App->geometry->GetMeshSize(ourMesh);
+		ourMesh->meshBuffer = App->geometry->SaveOurMesh(ourMesh, ourMesh->size);
+
+		App->fsystem->WriteFile((App->resourceManager->meshesLibPath + std::to_string(ourMesh->UID)).c_str(), ourMesh->meshBuffer, ourMesh->size);
+	}
+	delete ourMesh; 
 }
 
 bool ModuleGeometry::CheckuidOnLib(uint UID)

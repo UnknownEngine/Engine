@@ -45,6 +45,7 @@ public:
 	std::string meshesLibPath;
 	std::string texturesPath;
 	std::string texturesLibPath;
+	std::string modelsLibPath;
 
 	std::string realDir;
 	std::string metaDir;

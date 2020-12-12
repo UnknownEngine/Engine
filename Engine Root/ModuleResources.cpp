@@ -21,8 +21,10 @@ bool ModuleResourceManager::Start()
 	texturesPath = "Assets/Textures/";
 	texturesLibPath = "Library/Materials/";
 	meshesLibPath= "Library/Meshes/";
+	modelsLibPath = "Library/Models/";
 
 	ImportTexturesAssets();
+	ImportMeshAssets();
 	ImportMaterialsList();
 	SetFbxList();
 	SetTexturesList();
@@ -189,7 +191,7 @@ JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::str
 
 		fileData.AddString("Asset path", realDir.c_str());
 		fileData.AddInt("UID", GenerateNewUID());
-		fileData.AddString("Library path", (texturesLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
+		fileData.AddString("Library path", (modelsLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
 
 		uint metaSize = fileData.Save(&metaBuffer);
 		App->fsystem->WriteFile(metaDir.c_str(), metaBuffer, metaSize);
@@ -204,7 +206,7 @@ JsonObj ModuleResourceManager::CreateMeshMetas(std::string realDir, std::string 
 
 		fileData.AddString("Asset Path", realDir.c_str());
 		fileData.AddInt("UID", LCG().Int());
-		fileData.AddString("Library path", ((App->resourceManager->meshesLibPath + std::to_string(fileData.GetInt("UID"))).c_str()));
+		fileData.AddString("Library path", ((modelsLibPath + std::to_string(fileData.GetInt("UID"))).c_str()));
 
 	return fileData;
 }
