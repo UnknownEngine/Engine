@@ -1064,7 +1064,22 @@ void ModuleEditor::CreateFileInspector()
 	//}
 	ImGui::End();
 }
-
+void ModuleEditor::ShowFbxList(const uint& i)
+{
+	for (uint j = 0; j < App->resourceManager->fbxList.size(); j++)
+	{
+		std::string name = App->resourceManager->fbxList.at(j);
+		std::string finalName = name.erase(name.size() - 4);
+		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
+		{
+			if (ImGui::IsItemClicked(0)) {
+				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+				/*App->scene_intro->selected->GetMeshComponent()->r_mesh =*/ static_cast<ResourceMesh*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::mesh));
+			}
+			ImGui::TreePop();
+		}
+	}
+}
 void ModuleEditor::ShowTexturesList(const uint& i)
 {
 	for (uint j = 0; j < App->resourceManager->textureList.size(); j++)
@@ -1083,7 +1098,7 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 							App->resourceManager->resourceMap.erase(r_texture->UID);
 						}
 					}
-					App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str()));
+					App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(),ResourceType::texture));
 				}
 
 			}
@@ -1092,25 +1107,7 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 	}
 }
 
-void ModuleEditor::ShowFbxList(const uint& i)
-{
-	for (uint j = 0; j < App->resourceManager->fbxList.size(); j++)
-	{
-		std::string name = App->resourceManager->fbxList.at(j);
-		std::string finalName = name.erase(name.size() - 4);
-		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
-		{
-			if (ImGui::IsItemClicked(0)) {
-				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-				if (App->scene_intro->selected != nullptr) {
-					//App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str()));
-				}
 
-			}
-			ImGui::TreePop();
-		}
-	}
-}
 
 void ModuleEditor::HyperLink(const char* tooltip, const char* url)
 {

@@ -30,7 +30,7 @@ bool ModuleCamera3D::Start()
 	bool ret = true;
 	debugRay = false;
 	UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
-	c_transform->position = camera->frustum.pos;
+	//c_transform->position = camera->frustum.pos;
 	return ret;
 }
 
@@ -99,7 +99,7 @@ void ModuleCamera3D::UpdateCameraPos(math::float3& newPos)
 	changedMatrix.SetRotatePart(dir.Normalized());
 	camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
 	c_transform->rotation = dir;
-
+	c_transform->position = camera->frustum.pos;
 	camera->UpdateFrustum(ImGui::GetMainViewport()->Size.x, ImGui::GetMainViewport()->Size.y);
 }
 

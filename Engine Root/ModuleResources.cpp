@@ -109,8 +109,9 @@ const Resource* ModuleResourceManager::RequestResource(int uid) const
 	return nullptr;
 }
 
-Resource* ModuleResourceManager::RequestResource(const char* path)
+Resource* ModuleResourceManager::RequestResource(const char* path, ResourceType type)
 {
+	Resource* resource = nullptr;
 	char* buffer;
 	App->fsystem->ReadFile(path, &buffer);
 	JsonObj meta(buffer);
@@ -124,13 +125,21 @@ Resource* ModuleResourceManager::RequestResource(const char* path)
 		return resourceIt->second;
 	}
 
-	
+	switch (type)
+	{
+	case texture:
+		resource = LoadTexture(meta);
+		break;
+	case mesh:
+		resource = LoadModel(uid);
+		break;
+	}
 	//Cargar FBX ("Doble click) cargas .meta
 	//encontrar UID en el .meta
 	//Compruebo si está en el map sino lo está se crea de nuevo y se añade en el map
 	//Si lo está se devuelve el resource
 
-	return LoadTexture(meta);
+	return resource;
 }
 
 void ModuleResourceManager::ReleaseResource(int uid)
@@ -232,16 +241,8 @@ void ModuleResourceManager::SetTexturesList()
 
 ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 {
-	//char* buffer;
-	//App->fsystem->ReadFile("Assets/Textures/Baker_house.mta", &buffer);
-	//JsonObj meta(buffer);
-
 	int uid = json.GetInt("UID");
 
-	//Request Resource UID
-
-
-	//IF NO RESOURCE
 	char* materialBuffer;
 	uint size = App->fsystem->ReadFile(json.GetString("Library path"), &materialBuffer);
 
@@ -253,4 +254,35 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 	r_texture->instances++;
 	resourceMap[uid] = r_texture;
 	return r_texture;
+}
+
+ResourceTexture* ModuleResourceManager::LoadModel(int uid)
+{
+	char* buffer;
+	uint size = App->fsystem->ReadFile((modelsLibPath + std::to_string(uid)).c_str(), &buffer);
+
+	JsonObj modelMeta(buffer);
+	int _uid = modelMeta.GetInt("UID");
+	JsonArray pos = modelMeta.GetArray("Position");
+	JsonArray rot = modelMeta.GetArray("Rotation");
+	JsonArray scale = modelMeta.GetArray("Scale");
+
+	float3 position = pos.GetFloat3(0);
+	Quat rotation = rot.GetQuaternion(0);
+	float3 a_scale = scale.GetFloat3(0);
+
+	JsonArray childs = modelMeta.GetArray("Childs UID");
+	std::vector<int> childs_uid = childs.GetUIDs(0);
+
+	if (childs_uid.size() > 0) {
+		// HAS MODEL CHILDS
+		for (uint i = 0; i < childs_uid.size(); i++)
+		{
+			LoadModel(uid);
+
+		}
+
+	}
+
+	return nullptr;
 }

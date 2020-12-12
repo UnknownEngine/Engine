@@ -25,7 +25,7 @@ public:
 	int GenerateNewUID();
 
 	const Resource* RequestResource(int uid) const;
-	Resource* RequestResource(const char* path);
+	Resource* RequestResource(const char* path, ResourceType type);
 	void ReleaseResource(int uid);
 
 	bool CleanUp();
@@ -39,6 +39,7 @@ public:
 	void SetFbxList();
 	void SetTexturesList();
 	ResourceTexture* LoadTexture(JsonObj json);
+	ResourceTexture* LoadModel(int uid);
 
 public:
 	std::string fbxsPath;
