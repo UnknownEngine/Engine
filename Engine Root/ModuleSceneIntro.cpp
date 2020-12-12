@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "MathGeoLib/include/MathGeoLib.h"
 #include "ModuleWindow.h"
+#include "Json.h"
 
 
 #include "Glew/include/glew.h"
@@ -254,6 +255,105 @@ void ModuleSceneIntro::DrawRay(LineSegment& segment)
 		glEnd();
 		glColor3f(1, 1, 1);
 	
+}
+
+void ModuleSceneIntro::SaveScene(char** sceneBuffer)
+{
+	JsonObj scene;
+	SaveSceneMode(scene);
+	if (gameObjectsList.empty())
+	{
+		scene.AddArray("GameObjects");
+		SaveGameObjects(scene);
+	}
+	else
+	{
+		LOG("Any gameObjects to be saved");
+	}
+	uint size = scene.Save(sceneBuffer);
+	App->fsystem->WriteFile("Library/Config.json", *sceneBuffer, size);
+
+}
+
+JsonArray ModuleSceneIntro::SaveGameObjects(JsonObj scene)
+{
+	JsonArray gameObjects = scene.GetArray("GameObjects");
+
+	for (int it = 0; it < gameObjectsList.size(); it++)
+	{
+		JsonObj gameObject;
+		gameObjects.AddObject(gameObject);
+		gameObject.AddInt("UID", gameObjectsList.at(it)->UID);
+		gameObject.AddString("Name", gameObjectsList.at(it)->nameID.c_str());
+		gameObject.AddBool("Active",gameObjectsList.at(it)->active);
+		if (!App->scene_intro->gameObjectsList.at(it)->childs.empty())
+		{
+			SaveGobjsChilds(gameObjectsList.at(it), gameObject);
+		}
+		if (!gameObjectsList.at(it)->components.empty())
+		{
+			SaveGobjsComponentes(gameObjectsList.at(it), gameObject);
+		}
+	}
+	return gameObjects;
+}
+
+JsonArray ModuleSceneIntro::SaveSceneMode(JsonObj scene)
+{
+	return JsonArray();
+}
+
+void ModuleSceneIntro::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
+{
+}
+
+void ModuleSceneIntro::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
+{
+}
+
+void ModuleSceneIntro::SaveMesh(JsonObj component, GameObject* gameObject)
+{
+}
+
+void ModuleSceneIntro::SaveMaterial(JsonObj component, GameObject* gameObject)
+{
+}
+
+void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
+{
+}
+
+void ModuleSceneIntro::LoadScene(char* sceneBuffer)
+{
+}
+
+void ModuleSceneIntro::LoadSceneMode(JsonObj* scene)
+{
+}
+
+GameObject* ModuleSceneIntro::LoadGameObjects(JsonObj current_node)
+{
+	return nullptr;
+}
+
+void ModuleSceneIntro::LoadGobjsChilds(GameObject* gameObject, JsonObj current_node)
+{
+}
+
+void ModuleSceneIntro::LoadGobjsComponents(GameObject* gameObject, JsonObj current_node)
+{
+}
+
+void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
+{
+}
+
+void ModuleSceneIntro::LoadMaterial(JsonObj component, GameObject* gameObject)
+{
+}
+
+void ModuleSceneIntro::LoadTransform(JsonObj component, GameObject* gameObject)
+{
 }
 
 

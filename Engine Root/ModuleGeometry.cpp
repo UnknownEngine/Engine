@@ -479,6 +479,13 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 	{
 		root.AddInt("UID", meta.GetInt("UID"));
 		App->editor->AddLog("Loading scene...");
+		
+		std::string  path = "";
+		std::string  file = "";
+		std::string  extension = "";
+		App->fsystem->SplitFilePath(realDir.c_str(), &path, &file, &extension);
+
+		root.AddString("Name", file.c_str());
 
 		aiVector3D translation, scaling;
 		aiQuaternion rotation;
@@ -515,6 +522,7 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 					nodeName = node->mName.C_Str();
 					dummyFound = true;
 				}
+			}
 				if (createChildsarray)
 				{
 					childsArray = root.AddArray("Childs UID");
@@ -527,6 +535,7 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 
 					newChild.AddInt("UID", UID);
 					newChild.AddInt("Parent UID", root.GetInt("UID"));
+					newChild.AddString("Name", node->mName.C_Str());
 
 					if (node->mNumMeshes > 0) {
 
@@ -547,7 +556,6 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 				}
 
 			}
-		}
 		char* rootBuffer = nullptr;
 		char* metaBuffer = nullptr;
 
@@ -558,9 +566,10 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 		App->fsystem->WriteFile(((App->resourceManager->modelsLibPath + std::to_string(root.GetInt("UID"))).c_str()), rootBuffer, sizeRoot);
 
 		aiReleaseImport(scene);
-	}
+		}
 
 }
+
 
 void ModuleGeometry::ImportChildMeshes(aiNode* node,const aiScene* scene, JsonObj child, std::string realDir)
 {
