@@ -706,7 +706,7 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 {
 	if (gameObject == nullptr) return;
-	objects_rendered = 0;
+
 	if (gameObject->components.size() > 0) {
 		for (uint i = 0; i < gameObject->components.size(); i++)
 		{
@@ -722,9 +722,10 @@ void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 				gameObject->UpdateAABB();
 				//IF inside frustrum
 				if (ContainsAaBox(gameObject->GetAABB(), &App->camera->camera->frustum) == 1) {
-					objects_rendered++;
+
 					glPushMatrix();
 					glMultMatrixf((float*)&transformComponent->global_transform.Transposed());
+
 
 					DrawMesh(mesh, material);
 					glPopMatrix();

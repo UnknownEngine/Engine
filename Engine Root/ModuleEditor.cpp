@@ -517,14 +517,6 @@ void ModuleEditor::DrawInspector()
 			ImGui::Separator();
 			ImGui::Text("");
 			}
-			else {
-				ImGui::Text("Fov:");
-				CameraComponent* camera = App->scene_intro->selected->GetCameraComponent();
-				ImGui::PushItemWidth(150);
-				ImGui::InputFloat("##fov",&camera->fov , 0.1, 0.3);
-				ImGui::Text("");
-				ImGui::Text("Objects rendered: %d", App->geometry->objects_rendered);
-			}
 
 			ImGui::Text("");
 			ImGui::SameLine(72.f);

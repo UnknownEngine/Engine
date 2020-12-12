@@ -69,7 +69,6 @@ public:
 	GLuint bufferCheckerTexture = 0;
 	std::string texturesPath;
 	std::string meshesPath;
-	int objects_rendered = 0;
 private:
 };
 
