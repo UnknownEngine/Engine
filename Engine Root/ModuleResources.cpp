@@ -257,7 +257,7 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 	return r_texture;
 }
 
-ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject)
+ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 {
 	char* buffer;
 	uint size = App->fsystem->ReadFile((modelsLibPath + std::to_string(uid)).c_str(), &buffer);
@@ -268,9 +268,10 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject
 	JsonObj modelMeta(buffer);
 	int _uid = modelMeta.GetInt("UID");
 	GameObject* newGameObject = new GameObject(modelMeta.GetString("Name"), uid);
-	if (gameObject != nullptr) {
-		gameObject->childs.push_back(newGameObject);
+	if (parent != nullptr) {
+		parent->childs.push_back(newGameObject);
 	}
+
 	JsonArray arr_pos = modelMeta.GetArray("Position");
 	JsonArray arr_rot = modelMeta.GetArray("Rotation");
 	JsonArray arr_scale = modelMeta.GetArray("Scale");
@@ -298,10 +299,13 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject
 
 		newGameObject->AddComponent(c_mesh);
 	}
-	App->scene_intro->gameObjectsList.push_back(newGameObject);
+	if (parent == nullptr)
+	{
+		App->scene_intro->gameObjectsList.push_back(newGameObject);
+	}
 	JsonArray childs = modelMeta.GetArray("Childs UID");
 
-	if (childs.array != NULL) {
+	if (modelMeta.GetArray("Childs UID") != NULL) {
 		std::vector<int> childs_uid = childs.GetUIDs(0);
 		if (childs_uid.size() > 0) {
 			// HAS MODEL CHILDS
