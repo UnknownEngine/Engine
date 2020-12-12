@@ -16,7 +16,7 @@ GameObject::~GameObject()
 
 void GameObject::Update(float dt)
 {
-	for (int i = 0; i<components.size(); i++)
+	/*for (int i = 0; i<components.size(); i++)
 	{
 		if (components[i]->type == ComponentType::Transform)
 		{
@@ -25,7 +25,7 @@ void GameObject::Update(float dt)
 			transform->position.x += 0.01;
 			components[i] = transform;
 		}
-	}
+	}*/
 }
 
 Component* GameObject::CreateComponent(std::string type, bool active)

@@ -322,7 +322,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 				App->gameModePaused = false;
 				App->editorMode = !App->editorMode;
 				App->gameMode = !App->gameMode;
-				App->fsystem->LoadScene(App->scene_intro->sceneBuffer);
+				App->scene_intro->LoadScene(App->scene_intro->sceneBuffer);
 			}
 		}
 	}
@@ -1089,14 +1089,31 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 			if (ImGui::IsItemClicked(0)) {
 				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
 				if (App->scene_intro->selected != nullptr) {
-					ResourceTexture* r_texture = App->scene_intro->selected->GetMaterialComponent()->r_texture;
+					char* metaBuffer=nullptr;
+					App->fsystem->ReadFile(resourceDir.c_str(), &metaBuffer);
+					JsonObj textMeta(metaBuffer);
+					ResourceTexture* r_texture = App->resourceManager->LoadTexture(textMeta);
 					if (r_texture != nullptr) {
 						r_texture->instances--;
 						if (r_texture->instances <= 0) {
 							App->resourceManager->resourceMap.erase(r_texture->UID);
 						}
+					}			
+					
+					if (App->scene_intro->selected->ParentUID == 0)
+					{
+						for (int i = 0; i < App->scene_intro->selected->childs.size(); i++)
+						{
+							App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->r_texture = r_texture;
+							App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->UID = r_texture->UID;
+						}
 					}
-					App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(),ResourceType::texture));
+					else
+					{
+						App->scene_intro->selected->GetMaterialComponent()->r_texture = r_texture;
+						App->scene_intro->selected->GetMaterialComponent()->UID = r_texture->UID;
+					}
+					//App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(),ResourceType::texture));
 				}
 
 			}

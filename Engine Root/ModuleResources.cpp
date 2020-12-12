@@ -201,7 +201,7 @@ JsonObj ModuleResourceManager::CreateMaterialMetas(std::string realDir, std::str
 
 		fileData.AddString("Asset path", realDir.c_str());
 		fileData.AddInt("UID", GenerateNewUID());
-		fileData.AddString("Library path", (modelsLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
+		fileData.AddString("Library path", (texturesLibPath + std::to_string(fileData.GetInt("UID"))).c_str());
 
 		uint metaSize = fileData.Save(&metaBuffer);
 		App->fsystem->WriteFile(metaDir.c_str(), metaBuffer, metaSize);
@@ -293,7 +293,7 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 	if (mesh_uid != 0) {
 		MeshComponent* c_mesh = new MeshComponent;
 		ResourceMesh* r_mesh = new ResourceMesh(mesh_uid, ResourceType::mesh);
-
+		MaterialComponent* c_material = new MaterialComponent;
 		App->fsystem->ReadFile((meshesLibPath + std::to_string(mesh_uid)).c_str(), &r_mesh->meshBuffer);
 		App->geometry->LoadOurMesh(r_mesh->meshBuffer, r_mesh);
 
@@ -304,6 +304,7 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 		App->geometry->CreateBuffer(c_mesh->r_mesh);
 
 		newGameObject->AddComponent(c_mesh);
+		newGameObject->AddComponent(c_material);
 	}
 	if (parent == nullptr)
 	{
