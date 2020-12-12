@@ -475,6 +475,7 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 	}
 	else
 	{
+		App->editor->AddLog("Loading scene...");
 		for (uint i = 0; i < scene->mRootNode->mNumChildren; i++)
 		{
 			aiNode* node = scene->mRootNode->mChildren[i];

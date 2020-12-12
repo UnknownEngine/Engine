@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "CameraComponent.h"
 #include "MathGeoLib/include/MathGeoLib.h"
-
+#include "TransformComponent.h"
 class ModuleCamera3D : public Module
 {
 public:
@@ -20,6 +20,7 @@ public:
 	void KeyboardMove(math::float3& newPos, float speed);
 	void ModifySpeed(float& speed);
 	void FocusCamera();
+	void CameraMove(float speed);
 	bool CleanUp();
 
 	void Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference = false);
@@ -36,6 +37,9 @@ public:
 	LineSegment ray;
 
 	bool debugRay;
+	GameObject* cameraObject;
+
+	TransformComponent* c_transform = nullptr;
 private:
 
 	double last_x = 0;
@@ -43,8 +47,6 @@ private:
 
 	float x_rot = 0;
 	float y_rot = 0;
-
-	GameObject* cameraObject;
 
 };
 

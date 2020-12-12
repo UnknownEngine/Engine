@@ -31,6 +31,7 @@ public:
 private:
 	void FillInspector(GameObject* selected);
 	void DrawInspector();
+	void DrawCameraComponents();
 	void PrintConsole();
 	void CleanConsole();
 	void AboutWindow();

@@ -5,7 +5,6 @@
 #include "Glew/include/glew.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "TransformComponent.h"
 #include <math.h>
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -13,12 +12,12 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	cameraObject = new GameObject("Camera GameObject");
 	camera = new CameraComponent();
 
-	TransformComponent* transformComponent = new TransformComponent(float3(0,0,0),Quat(0,0,0,1),float3(1,1,1));
-	cameraObject->AddComponent(transformComponent);
+	c_transform = new TransformComponent(float3(0,0,0),Quat(0,0,0,1),float3(1,1,1));
+	cameraObject->AddComponent(c_transform);
 	cameraObject->AddComponent(camera);
 	Position = float3(0, 0, 0);
 	Reference = float3(0, 0, 0);
-
+	//newPos = float3(0, 0, 0);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -30,6 +29,8 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 	debugRay = false;
+	UpdateCameraPos(float3(-7.0f, 3.0f, 0.0f));
+	c_transform->position = camera->frustum.pos;
 	return ret;
 }
 
@@ -45,12 +46,12 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float dt)
 {
 		float3 target(0, 0, 0);
-		float3 newPos(0, 0, 0);
 		float speed = 0.2f;
 		float dragSpeed = 0.01f;
 		float zoom_speed = 0.1f;
 		float sensitivity = 0.25f;
 		float orbital_speed = 0.1f;
+
 
 		if (debugRay)
 			App->scene_intro->DrawRay(ray);
@@ -58,7 +59,8 @@ update_status ModuleCamera3D::Update(float dt)
 		//Camera Options
 		ModifySpeed(speed);
 
-		KeyboardMove(newPos, speed);
+		KeyboardMove(c_transform->position, speed);
+
 
 		FocusCamera();
 
@@ -70,27 +72,33 @@ update_status ModuleCamera3D::Update(float dt)
 			RotateCamera(sensitivity);
 		}
 
-		PanCamera(newPos, speed, dragSpeed, dt);
+		PanCamera(c_transform->position, speed, dragSpeed, dt);
 
-		Zoom(newPos, zoom_speed, dt);
+		Zoom(c_transform->position, zoom_speed, dt);
 
 
-		UpdateCameraPos(newPos);
+		UpdateCameraPos(c_transform->position);
 
 
 		//ClickOptions
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 			OnMouseClick();
 		}
-
+		//newPos = float3(0, 0, 0);
 
 	return UPDATE_CONTINUE;
 }
 
 void ModuleCamera3D::UpdateCameraPos(math::float3& newPos)
 {
-	camera->frustum.pos += newPos;
-	Reference += newPos;
+	camera->frustum.pos = newPos;
+	//Reference += newPos;
+	Quat dir;
+	dir = c_transform->rotation;
+	float4x4 changedMatrix = camera->frustum.WorldMatrix();
+	changedMatrix.SetRotatePart(dir.Normalized());
+	camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
+	c_transform->rotation = dir;
 
 	camera->UpdateFrustum(ImGui::GetMainViewport()->Size.x, ImGui::GetMainViewport()->Size.y);
 }
@@ -121,6 +129,7 @@ void ModuleCamera3D::RotateCamera(float sensitivity)
 		int dy = -App->input->GetMouseYMotion();
 
 		Quat dir;
+		dir = c_transform->rotation;
 		camera->frustum.WorldMatrix().Decompose(float3(), dir, float3());
 
 		Quat Y;
@@ -134,7 +143,7 @@ void ModuleCamera3D::RotateCamera(float sensitivity)
 		float4x4 changedMatrix = camera->frustum.WorldMatrix();
 		changedMatrix.SetRotatePart(dir.Normalized());
 		camera->frustum.SetWorldMatrix(changedMatrix.Float3x4Part());
-
+		c_transform->rotation = dir;
 	}
 }
 
@@ -209,6 +218,11 @@ void ModuleCamera3D::FocusCamera()
 			}
 		}
 	}
+}
+
+void ModuleCamera3D::CameraMove(float speed)
+{
+	//newPos += camera->frustum.front * speed;
 }
 
 // -----------------------------------------------------------------

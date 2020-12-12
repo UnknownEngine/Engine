@@ -16,6 +16,7 @@
 #include "TransformComponent.h"
 #include "MaterialComponent.h"
 #include "ImGuizmo/ImGuizmo.h"
+#include "CameraComponent.h"
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -104,7 +105,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGuizmo::BeginFrame();
-	if (App->scene_intro->selected != nullptr) {
+	if (App->scene_intro->selected != nullptr && App->scene_intro->selected != App->camera->cameraObject) {
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 			finalOperation = ImGuizmo::OPERATION::TRANSLATE;
@@ -145,15 +146,15 @@ update_status ModuleEditor::PostUpdate(float dt)
 	}
 
 
-	if (App->scene_intro->selected != nullptr) {
-		float4x4 viewMatrix = App->camera->camera->frustum.ViewMatrix();
-		viewMatrix.Transpose();
-		float modelPtr[16];
-		float4x4 modelProjection = App->scene_intro->selected->GetTransformComponent()->global_transform.Transposed();
-		memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
-		float4x4 projectionMatrix = App->camera->camera->frustum.ProjectionMatrix().Transposed();
+	//if (App->scene_intro->selected != nullptr) {
+	//	float4x4 viewMatrix = App->camera->camera->frustum.ViewMatrix();
+	//	viewMatrix.Transpose();
+	//	float modelPtr[16];
+	//	float4x4 modelProjection = App->scene_intro->selected->GetTransformComponent()->global_transform.Transposed();
+	//	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+	//	float4x4 projectionMatrix = App->camera->camera->frustum.ProjectionMatrix().Transposed();
 
-	}
+	//}
 
 
 	CreateFileInspector();
@@ -410,6 +411,10 @@ void ModuleEditor::DrawInspector()
 	}
 	if (App->scene_intro->selected != NULL)
 	{
+		//if (App->scene_intro->selected == App->camera->cameraObject) {
+		//	DrawCameraComponents();
+		//	return;
+		//}
 		if (ImGui::Button("Create Empty Child", ImVec2(200, 20)))
 		{
 			childIndex++;
@@ -499,19 +504,19 @@ void ModuleEditor::DrawInspector()
 			ImGui::Text("");
 			ImGui::Separator();
 			ImGui::Text("");
-
-			ImGui::Text("Scale:");
-			ImGui::PushItemWidth(150);
-			ImGui::InputFloat("##scalex", &App->scene_intro->selected->GetTransformComponent()->scale.x, 0.1, 0.3);
-			ImGui::InputFloat("##scaley", &App->scene_intro->selected->GetTransformComponent()->scale.y, 0.1, 0.3);
-			ImGui::InputFloat("##scalez", &App->scene_intro->selected->GetTransformComponent()->scale.z, 0.1, 0.3);
-			ImGui::PopItemWidth();
-
+			if (App->scene_intro->selected != App->camera->cameraObject) {
+				ImGui::Text("Scale:");
+				ImGui::PushItemWidth(150);
+				ImGui::InputFloat("##scalex", &App->scene_intro->selected->GetTransformComponent()->scale.x, 0.1, 0.3);
+				ImGui::InputFloat("##scaley", &App->scene_intro->selected->GetTransformComponent()->scale.y, 0.1, 0.3);
+				ImGui::InputFloat("##scalez", &App->scene_intro->selected->GetTransformComponent()->scale.z, 0.1, 0.3);
+				ImGui::PopItemWidth();
 			ImGui::PopItemWidth();
 
 			ImGui::Text("");
 			ImGui::Separator();
 			ImGui::Text("");
+			}
 
 			ImGui::Text("");
 			ImGui::SameLine(72.f);
@@ -631,6 +636,26 @@ void ModuleEditor::DrawInspector()
 			}
 		}
 	}
+}
+
+void ModuleEditor::DrawCameraComponents()
+{
+	ImGui::CollapsingHeader("Transform");
+	ImGui::PushItemWidth(60);
+	ImGui::Text("");
+
+	ImGui::Text("Position:");
+	ImGui::PushItemWidth(150);
+	ImGui::Text("X:");
+	ImGui::SameLine(72.f);
+	ImGui::InputFloat("##posx", &App->scene_intro->selected->GetTransformComponent()->position.x, 0.5f, 0.1f);
+	ImGui::Text("Y:");
+	ImGui::SameLine(72.f);
+	ImGui::InputFloat("##posy", &App->scene_intro->selected->GetTransformComponent()->position.y, 0.5, 1);
+	ImGui::Text("Z:");
+	ImGui::SameLine(72.f);
+	ImGui::InputFloat("##posz", &App->scene_intro->selected->GetTransformComponent()->position.z, 0.5, 1);
+	ImGui::PopItemWidth();
 }
 
 void ModuleEditor::FillInspector(GameObject* selected)
