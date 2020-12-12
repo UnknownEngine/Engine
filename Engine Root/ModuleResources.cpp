@@ -268,8 +268,14 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 	JsonObj modelMeta(buffer);
 	int _uid = modelMeta.GetInt("UID");
 	GameObject* newGameObject = new GameObject(modelMeta.GetString("Name"), uid);
+
 	if (parent != nullptr) {
+		newGameObject->ParentUID = parent->UID;
 		parent->childs.push_back(newGameObject);
+	}
+	else
+	{
+		newGameObject->ParentUID = 0;
 	}
 
 	JsonArray arr_pos = modelMeta.GetArray("Position");
@@ -282,7 +288,7 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 
 	TransformComponent* c_component = new TransformComponent(position, rotation, scale);
 	newGameObject->AddComponent(c_component);
-
+	
 	int mesh_uid = modelMeta.GetInt("Mesh UID");
 	if (mesh_uid != 0) {
 		MeshComponent* c_mesh = new MeshComponent;

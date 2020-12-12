@@ -50,8 +50,8 @@ public:
 	void LoadMesh(JsonObj component, GameObject* gameObject);
 	void LoadMaterial(JsonObj component, GameObject* gameObject);
 	void LoadTransform(JsonObj component, GameObject* gameObject);
-	void SetCameraTransform(TransformComponent* cameraTransform);
 
+	GameObject* GetGameObjectbyUID(int UID);
 public:
 	GameObject* selected=nullptr;
 	GameObject* toSelect = nullptr;

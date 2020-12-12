@@ -289,6 +289,7 @@ JsonArray ModuleSceneIntro::SaveGameObjects(JsonObj scene)
 		JsonObj gameObject;
 		gameObjects.AddObject(gameObject);
 		gameObject.AddInt("UID", gameObjectsList.at(it)->UID);
+		gameObject.AddInt("Parent UID", gameObjectsList.at(it)->ParentUID);
 		gameObject.AddString("Name", gameObjectsList.at(it)->nameID.c_str());
 		gameObject.AddBool("Active",gameObjectsList.at(it)->active);
 		if (!App->scene_intro->gameObjectsList.at(it)->childs.empty())
@@ -323,6 +324,7 @@ void ModuleSceneIntro::SaveGobjsChilds(GameObject* gameObject, JsonArray GobsArr
 		JsonObj child;
 		GobsArray.AddObject(child);
 		child.AddInt("UID", gameObject->childs.at(i)->UID);
+		child.AddInt("Parent UID", gameObject->childs.at(i)->ParentUID);
 		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
 		child.AddBool("Active", gameObject->childs.at(i)->active);
 		if (!gameObject->childs.at(i)->components.empty())
@@ -361,13 +363,15 @@ void ModuleSceneIntro::SaveGobjsComponentes(GameObject* gameObject, JsonObj Json
 void ModuleSceneIntro::SaveMesh(JsonObj component, GameObject* gameObject)
 {
 	MeshComponent* mesh = gameObject->GetMeshComponent();
-	component.AddInt("UID", mesh->UID);
+	component.AddInt("Mesh UID", mesh->UID);
+	component.AddString("TYPE", "Mesh");
 }
 
 void ModuleSceneIntro::SaveMaterial(JsonObj component, GameObject* gameObject)
 {
 	MaterialComponent* material = gameObject->GetMaterialComponent();
-	component.AddInt("UID", material->UID);
+	component.AddInt("Material UID", material->UID);
+	component.AddString("TYPE", "Material");
 }
 
 void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
@@ -426,7 +430,14 @@ void ModuleSceneIntro::LoadScene(char* sceneBuffer)
 		{
 			LoadGobjsComponents(created_gameobject, object);
 		}
-		App->scene_intro->gameObjectsList.push_back(created_gameobject);
+		if (created_gameobject->ParentUID != 0)
+		{
+			GetGameObjectbyUID(created_gameobject->ParentUID)->childs.push_back(created_gameobject);
+		}
+		else
+		{
+			App->scene_intro->gameObjectsList.push_back(created_gameobject);
+		}
 	}
 }
 
@@ -449,6 +460,8 @@ GameObject* ModuleSceneIntro::LoadGameObjects(JsonObj current_node)
 
 	gameObject->active = current_node.GetBool("Active");
 	gameObject->nameID = current_node.GetString("Name");
+	gameObject->UID = current_node.GetInt("UID");
+	gameObject->ParentUID = current_node.GetInt("Parent UID");
 
 	return gameObject;
 }
@@ -488,8 +501,20 @@ void ModuleSceneIntro::LoadGobjsComponents(GameObject* gameObject, JsonObj curre
 
 void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
 {
-	uint meshUID = component.GetInt("UID");
-	//Request del Mesh según UID
+	uint meshUID = component.GetInt("Mesh UID");
+	MeshComponent* c_mesh = new MeshComponent;
+	ResourceMesh* r_mesh = new ResourceMesh(meshUID, ResourceType::mesh);
+
+	App->fsystem->ReadFile((App->resourceManager->meshesLibPath + std::to_string(meshUID)).c_str(), &r_mesh->meshBuffer);
+	App->geometry->LoadOurMesh(r_mesh->meshBuffer, r_mesh);
+
+	c_mesh->r_mesh = r_mesh;
+	c_mesh->r_mesh->CreateAABB();
+	c_mesh->UID = meshUID;
+
+	App->geometry->CreateBuffer(c_mesh->r_mesh);
+
+	gameObject->AddComponent(c_mesh);
 }
 
 void ModuleSceneIntro::LoadMaterial(JsonObj component, GameObject* gameObject)
@@ -514,6 +539,18 @@ void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* ga
 	loadedTransform->rotation = rotation.GetQuaternion(0);
 
 	gameObject->AddComponent(loadedTransform);
+}
+
+GameObject* ModuleSceneIntro::GetGameObjectbyUID(int UID)
+{
+	for (int i = 0; i < gameObjectsList.size(); i++)
+	{
+		if (gameObjectsList.at(i)->UID == UID)
+		{
+			return gameObjectsList.at(i);
+		}
+	}
+	return nullptr;
 }
 
 
