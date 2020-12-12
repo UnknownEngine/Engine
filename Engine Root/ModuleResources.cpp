@@ -3,6 +3,7 @@
 #include "ModuleResources.h"
 #include "ModuleFSystem.h"
 #include "MaterialComponent.h"
+#include "MeshComponent.h"
 #include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
@@ -256,21 +257,43 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 	return r_texture;
 }
 
-ResourceTexture* ModuleResourceManager::LoadModel(int uid)
+ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject)
 {
 	char* buffer;
 	uint size = App->fsystem->ReadFile((modelsLibPath + std::to_string(uid)).c_str(), &buffer);
 
+	if (size <= 0) return nullptr;
+
+
 	JsonObj modelMeta(buffer);
 	int _uid = modelMeta.GetInt("UID");
-	JsonArray pos = modelMeta.GetArray("Position");
-	JsonArray rot = modelMeta.GetArray("Rotation");
-	JsonArray scale = modelMeta.GetArray("Scale");
+	GameObject* newGameObject = new GameObject(modelMeta.GetString("Name"), uid);
+	if (gameObject != nullptr) {
+		gameObject->childs.push_back(newGameObject);
+	}
+	JsonArray arr_pos = modelMeta.GetArray("Position");
+	JsonArray arr_rot = modelMeta.GetArray("Rotation");
+	JsonArray arr_scale = modelMeta.GetArray("Scale");
 
-	float3 position = pos.GetFloat3(0);
-	Quat rotation = rot.GetQuaternion(0);
-	float3 a_scale = scale.GetFloat3(0);
+	float3 position = arr_pos.GetFloat3(0);
+	Quat rotation = arr_rot.GetQuaternion(0);
+	float3 scale = arr_scale.GetFloat3(0);
 
+	TransformComponent* c_component = new TransformComponent(position, rotation, scale);
+	newGameObject->AddComponent(c_component);
+
+	int mesh_uid = modelMeta.GetInt("Mesh UID");
+	if (mesh_uid != 0) {
+		MeshComponent* c_mesh = new MeshComponent;
+		ResourceMesh* r_mesh = new ResourceMesh(mesh_uid, ResourceType::mesh);
+
+		App->fsystem->ReadFile((meshesLibPath + std::to_string(mesh_uid)).c_str(), &r_mesh->meshBuffer);
+		App->geometry->LoadOurMesh(r_mesh->meshBuffer, r_mesh);
+		c_mesh->r_mesh = r_mesh;
+		newGameObject->AddComponent(c_mesh);
+
+	}
+	App->scene_intro->gameObjectsList.push_back(newGameObject);
 	JsonArray childs = modelMeta.GetArray("Childs UID");
 	std::vector<int> childs_uid = childs.GetUIDs(0);
 
@@ -278,8 +301,7 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid)
 		// HAS MODEL CHILDS
 		for (uint i = 0; i < childs_uid.size(); i++)
 		{
-			LoadModel(uid);
-
+			LoadModel(uid,newGameObject);
 		}
 
 	}

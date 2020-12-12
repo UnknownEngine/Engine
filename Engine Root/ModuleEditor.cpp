@@ -257,8 +257,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 		gobIndex ++;
 		std::string gobName = "Empty Gobject ";
 		gobName += std::to_string(gobIndex);
-		GameObject* emptyGob = new GameObject(gobName.c_str());
-		emptyGob->UID = LCG().Int();
+		GameObject* emptyGob = new GameObject(gobName.c_str(), LCG().Int());
 
 		float3 pos(0, 0, 0);
 		float3 scale(1, 1, 1);
@@ -420,8 +419,7 @@ void ModuleEditor::DrawInspector()
 			childIndex++;
 			std::string childName = "Empty Child ";
 			childName += std::to_string(childIndex);
-			GameObject* emptychild = new GameObject(childName.c_str());
-			emptychild->UID = LCG().Int();
+			GameObject* emptychild = new GameObject(childName.c_str(), LCG().Int());
 
 			float3 pos(App->scene_intro->selected->GetTransformComponent()->position.x, App->scene_intro->selected->GetTransformComponent()->position.y, App->scene_intro->selected->GetTransformComponent()->position.z);
 			float3 scale(App->scene_intro->selected->GetTransformComponent()->scale.x, App->scene_intro->selected->GetTransformComponent()->scale.y, App->scene_intro->selected->GetTransformComponent()->scale.z);

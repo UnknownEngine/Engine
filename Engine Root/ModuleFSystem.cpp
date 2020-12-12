@@ -681,9 +681,9 @@ void M_FileSystem::LoadSceneMode(JsonObj* scene)
 
 GameObject* M_FileSystem::LoadGameObjects(JsonObj current_node)
 {
-	GameObject* gameObject = new GameObject(current_node.GetString("Name"));
+	GameObject* gameObject = new GameObject(current_node.GetString("Name"), current_node.GetInt("UID"));
 
-	gameObject->UID = current_node.GetInt("UID");
+
 	gameObject->active = current_node.GetBool("Active");
 
 	return gameObject;
@@ -697,8 +697,7 @@ void M_FileSystem::LoadGobjsChilds(GameObject* gameObject, JsonObj current_node)
 	{
 		childs_iterator = childs_array.GetObjectAt(i);
 
-		GameObject* newGameObject = new GameObject(childs_iterator.GetString("Name"),gameObject);
-		newGameObject->UID = childs_iterator.GetInt("UID");
+		GameObject* newGameObject = new GameObject(childs_iterator.GetString("Name"), childs_iterator.GetInt("UID"),gameObject);
 		newGameObject->ParentUID = childs_iterator.GetInt("Parent UID");
 		newGameObject->active = childs_iterator.GetBool("Active");
 

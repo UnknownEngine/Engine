@@ -15,7 +15,7 @@ class CameraComponent;
 class GameObject {
 
 public:
-	GameObject(std::string name, GameObject* parent = nullptr);
+	GameObject(std::string name,int uid, GameObject* parent = nullptr);
 	~GameObject();
 
 	void Update(float dt);

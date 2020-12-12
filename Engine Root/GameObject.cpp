@@ -5,7 +5,7 @@
 #include "MeshComponent.h"
 #include "CameraComponent.h"
 
-GameObject::GameObject(std::string name, GameObject* parent) : active(true), nameID(name), parent(parent)
+GameObject::GameObject(std::string name,int uid, GameObject* parent) : active(true), nameID(name), parent(parent),UID(uid)
 {
 }
 

@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 
+class GameObject;
 class ModuleResourceManager :public Module {
 public:
 	ModuleResourceManager(Application* app, bool start_enabled = true);
@@ -39,7 +40,7 @@ public:
 	void SetFbxList();
 	void SetTexturesList();
 	ResourceTexture* LoadTexture(JsonObj json);
-	ResourceTexture* LoadModel(int uid);
+	ResourceTexture* LoadModel(int uid, GameObject* gameObject = nullptr);
 
 public:
 	std::string fbxsPath;

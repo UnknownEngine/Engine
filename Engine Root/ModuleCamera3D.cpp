@@ -9,7 +9,7 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	cameraObject = new GameObject("Camera GameObject");
+	cameraObject = new GameObject("Camera GameObject", LCG().Int());
 	camera = new CameraComponent();
 
 	c_transform = new TransformComponent(float3(0,0,0),Quat(0,0,0,1),float3(1,1,1));

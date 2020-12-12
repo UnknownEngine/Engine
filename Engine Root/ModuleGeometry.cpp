@@ -100,8 +100,7 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 		return ret;
 	}
 	//Create Root GameObject
-	GameObject* gameObject = new GameObject(fileName);
-	gameObject->UID=LCG().Int();
+	GameObject* gameObject = new GameObject(fileName, LCG().Int());
 	App->scene_intro->gameObjectsList.push_back(gameObject);
 
 	aiVector3D translation, scaling;
@@ -146,9 +145,8 @@ bool ModuleGeometry::LoadFbx(const char* buffer,int size, std::string fileName, 
 			}
 		}
 		
-		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), gameObject);
+		GameObject* newGameObject = new GameObject(std::string(node->mName.C_Str()), LCG().Int(), gameObject);
 		newGameObject->ParentUID = gameObject->UID;
-		newGameObject->UID = LCG().Int();
 		gameObject->childs.push_back(newGameObject);
 		CheckNodeChilds(node, newGameObject, scene, realDir);
 		
