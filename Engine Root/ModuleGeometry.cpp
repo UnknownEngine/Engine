@@ -636,8 +636,8 @@ void ModuleGeometry::ImportTexture(JsonObj meta, ResourceTexture* resourceTextur
 //  ---------------------------------------------SIZE GETTERS-------------------------------------
 uint ModuleGeometry::GetMeshSize(ResourceMesh* ourMesh)
 {
-	uint ranges[4];
-	return (sizeof(ranges) + (sizeof(uint) * ourMesh->num_indices) + (sizeof(float) * ourMesh->num_vertices * 3) + (sizeof(float) * ourMesh->num_normals * 3) + (sizeof(float) * ourMesh->num_tex_coords * 2));
+	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
+	return (sizeof(ranges) + sizeof(uint) + (sizeof(uint) * ourMesh->num_indices) + (sizeof(float) * ourMesh->num_vertices * 3) + (sizeof(float) * ourMesh->num_normals * 3) + (sizeof(float) * ourMesh->num_tex_coords * 2));
 }
 
 uint ModuleGeometry::GetMatSize()
@@ -649,7 +649,7 @@ uint ModuleGeometry::GetMatSize()
 //  -----------------------------------------MESH SAVE & LOAD------------------------------------
 char* ModuleGeometry::SaveOurMesh(ResourceMesh* ourMesh, uint size)
 {
-	uint ranges[4] ;
+	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
 
 	char* buffer = new char[size];
 	char* cursor = buffer;
@@ -682,12 +682,18 @@ char* ModuleGeometry::SaveOurMesh(ResourceMesh* ourMesh, uint size)
 
 uint ModuleGeometry::LoadOurMesh(char* filebuffer, ResourceMesh* ourMesh)
 {
-	uint ranges[4] = { ourMesh->num_indices,ourMesh->num_vertices,ourMesh->num_normals,ourMesh->num_tex_coords };
+	uint ranges[4];
 	char* cursor = filebuffer;
 
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
+
+	ourMesh->num_indices    =ranges[0];
+	ourMesh->num_vertices   =ranges[1];
+	ourMesh->num_normals    =ranges[2];
+	ourMesh->num_tex_coords =ranges[3];
+
 
 	bytes = sizeof(uint) * ourMesh->num_indices;
 	ourMesh->indices = new uint[ourMesh->num_indices];
