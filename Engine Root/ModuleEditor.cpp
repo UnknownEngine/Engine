@@ -165,7 +165,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (ImGui::MenuItem("Save Scene"))
 			{
 				char* buffer;
-				App->fsystem->SaveScene(&buffer);
+				App->scene_intro->SaveScene(&buffer);
 			}
 
 			if (ImGui::MenuItem("Load Scene",nullptr,nullptr,&showLoadWindow))
@@ -300,7 +300,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 			if (App->editorMode)
 			{
 				char* buffer;
-				App->fsystem->SaveScene(&buffer);
+				App->scene_intro->SaveScene(&buffer);
 				App->editorMode = !App->editorMode;
 				App->gameMode = !App->gameMode;
 			}

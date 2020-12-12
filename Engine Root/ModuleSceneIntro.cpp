@@ -409,7 +409,7 @@ void ModuleSceneIntro::SaveCameraComponent(JsonObj component, GameObject* gameOb
 void ModuleSceneIntro::LoadScene(char* sceneBuffer)
 {
 	gameObjectsList.clear();
-	/*App->fsystem->ReadFile("Library/Config.json", &sceneBuffer);
+	App->fsystem->ReadFile("Library/Config.json", &sceneBuffer);
 	JsonObj* myScene = new JsonObj(sceneBuffer);
 
 	if (App->onStart)
@@ -430,7 +430,7 @@ void ModuleSceneIntro::LoadScene(char* sceneBuffer)
 			LoadGobjsComponents(created_gameobject, object);
 		}
 		App->scene_intro->gameObjectsList.push_back(created_gameobject);
-	}*/
+	}
 }
 
 void ModuleSceneIntro::LoadSceneMode(JsonObj* scene)
