@@ -35,11 +35,12 @@ public:
 	JsonArray SaveSceneMode(JsonObj scene);
 
 
-	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
+	void SaveGobjsChilds(GameObject* gameObject, JsonArray GobsArray);
 	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
 	void SaveMesh(JsonObj component, GameObject* gameObject);
 	void SaveMaterial(JsonObj component, GameObject* gameObject);
 	void SaveTransform(JsonObj component, GameObject* gameObject);
+	void SaveCameraComponent(JsonObj component, GameObject* gameObject);
 
 	void LoadScene(char* sceneBuffer);
 	void LoadSceneMode(JsonObj* scene);
@@ -49,11 +50,13 @@ public:
 	void LoadMesh(JsonObj component, GameObject* gameObject);
 	void LoadMaterial(JsonObj component, GameObject* gameObject);
 	void LoadTransform(JsonObj component, GameObject* gameObject);
+	void SetCameraTransform(TransformComponent* cameraTransform);
 
 public:
 	GameObject* selected=nullptr;
 	GameObject* toSelect = nullptr;
 	GameObject* CreateGameObject(std::string name);
+	TransformComponent* cameraTransform;
 	std::vector<GameObject*> gameObjectsList;
 	JsonObj myScene;
 	char* sceneBuffer;

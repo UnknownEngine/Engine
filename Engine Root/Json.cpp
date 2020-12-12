@@ -227,7 +227,7 @@ Quat JsonArray::GetQuaternion(int index)
 std::vector<int> JsonArray::GetUIDs(int index)
 {
 	std::vector<int> UIDs;
-	for (index; index < elements; index++)
+	for (index; index < array->count; index++)
 	{
 		UIDs.push_back(GetInt(index));
 	}

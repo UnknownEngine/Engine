@@ -71,7 +71,7 @@ public:
 	void AddQuaternion(float a, float x, float y, float z);
 	void AddFloat3(float x, float y, float z);
 	uint elements;
-private:
+public:
 	JSON_Array* array;
 	JSON_Value* val;
 	

@@ -257,11 +257,16 @@ void ModuleSceneIntro::DrawRay(LineSegment& segment)
 	
 }
 
+
+//  ----------------------------------------------------------------------------------------------
+//  --------------------------------------------SAVE----------------------------------------------
+//  ----------------------------------------------------------------------------------------------
+
 void ModuleSceneIntro::SaveScene(char** sceneBuffer)
 {
 	JsonObj scene;
 	SaveSceneMode(scene);
-	if (gameObjectsList.empty())
+	if (!gameObjectsList.empty())
 	{
 		scene.AddArray("GameObjects");
 		SaveGameObjects(scene);
@@ -288,7 +293,7 @@ JsonArray ModuleSceneIntro::SaveGameObjects(JsonObj scene)
 		gameObject.AddBool("Active",gameObjectsList.at(it)->active);
 		if (!App->scene_intro->gameObjectsList.at(it)->childs.empty())
 		{
-			SaveGobjsChilds(gameObjectsList.at(it), gameObject);
+			SaveGobjsChilds(gameObjectsList.at(it), gameObjects);
 		}
 		if (!gameObjectsList.at(it)->components.empty())
 		{
@@ -300,40 +305,155 @@ JsonArray ModuleSceneIntro::SaveGameObjects(JsonObj scene)
 
 JsonArray ModuleSceneIntro::SaveSceneMode(JsonObj scene)
 {
-	return JsonArray();
+	JsonArray sceneModes = scene.AddArray("Scene Mode");
+	JsonObj mode;
+	sceneModes.AddObject(mode);
+
+	mode.AddBool("EditorMode", App->editorMode);
+	mode.AddBool("GameMode", App->gameMode);
+	mode.AddBool("Paused", App->gameModePaused);
+
+	return sceneModes;
 }
 
-void ModuleSceneIntro::SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob)
+void ModuleSceneIntro::SaveGobjsChilds(GameObject* gameObject, JsonArray GobsArray)
 {
+	for (int i = 0; i < gameObject->childs.size(); i++)
+	{
+		JsonObj child;
+		GobsArray.AddObject(child);
+		child.AddInt("UID", gameObject->childs.at(i)->UID);
+		child.AddInt("Parent UID", gameObject->childs.at(i)->ParentUID);
+		child.AddString("Parent", gameObject->childs.at(i)->parent->nameID.c_str());
+		child.AddString("Name", gameObject->childs.at(i)->nameID.c_str());
+		child.AddBool("Active", gameObject->childs.at(i)->active);
+		if (!gameObject->childs.at(i)->components.empty())
+		{
+			SaveGobjsComponentes(gameObject->childs.at(i), child);
+		}
+	}
 }
 
 void ModuleSceneIntro::SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob)
 {
+	JsonArray components = JsonGob.AddArray("Components");
+	for (int i = 0; i < gameObject->components.size(); ++i)
+	{
+		JsonObj component;
+		components.AddObject(component);
+		if (gameObject->components.at(i)->type == ComponentType::Mesh)
+		{
+			SaveMesh(component, gameObject);
+		}
+		if (gameObject->components.at(i)->type == ComponentType::Material)
+		{
+			SaveMaterial(component, gameObject);
+		}
+		if (gameObject->components.at(i)->type == ComponentType::Transform)
+		{
+			SaveTransform(component, gameObject);
+		}
+		if (gameObject->components.at(i)->type == ComponentType::Camera)
+		{
+			SaveCameraComponent(component, gameObject);
+		}
+	}
 }
 
 void ModuleSceneIntro::SaveMesh(JsonObj component, GameObject* gameObject)
 {
+	MeshComponent* mesh = gameObject->GetMeshComponent();
+	component.AddInt("UID", mesh->UID);
 }
 
 void ModuleSceneIntro::SaveMaterial(JsonObj component, GameObject* gameObject)
 {
+	MaterialComponent* material = gameObject->GetMaterialComponent();
+	component.AddInt("UID", material->UID);
 }
 
 void ModuleSceneIntro::SaveTransform(JsonObj component, GameObject* gameObject)
 {
+	TransformComponent* transform = gameObject->GetTransformComponent();
+	component.AddString("TYPE", "Transform");
+	component.AddInt("UID", transform->UID);
+	JsonArray position = component.AddArray("Position");
+	JsonArray scale = component.AddArray("Scale");
+	JsonArray rotation = component.AddArray("Rotation");
+
+	position.AddFloat3(transform->position.x, transform->position.y, transform->position.z);
+	scale.AddFloat3(transform->scale.x, transform->scale.y, transform->scale.z);
+	rotation.AddQuaternion(transform->rotation.w, transform->rotation.x, transform->rotation.y, transform->rotation.z);
+}
+
+void ModuleSceneIntro::SaveCameraComponent(JsonObj component, GameObject* gameObject)
+{
+	//CameraComponent* camera = gameObject->GetCameraComponent();
+	//component.AddInt("Frustum Type", camera->frustum.type);
+	//component.AddFloat("Frustum Near Distance", camera->frustum.nearPlaneDistance);
+	//component.AddFloat("Frustum Far Distance", camera->frustum.farPlaneDistance);
+	//component.AddFloat("Frustum Vertical FOV", camera->frustum.verticalFov);
+
+	//JsonArray frustumFront = component.AddArray("Frustum Front");
+	//frustumFront.AddFloat3(camera->frustum.front.x, camera->frustum.front.y, camera->frustum.front.z);
+
+	//JsonArray frustumUp = component.AddArray("Frustum Up");
+	//frustumUp.AddFloat3(camera->frustum.up.x, camera->frustum.up.y, camera->frustum.up.z);
+
+	//JsonArray frustumPos = component.AddArray("Frustum Pos");
+	//frustumPos.AddFloat3(camera->frustum.pos.x, camera->frustum.pos.y, camera->frustum.pos.z);
+
+	//delete camera;
 }
 
 void ModuleSceneIntro::LoadScene(char* sceneBuffer)
 {
+	gameObjectsList.clear();
+	/*App->fsystem->ReadFile("Library/Config.json", &sceneBuffer);
+	JsonObj* myScene = new JsonObj(sceneBuffer);
+
+	if (App->onStart)
+	{
+		LoadSceneMode(myScene);
+		App->onStart = false;
+	}
+
+	JsonArray gameObjects = myScene->GetArray("GameObjects");
+	for (int i = 0; i < gameObjects.Size(); i++)
+	{
+		JsonObj object = gameObjects.GetObjectAt(i);
+
+		GameObject* created_gameobject = LoadGameObjects(object);
+
+		if (object.GetArray("Components") != NULL)
+		{
+			LoadGobjsComponents(created_gameobject, object);
+		}
+		App->scene_intro->gameObjectsList.push_back(created_gameobject);
+	}*/
 }
 
 void ModuleSceneIntro::LoadSceneMode(JsonObj* scene)
 {
+	JsonArray mode = scene->GetArray("Scene Mode");
+
+	for (int i = 0; i < mode.Size(); i++)
+	{
+		JsonObj node = mode.GetObjectAt(i);
+		App->editorMode = node.GetBool("EditorMode");
+		App->gameMode = node.GetBool("GameMode");
+		App->gameModePaused = node.GetBool("Paused");
+	}
 }
 
 GameObject* ModuleSceneIntro::LoadGameObjects(JsonObj current_node)
 {
-	return nullptr;
+	GameObject* gameObject = new GameObject(current_node.GetString("Name"), current_node.GetInt("UID"));
+
+	gameObject->active = current_node.GetBool("Active");
+	gameObject->nameID = current_node.GetString("Name");
+
+	return gameObject;
 }
 
 void ModuleSceneIntro::LoadGobjsChilds(GameObject* gameObject, JsonObj current_node)
@@ -342,19 +462,58 @@ void ModuleSceneIntro::LoadGobjsChilds(GameObject* gameObject, JsonObj current_n
 
 void ModuleSceneIntro::LoadGobjsComponents(GameObject* gameObject, JsonObj current_node)
 {
+	JsonArray components_array = current_node.GetArray("Components");
+	JsonObj components_iterator;
+	for (int i = 0; i < components_array.Size(); ++i)
+	{
+		components_iterator = components_array.GetObjectAt(i);
+
+		std::string type = components_iterator.GetString("TYPE");
+		if (type == "Mesh")
+		{
+			LoadMesh(components_iterator, gameObject);
+		}
+		else if (type == "Material")
+		{
+			LoadMaterial(components_iterator, gameObject);
+		}
+		else if (type == "Transform")
+		{
+			LoadTransform(components_iterator, gameObject);
+		}
+	}
 }
 
 void ModuleSceneIntro::LoadMesh(JsonObj component, GameObject* gameObject)
 {
+	uint meshUID = component.GetInt("UID");
+	//Request del Mesh según UID
 }
 
 void ModuleSceneIntro::LoadMaterial(JsonObj component, GameObject* gameObject)
 {
+	uint materialUID = component.GetInt("UID");
+	//Request del Material según UID
 }
 
-void ModuleSceneIntro::LoadTransform(JsonObj component, GameObject* gameObject)
+void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* gameObject)
 {
+	TransformComponent* loadedTransform = new TransformComponent();
+	loadedTransform->type = ComponentType::Transform;
+	loadedTransform->UID = components_iterator.GetInt("UID");
+
+	JsonArray position = components_iterator.GetArray("Position");
+	loadedTransform->position = position.GetFloat3(0);
+
+	JsonArray scale = components_iterator.GetArray("Scale");
+	loadedTransform->scale = scale.GetFloat3(0);
+
+	JsonArray rotation = components_iterator.GetArray("Rotation");
+	loadedTransform->rotation = rotation.GetQuaternion(0);
+
+	gameObject->AddComponent(loadedTransform);
 }
+
 
 
 

@@ -295,16 +295,16 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* gameObject
 	}
 	App->scene_intro->gameObjectsList.push_back(newGameObject);
 	JsonArray childs = modelMeta.GetArray("Childs UID");
-	std::vector<int> childs_uid = childs.GetUIDs(0);
 
-	if (childs_uid.size() > 0) {
-		// HAS MODEL CHILDS
-		for (uint i = 0; i < childs_uid.size(); i++)
-		{
-			LoadModel(uid,newGameObject);
+	if (childs.array != NULL) {
+		std::vector<int> childs_uid = childs.GetUIDs(0);
+		if (childs_uid.size() > 0) {
+			// HAS MODEL CHILDS
+			for (uint i = 0; i < childs_uid.size(); i++)
+			{
+				LoadModel(childs_uid.at(i), newGameObject);
+			}
 		}
-
 	}
-
 	return nullptr;
 }
