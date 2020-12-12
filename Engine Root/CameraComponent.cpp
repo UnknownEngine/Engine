@@ -12,13 +12,14 @@
 
 CameraComponent::CameraComponent() : Component()
 {
+    type = ComponentType::Camera;
     frustum.type = FrustumType::PerspectiveFrustum;
     frustum.nearPlaneDistance = 0.1f;
     frustum.farPlaneDistance = 500.f;
     frustum.front = float3::unitZ;
     frustum.up = float3::unitY;
-
-    frustum.verticalFov = 60.0f * DEGTORAD;
+    fov = 60.f;
+    frustum.verticalFov = fov * DEGTORAD;
     
     frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * 1.25f);
 
@@ -31,6 +32,7 @@ CameraComponent::~CameraComponent()
 
 void CameraComponent::UpdateFrustum(float width, float height)
 {
+    frustum.verticalFov = fov * DEGTORAD;
     frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov / 2.0f) * (width / height));
     frustum.ProjectionMatrix();
     frustum.ViewMatrix();
