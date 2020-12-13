@@ -1067,11 +1067,11 @@ void ModuleEditor::ShowFbxList(const uint& i)
 		std::string finalName = name.erase(name.size() - 4);
 		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
 		{
-			//if (ImGui::IsItemClicked(0)) {
-		//    std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-		//    /*App->scene_intro->selected->GetMeshComponent()->r_mesh =*/ static_cast<ResourceMesh*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::mesh));
-		//}
-			if (ImGui::IsItemClicked(0))
+			if (ImGui::IsItemClicked(0)) {
+		    std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+		    /*App->scene_intro->selected->GetMeshComponent()->r_mesh =*/ static_cast<ResourceMesh*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::mesh));
+		}
+			if (ImGui::IsItemClicked(1))
 			{
 				std::string metaPath = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
 				App->scene_intro->DeleteAssetNResource(metaPath);
@@ -1094,27 +1094,30 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 					char* metaBuffer=nullptr;
 					App->fsystem->ReadFile(resourceDir.c_str(), &metaBuffer);
 					JsonObj textMeta(metaBuffer);
-					ResourceTexture* r_texture = App->scene_intro->selected->GetMaterialComponent()->r_texture;
-					if (r_texture != nullptr) {
-						r_texture->instances--;
-						if (r_texture <= 0) {
-							App->resourceManager->resourceMap.erase(r_texture->UID);
+					MaterialComponent* c_material = App->scene_intro->selected->GetMaterialComponent();
+					if (c_material != nullptr) {
+						ResourceTexture* r_texture = c_material->r_texture;
+						if (r_texture != nullptr) {
+							r_texture->instances--;
+							if (r_texture <= 0) {
+								App->resourceManager->resourceMap.erase(r_texture->UID);
+							}
 						}
-					}	
-					r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::texture));
-					
-					if (App->scene_intro->selected->ParentUID == 0)
-					{
-						for (int i = 0; i < App->scene_intro->selected->childs.size(); i++)
+						r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::texture));
+
+						if (App->scene_intro->selected->ParentUID == 0)
 						{
-							App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->r_texture = r_texture;
-							App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->UID = r_texture->UID;
+							for (int i = 0; i < App->scene_intro->selected->childs.size(); i++)
+							{
+								App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->r_texture = r_texture;
+								App->scene_intro->selected->childs.at(i)->GetMaterialComponent()->UID = r_texture->UID;
+							}
 						}
-					}
-					else
-					{
-						App->scene_intro->selected->GetMaterialComponent()->r_texture = r_texture;
-						App->scene_intro->selected->GetMaterialComponent()->UID = r_texture->UID;
+						else
+						{
+							App->scene_intro->selected->GetMaterialComponent()->r_texture = r_texture;
+							App->scene_intro->selected->GetMaterialComponent()->UID = r_texture->UID;
+						}
 					}
 					//App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(),ResourceType::texture));
 				}
