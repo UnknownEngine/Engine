@@ -32,9 +32,9 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->LookAt(float3(0, 0, 0));
 
-	showDebugAABB = true;
+	showDebugAABB = false;
 
-	//gameObjectsList.push_back(App->camera->cameraObject);
+	gameObjectsList.push_back(App->camera->cameraObject);
 	//App->geometry->LoadFbx(buffer, size, file, file);
 	//char* drop_file_dir = "Assets/FBXs/BakerHouse.fbx";
 	//std::string  path = "";

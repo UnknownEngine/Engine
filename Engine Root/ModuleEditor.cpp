@@ -509,6 +509,11 @@ void ModuleEditor::DrawInspector()
 			}
 			else {
 				ImGui::Text("Rendered objects: %d", App->camera->rendered_objects);
+				ImGui::Text("");
+				ImGui::Checkbox("Debug AABB", &App->scene_intro->showDebugAABB);
+				ImGui::Checkbox("Debug raycast", &App->camera->debugRay);
+
+
 			}
 
 			ImGui::Text("");
