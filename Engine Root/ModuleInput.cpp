@@ -135,7 +135,27 @@ update_status ModuleInput::PreUpdate(float dt)
 				std::string  file = "";
 				std::string  extension = "";
 				App->fsystem->SplitFilePath(drop_file_dir, &path, &file, &extension);
-				App->fsystem->DetectExtension(path,file, extension);
+				
+				ResourceType type = App->resourceManager->SetResourceType(extension);
+
+				if (type == ResourceType::mesh)
+				{
+					App->fsystem->DuplicateFile(drop_file_dir, (App->resourceManager->fbxsPath + file + "." + extension).c_str());
+					App->resourceManager->ImportMeshAssets();
+					App->resourceManager->fbxList.clear();
+					App->resourceManager->SetFbxList();
+					//App->resourceManager.impo
+				}
+				else if (type == ResourceType::texture)
+				{
+					App->fsystem->DuplicateFile(drop_file_dir, (App->resourceManager->texturesPath + file + extension).c_str());
+					App->resourceManager->ImportTexturesAssets();
+					App->resourceManager->textureList.clear();
+					App->resourceManager->SetTexturesList();
+				}
+
+
+				//App->fsystem->DetectExtension(path,file, extension);
 			}
 			break;
 		}

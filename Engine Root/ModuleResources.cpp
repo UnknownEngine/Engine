@@ -30,11 +30,6 @@ bool ModuleResourceManager::Start()
 	SetFbxList();
 	SetTexturesList();
 
-	App->scene_intro->LoadScene(App->scene_intro->sceneBuffer);
-
-	//char* buffer=nullptr;
-	//App->geometry->LoadTexturefromBuffer(buffer);
-	//LoadResource();
 
 	return true;
 }
@@ -46,7 +41,6 @@ update_status ModuleResourceManager::PreUpdate(float dt)
 
 update_status ModuleResourceManager::Update(float dt)
 {
-	//ImportMeshAssets();
 	return UPDATE_CONTINUE;
 }
 
