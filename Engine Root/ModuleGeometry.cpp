@@ -537,6 +537,15 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 			aiNode* node = scene->mRootNode->mChildren[i];
 			std::string nodeName = node->mName.C_Str();
 
+			aiVector3D translation, scaling;
+			aiQuaternion rotation;
+
+			node->mTransformation.Decompose(scaling, rotation, translation);
+
+			float3 pos(translation.x, translation.y, translation.z);
+			float3 scale(scaling.x, scaling.y, scaling.z);
+			Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
 			bool dummyFound = true;
 			while (dummyFound)
 			{
@@ -554,39 +563,42 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 					dummyFound = true;
 				}
 			}
-				if (createChildsarray)
-				{
-					childsArray = root.AddArray("Childs UID");
-					createChildsarray = !createChildsarray;
-				}
-				uint UID = App->resourceManager->GenerateNewUID();
-				if (!App->fsystem->CheckIfExists(App->resourceManager->modelsLibPath + std::to_string(UID)))
-				{
-					childsArray.AddInt(UID);
-
-					newChild.AddInt("UID", UID);
-					newChild.AddInt("Parent UID", root.GetInt("UID"));
-					newChild.AddString("Name", node->mName.C_Str());
-
-					if (node->mNumMeshes > 0) {
-
-						ImportChildMeshes(node, scene, newChild, realDir);
-					}
-
-					JsonArray posArray = newChild.AddArray("Position");
-					posArray.AddFloat3(pos.x, pos.y, pos.z);
-					JsonArray scalArray = newChild.AddArray("Scale");
-					scalArray.AddFloat3(scale.x, scale.y, scale.z);
-					JsonArray rotArray = newChild.AddArray("Rotation");
-					rotArray.AddQuaternion(rot.w, rot.x, rot.y, rot.z);
-
-					char* childBuffer = nullptr;
-					uint sizeChild = newChild.Save(&childBuffer);
-
-					App->fsystem->WriteFile(((App->resourceManager->modelsLibPath + std::to_string(newChild.GetInt("UID"))).c_str()), childBuffer, sizeChild);
-				}
-
+			if (createChildsarray)
+			{
+				childsArray = root.AddArray("Childs UID");
+				createChildsarray = !createChildsarray;
 			}
+			uint UID = App->resourceManager->GenerateNewUID();
+			if (!App->fsystem->CheckIfExists(App->resourceManager->modelsLibPath + std::to_string(UID)))
+			{
+				childsArray.AddInt(UID);
+
+				newChild.AddInt("UID", UID);
+				newChild.AddInt("Parent UID", root.GetInt("UID"));
+				newChild.AddString("Name", node->mName.C_Str());
+
+				if (node->mNumMeshes > 0) {
+
+					ImportChildMeshes(node, scene, newChild, realDir);
+				}
+
+
+
+
+				JsonArray posArray = newChild.AddArray("Position");
+				posArray.AddFloat3(pos.x, pos.y, pos.z);
+				JsonArray scalArray = newChild.AddArray("Scale");
+				scalArray.AddFloat3(scale.x, scale.y, scale.z);
+				JsonArray rotArray = newChild.AddArray("Rotation");
+				rotArray.AddQuaternion(rot.w, rot.x, rot.y, rot.z);
+
+				char* childBuffer = nullptr;
+				uint sizeChild = newChild.Save(&childBuffer);
+
+				App->fsystem->WriteFile(((App->resourceManager->modelsLibPath + std::to_string(newChild.GetInt("UID"))).c_str()), childBuffer, sizeChild);
+			}
+
+		}
 		char* rootBuffer = nullptr;
 		char* metaBuffer = nullptr;
 

@@ -145,18 +145,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 		}
 	}
 
-
-	//if (App->scene_intro->selected != nullptr) {
-	//	float4x4 viewMatrix = App->camera->camera->frustum.ViewMatrix();
-	//	viewMatrix.Transpose();
-	//	float modelPtr[16];
-	//	float4x4 modelProjection = App->scene_intro->selected->GetTransformComponent()->global_transform.Transposed();
-	//	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
-	//	float4x4 projectionMatrix = App->camera->camera->frustum.ProjectionMatrix().Transposed();
-
-	//}
-
-
 	CreateFileInspector();
 
 	if (ImGui::BeginMainMenuBar()) {
@@ -410,10 +398,7 @@ void ModuleEditor::DrawInspector()
 	}
 	if (App->scene_intro->selected != NULL)
 	{
-		//if (App->scene_intro->selected == App->camera->cameraObject) {
-		//	DrawCameraComponents();
-		//	return;
-		//}
+
 		if (ImGui::Button("Create Empty Child", ImVec2(200, 20)))
 		{
 			childIndex++;
@@ -601,6 +586,7 @@ void ModuleEditor::DrawInspector()
 			}
 
 			ImGui::Text("");
+			ImGui::Text("Instances: %d", App->scene_intro->selected->GetMaterialComponent()->r_texture->instances);
 			ImGui::Text("");
 			ImGui::SameLine(72.f);
 			if (ImGui::Button("Delete Material", ImVec2(200, 20)))
@@ -695,13 +681,18 @@ void ModuleEditor::FillInspector(GameObject* selected)
 	}
 	if (materialComponent != nullptr)
 	{
-		//material_name = materialComponent->name;
-		//material_path = materialComponent->path;
-		//material_width = materialComponent->width;
-		//material_height = materialComponent->height;
-		//material_bpp = materialComponent->bpp;
-		//material_buffer = materialComponent->bufferTexture;
-		//hasMaterial = true;
+		if (materialComponent->r_texture != nullptr) {
+			material_name = materialComponent->r_texture->name;
+			material_path = materialComponent->r_texture->path;
+			material_width = materialComponent->r_texture->width;
+			material_height = materialComponent->r_texture->height;
+			material_bpp = materialComponent->r_texture->bpp;
+			material_buffer = materialComponent->r_texture->bufferTexture;
+			hasMaterial = true;
+		}
+		else {
+			hasMaterial = false;
+		}
 	}
 	else
 	{
@@ -1092,13 +1083,14 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 					char* metaBuffer=nullptr;
 					App->fsystem->ReadFile(resourceDir.c_str(), &metaBuffer);
 					JsonObj textMeta(metaBuffer);
-					ResourceTexture* r_texture = App->resourceManager->LoadTexture(textMeta);
+					ResourceTexture* r_texture = App->scene_intro->selected->GetMaterialComponent()->r_texture;
 					if (r_texture != nullptr) {
 						r_texture->instances--;
-						if (r_texture->instances <= 0) {
+						if (r_texture <= 0) {
 							App->resourceManager->resourceMap.erase(r_texture->UID);
 						}
-					}			
+					}	
+					r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::texture));
 					
 					if (App->scene_intro->selected->ParentUID == 0)
 					{
