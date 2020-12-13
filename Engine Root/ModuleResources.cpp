@@ -254,6 +254,7 @@ ResourceTexture* ModuleResourceManager::LoadTexture(JsonObj json)
 	//App->geometry->LoadTexturefromBuffer(uid,r_texture);
 	App->geometry->LoadTexture(json.GetString("Asset path"), r_texture);
 	r_texture->instances++;
+	r_texture->UID = uid;
 	resourceMap[uid] = r_texture;
 	return r_texture;
 }
