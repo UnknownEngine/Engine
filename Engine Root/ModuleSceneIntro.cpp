@@ -76,94 +76,96 @@ update_status ModuleSceneIntro::Update(float dt)
 			{
 				for (uint j = 0; j < gameObjectsList[i]->childs.size(); j++)
 				{
-					float3 corners[8];
-					gameObjectsList[i]->childs[j]->GetAABB().GetCornerPoints(corners);
+					if (gameObjectsList[i]->childs[j]->GetMeshComponent()->r_mesh != nullptr)
+					{
+						float3 corners[8];
+						gameObjectsList[i]->childs[j]->GetAABB().GetCornerPoints(corners);
 
-					glColor3f(0, 1, 0);
-					glBegin(GL_LINES);
+						glColor3f(0, 1, 0);
+						glBegin(GL_LINES);
 
-					//Botton face
-					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+						//Botton face
+						glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+						glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+						glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+						glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+						glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+						glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+						glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+						glVertex3f(corners[0].x, corners[0].y, corners[0].z);
 
-					//Top Face
-					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+						//Top Face
+						glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+						glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+						glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+						glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+						glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+						glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+						glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+						glVertex3f(corners[2].x, corners[2].y, corners[2].z);
 
-					//Left Face
-					glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-					glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-					glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-					glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-
-
-					//Right Face
-					glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-					glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-					glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-					glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-
-					glEnd();
-					glColor3f(1, 1, 1);
-
-					if (gameObjectsList[i]->childs[j]->childs.size() > 0) {
-						for (uint k = 0; k < gameObjectsList[i]->childs[j]->childs.size(); k++) {
-							float3 corners[8];
-							gameObjectsList[i]->childs[j]->childs[k]->GetAABB().GetCornerPoints(corners);
-
-							glColor3f(0, 1, 0);
-							glBegin(GL_LINES);
-
-							//Botton face
-							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-
-							//Top Face
-							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
-							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
-
-							//Left Face
-							glVertex3f(corners[1].x, corners[1].y, corners[1].z);
-							glVertex3f(corners[3].x, corners[3].y, corners[3].z);
-							glVertex3f(corners[0].x, corners[0].y, corners[0].z);
-							glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+						//Left Face
+						glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+						glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+						glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+						glVertex3f(corners[2].x, corners[2].y, corners[2].z);
 
 
-							//Right Face
-							glVertex3f(corners[5].x, corners[5].y, corners[5].z);
-							glVertex3f(corners[7].x, corners[7].y, corners[7].z);
-							glVertex3f(corners[4].x, corners[4].y, corners[4].z);
-							glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+						//Right Face
+						glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+						glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+						glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+						glVertex3f(corners[6].x, corners[6].y, corners[6].z);
 
-							glEnd();
-							glColor3f(1, 1, 1);
+						glEnd();
+						glColor3f(1, 1, 1);
+
+						if (gameObjectsList[i]->childs[j]->childs.size() > 0) {
+							for (uint k = 0; k < gameObjectsList[i]->childs[j]->childs.size(); k++) {
+								float3 corners[8];
+								gameObjectsList[i]->childs[j]->childs[k]->GetAABB().GetCornerPoints(corners);
+
+								glColor3f(0, 1, 0);
+								glBegin(GL_LINES);
+
+								//Botton face
+								glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+								glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+								glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+								glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+								glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+								glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+								glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+								glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+
+								//Top Face
+								glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+								glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+								glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+								glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+								glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+								glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+								glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+								glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+								//Left Face
+								glVertex3f(corners[1].x, corners[1].y, corners[1].z);
+								glVertex3f(corners[3].x, corners[3].y, corners[3].z);
+								glVertex3f(corners[0].x, corners[0].y, corners[0].z);
+								glVertex3f(corners[2].x, corners[2].y, corners[2].z);
+
+
+								//Right Face
+								glVertex3f(corners[5].x, corners[5].y, corners[5].z);
+								glVertex3f(corners[7].x, corners[7].y, corners[7].z);
+								glVertex3f(corners[4].x, corners[4].y, corners[4].z);
+								glVertex3f(corners[6].x, corners[6].y, corners[6].z);
+
+								glEnd();
+								glColor3f(1, 1, 1);
+							}
 						}
 					}
-
 				}
 
 
@@ -213,7 +215,7 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 
 		//Testing triangle by triangle
 		const MeshComponent* mesh = candidates[i]->GetMeshComponent();
-		if (mesh)
+		if (mesh && mesh->r_mesh != nullptr)
 		{
 				LineSegment local = segment;
 				local.Transform(candidates[i]->GetTransformComponent()->global_transform.Inverted());
@@ -556,7 +558,7 @@ void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* ga
 	gameObject->AddComponent(loadedTransform);
 }
 
-void ModuleSceneIntro::DeleteAssetNResource(std::string metaDir)
+void ModuleSceneIntro::DeleteFBXnResource(std::string metaDir)
 {
 	char* metaBuffer;
 	App->fsystem->ReadFile(metaDir.c_str(), &metaBuffer);
@@ -581,6 +583,7 @@ void ModuleSceneIntro::DeleteAssetNResource(std::string metaDir)
 
 		if (App->fsystem->CheckIfExists(meshDir))
 		{
+			r_meshesToDelete.push_back(meshUID);
 			App->fsystem->Remove(meshDir.c_str());
 		}
 		App->fsystem->Remove((App->resourceManager->modelsLibPath + std::to_string(ModelsUIDs.at(i))).c_str());
@@ -591,7 +594,97 @@ void ModuleSceneIntro::DeleteAssetNResource(std::string metaDir)
 
 	App->fsystem->Remove(metaDir.c_str());
 	App->fsystem->Remove(fullPath.c_str());
+	App->resourceManager->fbxList.clear();
+	App->resourceManager->SetFbxList();
+	EmptyMeshComponents(r_meshesToDelete);
+
+	r_meshesToDelete.clear();
 }
+
+void ModuleSceneIntro::DeleteTexturenResource(std::string metaDir)
+{
+	char* metaBuffer;
+	App->fsystem->ReadFile(metaDir.c_str(), &metaBuffer);
+
+	JsonObj meta(metaBuffer);
+	char* textureBuffer;
+
+	r_texturesToDelete.push_back(meta.GetInt("UID"));
+	App->fsystem->Remove(meta.GetString("Library path"));
+	App->fsystem->Remove(meta.GetString("Asset path"));
+	App->fsystem->Remove(metaDir.c_str());
+
+	App->resourceManager->textureList.clear();
+	App->resourceManager->SetTexturesList();
+	EmptyTextureComponents(r_texturesToDelete);
+
+	r_texturesToDelete.clear();
+}
+
+void ModuleSceneIntro::EmptyMeshComponents(std::vector<int> meshestoDelete)
+{
+	for (int i = 0; i < meshestoDelete.size(); i++)
+	{
+		for (int j = 0; j < gameObjectsList.size(); j++)
+		{
+			if (gameObjectsList.at(j)->nameID != "Camera GameObject")
+			{
+			if (!gameObjectsList.at(j)->childs.empty())
+			{
+				for (int n = 0; n < gameObjectsList.at(j)->childs.size(); n++)
+				{
+					if (meshestoDelete.at(i) == gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->UID)
+					{
+						gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->r_mesh = nullptr;
+						gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->UID = NULL;
+					}
+				}
+			}
+			else
+			{
+				if (meshestoDelete.at(i) == gameObjectsList.at(j)->GetMeshComponent()->UID)
+				{
+					if (gameObjectsList.at(i)->GetMeshComponent()->r_mesh != nullptr)
+					{
+						gameObjectsList.at(j)->GetMeshComponent()->r_mesh = nullptr;
+						gameObjectsList.at(j)->GetMeshComponent()->UID = NULL;
+					}
+				}
+			}
+			}
+		}
+	}
+}
+
+void ModuleSceneIntro::EmptyTextureComponents(std::vector<int> texturestoDelete)
+{
+	for (int i = 0; i < texturestoDelete.size(); i++)
+	{
+		for (int j = 0; j < gameObjectsList.size(); j++)
+		{
+			if (!gameObjectsList.at(j)->childs.empty())
+			{
+				for (int n = 0; n < gameObjectsList.at(j)->childs.size(); n++)
+				{
+					if (texturestoDelete.at(i) == gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->UID)
+					{
+						gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->r_texture = nullptr;
+						gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->UID = NULL;
+					}
+				}
+			}
+			else
+			{
+				if (texturestoDelete.at(i) == gameObjectsList.at(j)->GetMaterialComponent()->UID)
+				{
+					gameObjectsList.at(j)->GetMaterialComponent()->r_texture = nullptr;
+					gameObjectsList.at(j)->GetMaterialComponent()->UID = NULL;
+				}
+			}
+		}
+	}
+}
+
 
 GameObject* ModuleSceneIntro::GetGameObjectbyUID(int UID)
 {

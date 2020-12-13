@@ -695,7 +695,7 @@ void ModuleEditor::FillInspector(GameObject* selected)
 	{
 		hasTransform = false;
 	}
-	if (materialComponent != nullptr)
+	if (materialComponent != nullptr && materialComponent->r_texture!=nullptr)
 	{
 		if (materialComponent->r_texture != nullptr) {
 			material_name = materialComponent->r_texture->name;
@@ -714,7 +714,7 @@ void ModuleEditor::FillInspector(GameObject* selected)
 	{
 		hasMaterial = false;
 	}
-	if (meshComponent != nullptr)
+	if (meshComponent != nullptr && meshComponent->r_mesh != nullptr)
 	{
 		numvertices = meshComponent->r_mesh->num_vertices;
 		numnormals = meshComponent->r_mesh->num_normals;
@@ -1084,7 +1084,7 @@ void ModuleEditor::ShowFbxList(const uint& i)
 			if (ImGui::IsItemClicked(1))
 			{
 				std::string metaPath = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-				App->scene_intro->DeleteAssetNResource(metaPath);
+				App->scene_intro->DeleteFBXnResource(metaPath);
 			}
 			ImGui::TreePop();
 		}
@@ -1131,7 +1131,11 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 					}
 					//App->scene_intro->selected->GetMaterialComponent()->r_texture = static_cast<ResourceTexture*>(App->resourceManager->RequestResource(resourceDir.c_str(),ResourceType::texture));
 				}
-
+			}
+			if (ImGui::IsItemClicked(1))
+			{
+				std::string metaDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+				App->scene_intro->DeleteTexturenResource(metaDir);
 			}
 			ImGui::TreePop();
 		}

@@ -79,27 +79,6 @@ public:
 	void CreatePrimitives(std::string path, std::string file);
 	std::string GetMetaPath(std::string realDir);
 
-
-	void SaveScene(char** sceneBuffer);
-	JsonArray SaveGameObjects(JsonObj scene);
-	JsonArray SaveSceneMode(JsonObj scene);
-
-	void WriteModelFile(GameObject* gameObject);
-
-	void SaveGobjsChilds(GameObject* gameObject, JsonObj JsonGob);
-	void SaveGobjsComponentes(GameObject* gameObject, JsonObj JsonGob);
-	void SaveMesh(JsonObj component, GameObject* gameObject);
-	void SaveMaterial(JsonObj component, GameObject* gameObject);
-	void SaveTransform(JsonObj component, GameObject* gameObject);
-
-	void LoadScene(char* sceneBuffer);
-	void LoadSceneMode(JsonObj* scene);
-	GameObject* LoadGameObjects(JsonObj current_node);
-	void LoadGobjsChilds(GameObject* gameObject, JsonObj current_node);
-	void LoadGobjsComponents(GameObject* gameObject, JsonObj current_node);
-	void LoadMesh(JsonObj component, GameObject* gameObject);
-	void LoadMaterial(JsonObj component, GameObject* gameObject);
-	void LoadTransform(JsonObj component, GameObject* gameObject);
 	// Open for Read/Write
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Load(const char* file, char** buffer) const;

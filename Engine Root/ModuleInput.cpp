@@ -148,7 +148,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				}
 				else if (type == ResourceType::texture)
 				{
-					App->fsystem->DuplicateFile(drop_file_dir, (App->resourceManager->texturesPath + file + extension).c_str());
+					App->fsystem->DuplicateFile(drop_file_dir, (App->resourceManager->texturesPath + file + "." + extension).c_str());
 					App->resourceManager->ImportTexturesAssets();
 					App->resourceManager->textureList.clear();
 					App->resourceManager->SetTexturesList();
