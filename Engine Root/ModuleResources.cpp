@@ -30,6 +30,8 @@ bool ModuleResourceManager::Start()
 	SetFbxList();
 	SetTexturesList();
 
+	App->scene_intro->LoadScene(App->scene_intro->sceneBuffer);
+
 	//char* buffer=nullptr;
 	//App->geometry->LoadTexturefromBuffer(buffer);
 	//LoadResource();

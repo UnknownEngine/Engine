@@ -1,0 +1,1162 @@
+{
+    "Scene Mode": [
+        {
+            "EditorMode": true,
+            "GameMode": false,
+            "Paused": false
+        }
+    ],
+    "GameObjects": [
+        {
+            "UID": 331551952,
+            "Parent UID": 0,
+            "Name": "Camera GameObject",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        15.23684024810791,
+                        20.825485229492188,
+                        -30.956644058227539
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0.26029399037361145,
+                        -0.069151751697063446,
+                        0.93077242374420166,
+                        0.24724031984806061
+                    ]
+                },
+                {
+                    "TYPE": "Camera",
+                    "Frustum Type": 2,
+                    "Frustum Near Distance": 0.10000000149011612,
+                    "Frustum Far Distance": 500,
+                    "Frustum Vertical FOV": 1.0471975803375244,
+                    "Frustum Front": [
+                        0,
+                        0,
+                        1
+                    ],
+                    "Frustum Up": [
+                        0,
+                        1,
+                        0
+                    ],
+                    "Frustum Pos": [
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2131328291,
+            "Parent UID": 0,
+            "Name": "Street_Enviroment_01",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 952943642,
+            "Parent UID": 2131328291,
+            "Name": "City_building_041",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -5.0714411735534668,
+                        0,
+                        -10.029492378234863
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1138762091,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V02_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 134359656,
+            "Parent UID": 2131328291,
+            "Name": "City_building_040",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        10.956417083740234,
+                        0,
+                        9.8950405120849609
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 330342771,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 1629050820,
+            "Parent UID": 2131328291,
+            "Name": "City_building_039",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -7.7432165145874023,
+                        0,
+                        10.840725898742676
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1824825072,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 1315869575,
+            "Parent UID": 2131328291,
+            "Name": "City_building_038",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        8.9476327896118164,
+                        0,
+                        4.3313298225402832
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1510738754,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 2084204846,
+            "Parent UID": 2131328291,
+            "Name": "City_building_037",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        5.2035579681396484,
+                        0,
+                        4.7008852958679199
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 138900583,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 515617729,
+            "Parent UID": 2131328291,
+            "Name": "City_building_036",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        6.7394919395446777,
+                        0,
+                        10.209297180175781
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 705126091,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building 06_ c .tga"
+                }
+            ]
+        },
+        {
+            "UID": 1767331603,
+            "Parent UID": 2131328291,
+            "Name": "City_building_035",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        8.930572509765625,
+                        0,
+                        9.7880125045776367
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1962200782,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 1297781592,
+            "Parent UID": 2131328291,
+            "Name": "City_building_034",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        4.2734274864196777,
+                        0,
+                        8.4404048919677734
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1507062318,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 131673476,
+            "Parent UID": 2131328291,
+            "Name": "City_building_033",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -8.6815853118896484,
+                        0,
+                        3.9070582389831543
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 316377989,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building 06_ c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 465386661,
+            "Parent UID": 2131328291,
+            "Name": "City_building_032",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -7.4311914443969727,
+                        0,
+                        -10.115571975708008
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 664224237,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building03_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1799531799,
+            "Parent UID": 2131328291,
+            "Name": "City_building_031",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        7.8065075874328613,
+                        0,
+                        -10.474399566650391
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 2001989667,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 1271917874,
+            "Parent UID": 2131328291,
+            "Name": "City_building_030",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -7.6389551162719727,
+                        0,
+                        8.3600015640258789
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1453210958,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 497427883,
+            "Parent UID": 2131328291,
+            "Name": "Object010",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 667720849,
+                    "TYPE": "Mesh"
+                }
+            ]
+        },
+        {
+            "UID": 1247174347,
+            "Parent UID": 2131328291,
+            "Name": "City_building_028",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -7.9669351577758789,
+                        0,
+                        6.1007266044616699
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1444549882,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 394082247,
+            "Parent UID": 2131328291,
+            "Name": "City_building_026",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        4.5086946487426758,
+                        0,
+                        -5.1503744125366211
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 574748742,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1178360727,
+            "Parent UID": 2131328291,
+            "Name": "City_building_024",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        10.762777328491211,
+                        0,
+                        7.8220839500427246
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1361046231,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building_025_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1779466356,
+            "Parent UID": 2131328291,
+            "Name": "City_building_023",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -10.585455894470215,
+                        0,
+                        -5.9954509735107422
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1976493786,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building_016_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 399343286,
+            "Parent UID": 2131328291,
+            "Name": "City_building_022",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -10.324603080749512,
+                        0,
+                        7.996333122253418
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 579452813,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1303857233,
+            "Parent UID": 2131328291,
+            "Name": "City_building_014",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -4.9830689430236816,
+                        0,
+                        7.4985971450805664
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1482365477,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building03_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 376618768,
+            "Parent UID": 2131328291,
+            "Name": "City_building_013",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -4.8733301162719727,
+                        0,
+                        4.4108047485351563
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 568146139,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building 06_ c .tga"
+                }
+            ]
+        },
+        {
+            "UID": 1338848524,
+            "Parent UID": 2131328291,
+            "Name": "City_building_011",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -5.1836037635803223,
+                        0,
+                        -6.0456037521362305
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1519236535,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building_016_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 2003030779,
+            "Parent UID": 2131328291,
+            "Name": "Plane001",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 36909837,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": 1062428018,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/grass.png"
+                }
+            ]
+        },
+        {
+            "UID": 323328546,
+            "Parent UID": 2131328291,
+            "Name": "Line002",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 500374749,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building 06_ c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1644060733,
+            "Parent UID": 2131328291,
+            "Name": "City_building_008",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        8.0021791458129883,
+                        0,
+                        7.5258016586303711
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1835936209,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building_025_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 136879338,
+            "Parent UID": 2131328291,
+            "Name": "City_building_007",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -7.812748908996582,
+                        0,
+                        -6.0277290344238281
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 350198082,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building_016_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 708256800,
+            "Parent UID": 2131328291,
+            "Name": "City_building_001",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        4.8908400535583496,
+                        0,
+                        -10.521424293518066
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 888505569,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V02_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 1444705653,
+            "Parent UID": 2131328291,
+            "Name": "City_building_004",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        -10.363251686096191,
+                        -1.4901161193847656e-08,
+                        -10.018976211547852
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1629131682,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building03_c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 142488482,
+            "Parent UID": 2131328291,
+            "Name": "City_building_042",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        10.79900074005127,
+                        0,
+                        -7.4638586044311523
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 322598009,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/building05 _c.tga"
+                }
+            ]
+        },
+        {
+            "UID": 1047698639,
+            "Parent UID": 2131328291,
+            "Name": "City_building_043",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        7.0129952430725098,
+                        0,
+                        -7.8123130798339844
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 1223909390,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        },
+        {
+            "UID": 427628026,
+            "Parent UID": 2131328291,
+            "Name": "City_building_044",
+            "Active": true,
+            "Components": [
+                {
+                    "TYPE": "Transform",
+                    "Position": [
+                        4.4716548919677734,
+                        0,
+                        -8.1207418441772461
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "UID": 615674347,
+                    "TYPE": "Mesh"
+                },
+                {
+                    "UID": -842150451,
+                    "TYPE": "Material",
+                    "Asset path": "Assets\/Textures\/Building_V01_C.png"
+                }
+            ]
+        }
+    ]
+} 
