@@ -42,6 +42,11 @@ public:
 	ResourceTexture* LoadTexture(JsonObj json);
 	ResourceTexture* LoadModel(int uid, GameObject* gameObject = nullptr);
 
+	void DeleteFBXnResource(std::string metaDir);
+	void DeleteTexturenResource(std::string metaDir);
+	void EmptyMeshComponents(std::vector<int> meshestoDelete);
+	void EmptyTextureComponents(std::vector<int> texutrestoDelete);
+
 public:
 	std::string fbxsPath;
 	std::string meshesLibPath;

@@ -345,3 +345,139 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 	}
 	return nullptr;
 }
+
+void ModuleResourceManager::DeleteFBXnResource(std::string metaDir)
+{
+	char* metaBuffer;
+	App->fsystem->ReadFile(metaDir.c_str(), &metaBuffer);
+
+	JsonObj meta(metaBuffer);
+	char* rootmodelBuffer;
+	App->fsystem->ReadFile(meta.GetString("Library path"), &rootmodelBuffer);
+	JsonObj rootModel(rootmodelBuffer);
+
+	JsonArray childs = rootModel.GetArray("Childs UID");
+
+	std::vector<int> ModelsUIDs = childs.GetUIDs(0);
+
+	for (int i = 0; i < ModelsUIDs.size(); i++)
+	{
+		char* childBuffer;
+		App->fsystem->ReadFile((App->resourceManager->modelsLibPath + std::to_string(ModelsUIDs.at(i))).c_str(), &childBuffer);
+		JsonObj child(childBuffer);
+
+		uint meshUID = child.GetInt("Mesh UID");
+		std::string meshDir = App->resourceManager->meshesLibPath + std::to_string(meshUID);
+
+		if (App->fsystem->CheckIfExists(meshDir))
+		{
+			App->scene_intro->r_meshesToDelete.push_back(meshUID);
+			App->fsystem->Remove(meshDir.c_str());
+		}
+		App->fsystem->Remove((App->resourceManager->modelsLibPath + std::to_string(ModelsUIDs.at(i))).c_str());
+	}
+	App->fsystem->Remove(meta.GetString("Library path"));
+
+	std::string fullPath = meta.GetString("Asset Path");
+
+	App->fsystem->Remove(metaDir.c_str());
+	App->fsystem->Remove(fullPath.c_str());
+	App->resourceManager->fbxList.clear();
+	App->resourceManager->SetFbxList();
+	EmptyMeshComponents(App->scene_intro->r_meshesToDelete);
+
+	App->scene_intro->r_meshesToDelete.clear();
+}
+
+void ModuleResourceManager::DeleteTexturenResource(std::string metaDir)
+{
+	char* metaBuffer;
+	App->fsystem->ReadFile(metaDir.c_str(), &metaBuffer);
+
+	JsonObj meta(metaBuffer);
+	char* textureBuffer;
+
+	App->scene_intro->r_texturesToDelete.push_back(meta.GetInt("UID"));
+	App->fsystem->Remove(meta.GetString("Library path"));
+	App->fsystem->Remove(meta.GetString("Asset path"));
+	App->fsystem->Remove(metaDir.c_str());
+
+	App->resourceManager->textureList.clear();
+	App->resourceManager->SetTexturesList();
+	EmptyTextureComponents(App->scene_intro->r_texturesToDelete);
+
+	App->scene_intro->r_texturesToDelete.clear();
+}
+
+void ModuleResourceManager::EmptyMeshComponents(std::vector<int> meshestoDelete)
+{
+	for (int i = 0; i < meshestoDelete.size(); i++)
+	{
+		for (int j = 0; j < App->scene_intro->gameObjectsList.size(); j++)
+		{
+			if (App->scene_intro->gameObjectsList.at(j)->nameID != "Camera GameObject")
+			{
+				if (!App->scene_intro->gameObjectsList.at(j)->childs.empty())
+				{
+					for (int n = 0; n < App->scene_intro->gameObjectsList.at(j)->childs.size(); n++)
+					{
+						if (meshestoDelete.at(i) == App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->UID)
+						{
+							App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->r_mesh = nullptr;
+							App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMeshComponent()->UID = NULL;
+						}
+					}
+				}
+				else
+				{
+					if (meshestoDelete.at(i) == App->scene_intro->gameObjectsList.at(j)->GetMeshComponent()->UID)
+					{
+						if (App->scene_intro->gameObjectsList.at(i)->GetMeshComponent()->r_mesh != nullptr)
+						{
+							App->scene_intro->gameObjectsList.at(j)->GetMeshComponent()->r_mesh = nullptr;
+							App->scene_intro->gameObjectsList.at(j)->GetMeshComponent()->UID = NULL;
+						}
+					}
+				}
+				delete App->resourceManager->resourceMap[meshestoDelete.at(i)];
+				App->resourceManager->resourceMap.erase(meshestoDelete.at(i));
+			}
+		}
+
+	}
+}
+
+void ModuleResourceManager::EmptyTextureComponents(std::vector<int> texturestoDelete)
+{
+	for (int i = 0; i < texturestoDelete.size(); i++)
+	{
+		for (int j = 0; j < App->scene_intro->gameObjectsList.size(); j++)
+		{
+			if (App->scene_intro->gameObjectsList.at(j)->nameID != "Camera GameObject")
+			{
+				if (!App->scene_intro->gameObjectsList.at(j)->childs.empty())
+				{
+					for (int n = 0; n < App->scene_intro->gameObjectsList.at(j)->childs.size(); n++)
+					{
+						if (texturestoDelete.at(i) == App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->UID)
+						{
+							App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->r_texture = nullptr;
+							App->scene_intro->gameObjectsList.at(j)->childs.at(n)->GetMaterialComponent()->UID = NULL;
+						}
+					}
+				}
+				else
+				{
+					if (texturestoDelete.at(i) == App->scene_intro->gameObjectsList.at(j)->GetMaterialComponent()->UID)
+					{
+						App->scene_intro->gameObjectsList.at(j)->GetMaterialComponent()->r_texture = nullptr;
+						App->scene_intro->gameObjectsList.at(j)->GetMaterialComponent()->UID = NULL;
+					}
+				}
+				delete App->resourceManager->resourceMap[texturestoDelete.at(i)];
+				App->resourceManager->resourceMap.erase(texturestoDelete.at(i));
+			}
+		}
+
+	}
+}

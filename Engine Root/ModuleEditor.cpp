@@ -580,6 +580,20 @@ void ModuleEditor::DrawInspector()
 			}
 			ImGui::Text("");
 		}
+		if (!hasMesh&& App->scene_intro->selected->nameID!="Camera GameObject")
+		{
+			ImGui::Text("");
+			ImGui::Text("");
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			ImGui::CollapsingHeader("Mesh");
+			if (ImGui::Button("Create Mesh", ImVec2(200, 20)))
+			{
+				MeshComponent* newMesh = new MeshComponent();
+				App->scene_intro->selected->AddComponent(newMesh);
+			}
+		}
+
 		if (hasMaterial)
 		{
 			ImGui::CollapsingHeader("Material");
@@ -633,6 +647,19 @@ void ModuleEditor::DrawInspector()
 				else {
 					ImGui::Image((void*)(intptr_t)App->geometry->bufferCheckerTexture, ImVec2(256, 256));
 				}
+			}
+		}
+		if (!hasMaterial && App->scene_intro->selected->nameID != "Camera GameObject")
+		{
+			ImGui::CollapsingHeader("Material");
+			ImGui::Text("");
+			ImGui::Text("");
+			ImGui::Text("");
+			ImGui::SameLine(72.f);
+			if (ImGui::Button("Create Material", ImVec2(200, 20)))
+			{
+				MaterialComponent* newMat = new MaterialComponent();
+				App->scene_intro->selected->AddComponent(newMat);
 			}
 		}
 	}
@@ -1084,7 +1111,7 @@ void ModuleEditor::ShowFbxList(const uint& i)
 			if (ImGui::IsItemClicked(1))
 			{
 				std::string metaPath = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-				App->scene_intro->DeleteFBXnResource(metaPath);
+				App->resourceManager->DeleteFBXnResource(metaPath);
 			}
 			ImGui::TreePop();
 		}
@@ -1135,7 +1162,7 @@ void ModuleEditor::ShowTexturesList(const uint& i)
 			if (ImGui::IsItemClicked(1))
 			{
 				std::string metaDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-				App->scene_intro->DeleteTexturenResource(metaDir);
+				App->resourceManager->DeleteTexturenResource(metaDir);
 			}
 			ImGui::TreePop();
 		}
