@@ -951,6 +951,26 @@ bool M_FileSystem::DuplicateFile(const char* srcFile, const char* dstFile)
 	}
 }
 
+bool M_FileSystem::Remove(const char* file)
+{
+	bool ret = false;
+
+	if (file != nullptr)
+	{
+		//If it is a directory, we need to recursively remove all the files inside
+	
+		if (PHYSFS_delete(file) != 0)
+		{
+			LOG("File deleted: [%s]", file);
+			ret = true;
+		}
+		else
+			LOG("File System error while trying to delete [%s]: %s", file, PHYSFS_getLastError());
+	}
+
+	return ret;
+}
+
 int close_sdl_rwops(SDL_RWops *rw)
 {
 	RELEASE_ARRAY(rw->hidden.mem.base);
@@ -1039,4 +1059,3 @@ std::string M_FileSystem::GetUniqueName(const char* path, const char* name) cons
 	}
 	return finalName;
 }
-

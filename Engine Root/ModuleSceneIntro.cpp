@@ -556,6 +556,43 @@ void ModuleSceneIntro::LoadTransform(JsonObj components_iterator, GameObject* ga
 	gameObject->AddComponent(loadedTransform);
 }
 
+void ModuleSceneIntro::DeleteAssetNResource(std::string metaDir)
+{
+	char* metaBuffer;
+	App->fsystem->ReadFile(metaDir.c_str(), &metaBuffer);
+	
+	JsonObj meta(metaBuffer);
+	char* rootmodelBuffer;
+	App->fsystem->ReadFile(meta.GetString("Library path"), &rootmodelBuffer);
+	JsonObj rootModel(rootmodelBuffer);
+
+	JsonArray childs = rootModel.GetArray("Childs UID");
+
+	std::vector<int> ModelsUIDs = childs.GetUIDs(0);
+
+	for (int i = 0; i < ModelsUIDs.size(); i++)
+	{
+		char* childBuffer;
+		App->fsystem->ReadFile((App->resourceManager->modelsLibPath + std::to_string(ModelsUIDs.at(i))).c_str(), &childBuffer);
+		JsonObj child(childBuffer);
+
+		uint meshUID = child.GetInt("Mesh UID");
+		std::string meshDir = App->resourceManager->meshesLibPath + std::to_string(meshUID);
+
+		if (App->fsystem->CheckIfExists(meshDir))
+		{
+			App->fsystem->Remove(meshDir.c_str());
+		}
+		App->fsystem->Remove((App->resourceManager->modelsLibPath + std::to_string(ModelsUIDs.at(i))).c_str());
+	}
+	App->fsystem->Remove(meta.GetString("Library path"));
+
+	std::string fullPath = meta.GetString("Asset Path");
+
+	App->fsystem->Remove(metaDir.c_str());
+	App->fsystem->Remove(fullPath.c_str());
+}
+
 GameObject* ModuleSceneIntro::GetGameObjectbyUID(int UID)
 {
 	for (int i = 0; i < gameObjectsList.size(); i++)

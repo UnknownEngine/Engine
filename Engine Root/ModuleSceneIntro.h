@@ -50,6 +50,7 @@ public:
 	void LoadMesh(JsonObj component, GameObject* gameObject);
 	void LoadMaterial(JsonObj component, GameObject* gameObject);
 	void LoadTransform(JsonObj component, GameObject* gameObject);
+	void DeleteAssetNResource(std::string fileDir);
 
 	GameObject* GetGameObjectbyUID(int UID);
 public:

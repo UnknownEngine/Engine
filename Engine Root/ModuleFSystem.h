@@ -79,8 +79,6 @@ public:
 	void CreatePrimitives(std::string path, std::string file);
 	std::string GetMetaPath(std::string realDir);
 
-	void LoadFBXMeshes(std::string fileName, char* buffer);
-
 
 	void SaveScene(char** sceneBuffer);
 	JsonArray SaveGameObjects(JsonObj scene);
@@ -108,6 +106,7 @@ public:
 
 	bool DuplicateFile(const char* file, const char* dstFolder, std::string& relativePath);
 	bool DuplicateFile(const char* srcFile, const char* dstFile);
+	bool Remove(const char* file);
 
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 
