@@ -544,6 +544,8 @@ void ModuleGeometry::ImportFBXMeshes(JsonObj meta, std::string realDir, std::str
 				if (nodeName.find("_$AssimpFbx$_") != std::string::npos && node->mNumChildren == 1) {
 					node = node->mChildren[0];
 
+					node->mTransformation.Decompose(scaling, rotation, translation);
+
 					pos += float3(translation.x, translation.y, translation.z);
 					rot = rot * Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 					scale = float3(scaling.x, scaling.y, scaling.z);
