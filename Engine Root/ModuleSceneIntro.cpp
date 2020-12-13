@@ -176,7 +176,11 @@ update_status ModuleSceneIntro::Update(float dt)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-
+	if (App->onStart)
+	{
+		LoadScene(sceneBuffer);
+		App->onStart = false;
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -256,7 +260,6 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 		_toSelect = real_candidates[index];
 	}
 	selected = _toSelect;
-
 }
 
 void ModuleSceneIntro::DrawRay(LineSegment& segment)
@@ -456,6 +459,7 @@ void ModuleSceneIntro::LoadScene(char* sceneBuffer)
 		else
 		{
 			App->scene_intro->gameObjectsList.push_back(created_gameobject);
+			created_gameobject->parent = GetGameObjectbyUID(created_gameobject->ParentUID);
 		}
 	}
 }
