@@ -386,6 +386,7 @@ void ModuleEditor::DrawInspector()
 								auto it = std::find(App->scene_intro->gameObjectsList.at(i)->childs.begin(), App->scene_intro->gameObjectsList.at(i)->childs.end(), App->scene_intro->gameObjectsList.at(i)->childs.at(j));
 								App->scene_intro->gameObjectsList.at(i)->childs.erase(it);
 								App->scene_intro->selected = nullptr;
+								break;
 							}
 						}
 					}
