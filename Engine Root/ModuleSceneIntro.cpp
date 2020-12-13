@@ -210,6 +210,8 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 		}
 	}
 
+	std::vector<GameObject*> real_candidates;
+
 	for (uint i = 0; i < candidates.size(); i++)
 	{
 
@@ -234,12 +236,24 @@ void ModuleSceneIntro::OnClickSelection(const LineSegment& segment)
 
 					if (local.Intersects(triangle, nullptr, nullptr))
 					{
-						_toSelect = candidates[i];
+						real_candidates.push_back(candidates[i]);
 						break;
 					}
 				}
 			
 		}
+	}
+	if (real_candidates.size() > 0) {
+		int index = 0;
+		float distance = segment.a.Distance(real_candidates[0]->GetAABB().CenterPoint());
+		for (uint i = 0; i < real_candidates.size(); i++)
+		{
+			if (segment.a.Distance(real_candidates[i]->GetAABB().CenterPoint()) < distance) {
+				distance = segment.a.Distance(real_candidates[i]->GetAABB().CenterPoint());
+				index = i;
+			}
+		}
+		_toSelect = real_candidates[index];
 	}
 	selected = _toSelect;
 
