@@ -136,8 +136,13 @@ update_status ModuleEditor::PostUpdate(float dt)
 			float4x4 newMatrix;
 			newMatrix.Set(modelPtr);
 			modelProjection = newMatrix.Transposed();
-
-			float4x4 localTransform = gameObject->parent->GetTransformComponent()->transform.Inverted() * modelProjection;
+			float4x4 localTransform;
+			if (gameObject->parent != nullptr) {
+				localTransform = gameObject->parent->GetTransformComponent()->transform.Inverted() * modelProjection;
+			}
+			else {
+				localTransform =  modelProjection;
+			}
 			gameObject->GetTransformComponent()->transform = localTransform;
 			gameObject->GetTransformComponent()->global_transform = modelProjection;
 
