@@ -50,10 +50,6 @@ public:
 	void LoadMesh(JsonObj component, GameObject* gameObject);
 	void LoadMaterial(JsonObj component, GameObject* gameObject);
 	void LoadTransform(JsonObj component, GameObject* gameObject);
-	void DeleteFBXnResource(std::string metaDir);
-	void DeleteTexturenResource(std::string metaDir);
-	void EmptyMeshComponents(std::vector<int> meshestoDelete);
-	void EmptyTextureComponents(std::vector<int> meshestoDelete);
 
 	GameObject* GetGameObjectbyUID(int UID);
 public:
