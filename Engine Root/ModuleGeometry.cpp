@@ -63,6 +63,7 @@ update_status ModuleGeometry::PreUpdate(float dt)
 
 update_status ModuleGeometry::Update(float dt)
 {
+	App->camera->rendered_objects = 0;
 	if (App->gameMode)
 	{
 		if (!App->gameModePaused)
@@ -815,32 +816,33 @@ void ModuleGeometry::CreateTransformComponent(aiNode* node, GameObject* gameObje
 
 void ModuleGeometry::DrawMeshFromGameObjectRoot(GameObject* gameObject)
 {
+
 	if (gameObject == nullptr) return;
 
 	if (gameObject->components.size() > 0) {
-		for (uint i = 0; i < gameObject->components.size(); i++)
-		{
-			TransformComponent* transformComponent = gameObject->GetTransformComponent();
-			MeshComponent* mesh = gameObject->GetMeshComponent();
-			MaterialComponent* material = gameObject->GetMaterialComponent();
 
-			UpdateGlobalTransform(transformComponent, gameObject);
-			
+		TransformComponent* transformComponent = gameObject->GetTransformComponent();
+		MeshComponent* mesh = gameObject->GetMeshComponent();
+		MaterialComponent* material = gameObject->GetMaterialComponent();
+
+		UpdateGlobalTransform(transformComponent, gameObject);
 
 
-			if (mesh) {
-				gameObject->UpdateAABB();
-				//IF inside frustrum
-				if (ContainsAaBox(gameObject->GetAABB(), &App->camera->camera->frustum) == 1) {
 
-					glPushMatrix();
-					glMultMatrixf((float*)&transformComponent->global_transform.Transposed());
+		if (mesh != nullptr && mesh->r_mesh != nullptr) {
+			gameObject->UpdateAABB();
+			//IF inside frustrum
+			if (ContainsAaBox(gameObject->GetAABB(), &App->camera->camera->frustum) == 1) {
+
+				App->camera->rendered_objects++;
+				glPushMatrix();
+				glMultMatrixf((float*)&transformComponent->global_transform.Transposed());
 
 
-					DrawMesh(mesh, material);
-					glPopMatrix();
-				}
+				DrawMesh(mesh, material);
+				glPopMatrix();
 			}
+
 		}
 	}
 	if (gameObject->childs.size() > 0) {

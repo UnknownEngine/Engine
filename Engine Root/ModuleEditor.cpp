@@ -366,31 +366,33 @@ void ModuleEditor::DrawInspector()
 {
 	if (App->scene_intro->selected != NULL)
 	{
-		if (ImGui::Button("Delete Game Object", ImVec2(200, 20)))
-		{
-			for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
+		if (App->scene_intro->selected != App->camera->cameraObject) {
+			if (ImGui::Button("Delete Game Object", ImVec2(200, 20)))
 			{
-				if (App->scene_intro->selected->parent != NULL)
+				for (int i = 0; i < App->scene_intro->gameObjectsList.size(); i++)
 				{
-					for (int j = 0; j < App->scene_intro->gameObjectsList.at(i)->childs.size(); j++)
+					if (App->scene_intro->selected->parent != NULL)
 					{
-						if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->childs.at(j)->UID)
+						for (int j = 0; j < App->scene_intro->gameObjectsList.at(i)->childs.size(); j++)
 						{
-							delete App->scene_intro->gameObjectsList.at(i)->childs.at(j);
-							auto it = std::find(App->scene_intro->gameObjectsList.at(i)->childs.begin(), App->scene_intro->gameObjectsList.at(i)->childs.end(), App->scene_intro->gameObjectsList.at(i)->childs.at(j));
-							App->scene_intro->gameObjectsList.at(i)->childs.erase(it);
-							App->scene_intro->selected = nullptr;
+							if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->childs.at(j)->UID)
+							{
+								delete App->scene_intro->gameObjectsList.at(i)->childs.at(j);
+								auto it = std::find(App->scene_intro->gameObjectsList.at(i)->childs.begin(), App->scene_intro->gameObjectsList.at(i)->childs.end(), App->scene_intro->gameObjectsList.at(i)->childs.at(j));
+								App->scene_intro->gameObjectsList.at(i)->childs.erase(it);
+								App->scene_intro->selected = nullptr;
+							}
 						}
 					}
-				}
-				else
-				{
-					if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->UID)
+					else
 					{
-						delete App->scene_intro->gameObjectsList.at(i);
-						auto it = std::find(App->scene_intro->gameObjectsList.begin(), App->scene_intro->gameObjectsList.end(), App->scene_intro->gameObjectsList.at(i));
-						App->scene_intro->gameObjectsList.erase(it);
-						App->scene_intro->selected = nullptr;
+						if (App->scene_intro->selected->UID == App->scene_intro->gameObjectsList.at(i)->UID)
+						{
+							delete App->scene_intro->gameObjectsList.at(i);
+							auto it = std::find(App->scene_intro->gameObjectsList.begin(), App->scene_intro->gameObjectsList.end(), App->scene_intro->gameObjectsList.at(i));
+							App->scene_intro->gameObjectsList.erase(it);
+							App->scene_intro->selected = nullptr;
+						}
 					}
 				}
 			}
@@ -500,6 +502,9 @@ void ModuleEditor::DrawInspector()
 			ImGui::Separator();
 			ImGui::Text("");
 			}
+			else {
+				ImGui::Text("Rendered objects: %d", App->camera->rendered_objects);
+			}
 
 			ImGui::Text("");
 			ImGui::SameLine(72.f);
@@ -533,7 +538,8 @@ void ModuleEditor::DrawInspector()
 				App->scene_intro->selected->GetMeshComponent()->r_mesh->showNormalsVertices = !App->scene_intro->selected->GetMeshComponent()->r_mesh->showNormalsVertices;
 			}
 			ImGui::Text("");
-
+			ImGui::Text("Instances: %d", App->scene_intro->selected->GetMeshComponent()->r_mesh->instances);
+			ImGui::Text("Instances: %d", App->scene_intro->selected->GetMeshComponent()->UID);
 			ImGui::TextWrapped("Vertexs");
 			ImGui::SameLine(100);
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(233, 233, 43)));
@@ -1061,9 +1067,14 @@ void ModuleEditor::ShowFbxList(const uint& i)
 		std::string finalName = name.erase(name.size() - 4);
 		if (ImGui::TreeNodeEx(finalName.c_str(), ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_Bullet))
 		{
-			if (ImGui::IsItemClicked(0)) {
-				std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
-				/*App->scene_intro->selected->GetMeshComponent()->r_mesh =*/ static_cast<ResourceMesh*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::mesh));
+			//if (ImGui::IsItemClicked(0)) {
+		//    std::string resourceDir = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+		//    /*App->scene_intro->selected->GetMeshComponent()->r_mesh =*/ static_cast<ResourceMesh*>(App->resourceManager->RequestResource(resourceDir.c_str(), ResourceType::mesh));
+		//}
+			if (ImGui::IsItemClicked(0))
+			{
+				std::string metaPath = rootFolders[0] + std::string("/") + assetFolders[i] + std::string("/") + finalName + std::string(".mta");
+				App->scene_intro->DeleteAssetNResource(metaPath);
 			}
 			ImGui::TreePop();
 		}

@@ -38,6 +38,8 @@ public:
 
 	bool debugRay;
 	GameObject* cameraObject;
+
+	int rendered_objects = 0;
 private:
 
 	double last_x = 0;

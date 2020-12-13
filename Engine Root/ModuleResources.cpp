@@ -293,8 +293,24 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 	
 	int mesh_uid = modelMeta.GetInt("Mesh UID");
 	if (mesh_uid != 0) {
+
+		ResourceMesh* r_mesh = nullptr;
+		std::map<int, Resource*>::iterator resourceIt = resourceMap.find(mesh_uid);
+		if (resourceIt != resourceMap.end())
+		{
+			resourceIt->second->instances++;
+			r_mesh = static_cast<ResourceMesh*>(resourceIt->second);
+		}
+		else {
+
+			r_mesh = new ResourceMesh(mesh_uid, ResourceType::mesh);
+			r_mesh->instances++;
+			resourceMap[mesh_uid] = r_mesh;
+		}
+		
+
+
 		MeshComponent* c_mesh = new MeshComponent;
-		ResourceMesh* r_mesh = new ResourceMesh(mesh_uid, ResourceType::mesh);
 		MaterialComponent* c_material = new MaterialComponent;
 		App->fsystem->ReadFile((meshesLibPath + std::to_string(mesh_uid)).c_str(), &r_mesh->meshBuffer);
 		App->geometry->LoadOurMesh(r_mesh->meshBuffer, r_mesh);
@@ -307,6 +323,8 @@ ResourceTexture* ModuleResourceManager::LoadModel(int uid,GameObject* parent)
 
 		newGameObject->AddComponent(c_mesh);
 		newGameObject->AddComponent(c_material);
+
+
 	}
 	if (parent == nullptr)
 	{
